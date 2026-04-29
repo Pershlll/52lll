@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="default" />
+<meta name="apple-mobile-web-app-title" content="КалоКалк" />
+<title>КалоКалк</title>
+<style>
+  :root {
+    --green: #1D9E75;
+    --green-light: #E1F5EE;
+    --green-dark: #0F6E56;
+    --amber: #EF9F27;
+    --blue: #378ADD;
+    --text: #1a1a1a;
+    --text2: #666;
+    --text3: #999;
+    --bg: #f5f5f0;
+    --surface: #ffffff;
+    --border: rgba(0,0,0,0.1);
+    --border2: rgba(0,0,0,0.18);
+    --radius: 14px;
+    --radius-sm: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --text: #f0f0f0;
+      --text2: #aaa;
+      --text3: #666;
+      --bg: #111;
+      --surface: #1e1e1e;
+      --border: rgba(255,255,255,0.1);
+      --border2: rgba(255,255,255,0.2);
+    }
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; background: var(--bg); font-family: -apple-system, 'SF Pro Text', sans-serif; color: var(--text); }
+
+  .app { display: flex; flex-direction: column; height: 100vh; height: 100dvh; max-width: 430px; margin: 0 auto; }
+
+  /* Header */
+  .header { background: var(--surface); border-bottom: 0.5px solid var(--border); padding: 54px 20px 12px; }
+  .header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  .header h1 span { color: var(--green); }
+
+  /* Bottom nav */
+  .bottom-nav { background: var(--surface); border-top: 0.5px solid var(--border); display: flex; padding: 8px 0 28px; }
+  .nav-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; padding: 6px 0; cursor: pointer; border: none; background: none; color: var(--text3); font-size: 10px; transition: color 0.15s; }
+  .nav-item.active { color: var(--green); }
+  .nav-icon { font-size: 22px; line-height: 1; }
+
+  /* Scroll content */
+  .content { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 16px; }
+
+  /* Page */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* Section */
+  .section { background: var(--surface); border-radius: var(--radius); padding: 16px; margin-bottom: 12px; }
+  .section-title { font-size: 11px; font-weight: 600; color: var(--text3); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 14px; }
+
+  /* Field */
+  .field { margin-bottom: 14px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 13px; color: var(--text2); margin-bottom: 6px; }
+  .field input, .field select {
+    width: 100%; padding: 12px 14px; font-size: 16px;
+    border: 0.5px solid var(--border2); border-radius: var(--radius-sm);
+    background: var(--bg); color: var(--text);
+    -webkit-appearance: none; appearance: none;
+  }
+  .field input:focus, .field select:focus { outline: none; border-color: var(--green); }
+  .field-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+  /* Segment */
+  .segment { display: flex; background: var(--bg); border-radius: var(--radius-sm); padding: 3px; gap: 2px; }
+  .seg-btn { flex: 1; padding: 9px 6px; text-align: center; font-size: 13px; font-weight: 500; border-radius: 8px; cursor: pointer; color: var(--text2); border: none; background: none; transition: all 0.15s; }
+  .seg-btn.sel { background: var(--surface); color: var(--text); box-shadow: 0 1px 4px rgba(0,0,0,0.12); }
+
+  /* Save button */
+  .btn-primary { width: 100%; padding: 15px; font-size: 16px; font-weight: 600; border: none; border-radius: var(--radius); background: var(--green); color: #fff; cursor: pointer; margin-top: 4px; transition: opacity 0.15s; }
+  .btn-primary:active { opacity: 0.8; }
+
+  .btn-secondary { width: 100%; padding: 13px; font-size: 15px; font-weight: 500; border: 1.5px solid var(--green); border-radius: var(--radius); background: none; color: var(--green); cursor: pointer; margin-top: 8px; transition: all 0.15s; }
+  .btn-secondary:active { background: var(--green-light); }
+
+  /* Stats */
+  .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; }
+  .stat-card { background: var(--surface); border-radius: var(--radius); padding: 14px; }
+  .stat-label { font-size: 12px; color: var(--text3); margin-bottom: 4px; }
+  .stat-value { font-size: 24px; font-weight: 700; color: var(--text); }
+  .stat-unit { font-size: 12px; font-weight: 400; color: var(--text2); margin-left: 2px; }
+
+  /* Calorie cards */
+  .kcal-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .kcal-card { background: var(--surface); border-radius: var(--radius); padding: 12px 8px; text-align: center; cursor: pointer; border: 2px solid transparent; transition: all 0.15s; }
+  .kcal-card.sel { border-color: var(--green); background: var(--green-light); }
+  .kcal-title { font-size: 11px; color: var(--text3); margin-bottom: 4px; }
+  .kcal-card.sel .kcal-title { color: var(--green-dark); }
+  .kcal-num { font-size: 20px; font-weight: 700; color: var(--text); }
+  .kcal-card.sel .kcal-num { color: var(--green); }
+  .kcal-sub { font-size: 10px; color: var(--text3); }
+  .kcal-card.sel .kcal-sub { color: var(--green); }
+
+  /* Macros */
+  .macro { margin-bottom: 14px; }
+  .macro-header { display: flex; justify-content: space-between; margin-bottom: 6px; }
+  .macro-name { font-size: 14px; color: var(--text2); }
+  .macro-val { font-size: 14px; font-weight: 600; }
+  .bar-bg { height: 7px; border-radius: 99px; background: var(--bg); overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 99px; transition: width 0.5s ease; }
+
+  /* Recipe card */
+  .recipe-card { background: var(--surface); border-radius: var(--radius); padding: 14px; margin-bottom: 10px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: opacity 0.15s; }
+  .recipe-card:active { opacity: 0.7; }
+  .recipe-emoji { font-size: 32px; width: 52px; height: 52px; display: flex; align-items: center; justify-content: center; background: var(--bg); border-radius: 12px; flex-shrink: 0; }
+  .recipe-info { flex: 1; min-width: 0; }
+  .recipe-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .recipe-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+  .recipe-tag { font-size: 11px; padding: 2px 8px; border-radius: 99px; background: var(--bg); color: var(--text2); }
+  .recipe-kcal { font-size: 15px; font-weight: 700; color: var(--text2); flex-shrink: 0; }
+
+  /* Filters */
+  .filters { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 4px; margin-bottom: 14px; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .chip { padding: 7px 14px; border-radius: 99px; font-size: 13px; font-weight: 500; white-space: nowrap; cursor: pointer; border: 1.5px solid var(--border2); color: var(--text2); background: var(--surface); transition: all 0.15s; flex-shrink: 0; }
+  .chip.active { background: var(--green); color: #fff; border-color: var(--green); }
+
+  /* Empty */
+  .empty { text-align: center; padding: 50px 20px; color: var(--text3); }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty p { font-size: 15px; line-height: 1.5; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 100px; left: 50%; transform: translateX(-50%); background: #1a1a1a; color: #fff; padding: 10px 20px; border-radius: 99px; font-size: 14px; font-weight: 500; opacity: 0; transition: opacity 0.2s; pointer-events: none; z-index: 999; white-space: nowrap; }
+  .toast.show { opacity: 1; }
+
+  /* Modal overlay */
+  .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 100; display: flex; align-items: flex-end; opacity: 0; pointer-events: none; transition: opacity 0.25s; }
+  .modal-overlay.show { opacity: 1; pointer-events: all; }
+  .modal { background: var(--surface); border-radius: 24px 24px 0 0; padding: 20px 20px 40px; width: 100%; max-height: 80vh; overflow-y: auto; transform: translateY(100%); transition: transform 0.3s ease; }
+  .modal-overlay.show .modal { transform: translateY(0); }
+  .modal-handle { width: 36px; height: 4px; background: var(--border2); border-radius: 99px; margin: 0 auto 18px; }
+  .modal-title { font-size: 18px; font-weight: 700; margin-bottom: 12px; }
+  .modal-close { float: right; font-size: 24px; cursor: pointer; color: var(--text3); line-height: 1; }
+  .modal-kcal { font-size: 32px; font-weight: 700; color: var(--green); margin-bottom: 8px; }
+  .macros-row { display: flex; gap: 10px; margin: 12px 0 16px; }
+  .macro-pill { flex: 1; text-align: center; background: var(--bg); border-radius: 10px; padding: 10px 4px; }
+  .macro-pill-val { font-size: 18px; font-weight: 700; }
+  .macro-pill-name { font-size: 11px; color: var(--text3); }
+  .ingredients-title { font-size: 14px; font-weight: 600; color: var(--text2); margin-bottom: 8px; }
+  .ingredient { font-size: 14px; color: var(--text); padding: 6px 0; border-bottom: 0.5px solid var(--border); }
+  .steps-title { font-size: 14px; font-weight: 600; color: var(--text2); margin: 14px 0 8px; }
+  .step { display: flex; gap: 10px; margin-bottom: 10px; }
+  .step-num { width: 24px; height: 24px; background: var(--green); color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 700; flex-shrink: 0; margin-top: 1px; }
+  .step-text { font-size: 14px; color: var(--text); line-height: 1.5; }
+
+  .page-title { font-size: 22px; font-weight: 700; margin-bottom: 16px; letter-spacing: -0.3px; }
+
+  input[type=number]::-webkit-inner-spin-button { -webkit-appearance: none; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <div class="header">
+    <h1>Кало<span>Калк</span></h1>
+  </div>
+
+  <div class="content" id="main-content">
+    <!-- PROFILE PAGE -->
+    <div id="page-profile" class="page active">
+      <div class="section">
+        <div class="section-title">Личные данные</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Имя</label>
+            <input type="text" id="name" placeholder="Ваше имя" autocomplete="off" />
+          </div>
+          <div class="field">
+            <label>Возраст</label>
+            <input type="number" id="age" placeholder="30" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="field">
+          <label>Пол</label>
+          <div class="segment">
+            <button class="seg-btn sel" id="g-male" onclick="setGender('male')">Мужской</button>
+            <button class="seg-btn" id="g-female" onclick="setGender('female')">Женский</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>Рост (см)</label>
+          <input type="number" id="height" placeholder="170" inputmode="numeric" />
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Размеры тела</div>
+        <div class="field-row">
+          <div class="field">
+            <label>Вес (кг)</label>
+            <input type="number" id="weight" placeholder="70" inputmode="decimal" step="0.1" />
+          </div>
+          <div class="field">
+            <label>Талия (см)</label>
+            <input type="number" id="waist" placeholder="80" inputmode="numeric" />
+          </div>
+        </div>
+        <div class="field-row">
+          <div class="field">
+            <label>Бёдра (см)</label>
+            <input type="number" id="hips" placeholder="100" inputmode="numeric" />
+          </div>
+          <div class="field">
+            <label>Шея (см)</label>
+            <input type="number" id="neck" placeholder="38" inputmode="numeric" />
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Активность</div>
+        <div class="field">
+          <select id="activity">
+            <option value="1.2">Сидячий образ жизни</option>
+            <option value="1.375">Лёгкая (1–3 тренировки/нед.)</option>
+            <option value="1.55" selected>Умеренная (3–5 тренировок)</option>
+            <option value="1.725">Высокая (6–7 тренировок)</option>
+            <option value="1.9">Очень высокая (физический труд)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Цель</div>
+        <div class="segment">
+          <button class="seg-btn" id="goal-lose" onclick="setGoal('lose')">Похудение</button>
+          <button class="seg-btn sel" id="goal-maintain" onclick="setGoal('maintain')">Норма</button>
+          <button class="seg-btn" id="goal-gain" onclick="setGoal('gain')">Масса</button>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="saveProfile()">Рассчитать →</button>
+    </div>
+
+    <!-- DASHBOARD PAGE -->
+    <div id="page-dashboard" class="page">
+      <div id="dashboard-content"></div>
+    </div>
+
+    <!-- RECIPES PAGE -->
+    <div id="page-recipes" class="page">
+      <div id="recipes-content"></div>
+    </div>
+  </div>
+
+  <div class="bottom-nav">
+    <button class="nav-item active" id="nav-profile" onclick="showPage('profile')">
+      <span class="nav-icon">👤</span>
+      Профиль
+    </button>
+    <button class="nav-item" id="nav-dashboard" onclick="showPage('dashboard')">
+      <span class="nav-icon">📊</span>
+      Мой план
+    </button>
+    <button class="nav-item" id="nav-recipes" onclick="showPage('recipes')">
+      <span class="nav-icon">🥗</span>
+      Рецепты
+    </button>
+  </div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- Recipe Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-body">
+    <div class="modal-handle"></div>
+    <div id="modal-content"></div>
+  </div>
+</div>
+
+<script>
+const RECIPES = [
+  {
+    name:'Овсянка с бананом и орехами', emoji:'🥣', kcal:380, p:12, f:14, c:52, meal:'breakfast',
+    tags:['Завтрак','Быстро','Вегет.'],
+    ingredients:['Овсянка (крупные хлопья) — 80 г','Молоко 2.5% — 200 мл','Банан — 1 шт (средний)','Грецкие орехи — 20 г','Мёд — 1 ч.л.'],
+    steps:['Залейте овсянку горячим молоком, накройте крышкой на 5 минут.','Нарежьте банан кружочками и выложите сверху.','Добавьте дроблёные орехи и мёд. Подавайте тёплым.']
+  },
+  {
+    name:'Яичница с авокадо и тостом', emoji:'🍳', kcal:420, p:18, f:22, c:32, meal:'breakfast',
+    tags:['Завтрак','Белковое'],
+    ingredients:['Яйца — 2 шт','Авокадо — ½ шт','Цельнозерновой хлеб — 1 ломтик','Оливковое масло — 1 ч.л.','Соль, перец — по вкусу','Лимонный сок — несколько капель'],
+    steps:['Разогрейте сковороду с маслом на среднем огне.','Разбейте яйца и жарьте 3–4 мин до желаемой готовности.','Авокадо разомните вилкой, добавьте соль и лимонный сок.','Поджарьте хлеб. Выложите авокадо на тост, рядом яичницу.']
+  },
+  {
+    name:'Йогурт с ягодами и гранолой', emoji:'🫐', kcal:260, p:14, f:5, c:40, meal:'breakfast',
+    tags:['Завтрак','Лёгкое','Вегет.'],
+    ingredients:['Греческий йогурт 2% — 200 г','Замороженная черника — 80 г','Гранола без сахара — 30 г','Мёд — 1 ч.л.'],
+    steps:['Йогурт выложите в глубокую миску.','Добавьте ягоды (можно разморозить или использовать свежие).','Посыпьте гранолой и полейте мёдом. Готово!']
+  },
+  {
+    name:'Куриная грудка с киноа', emoji:'🍗', kcal:520, p:45, f:10, c:55, meal:'lunch',
+    tags:['Обед','Белковое','ПП'],
+    ingredients:['Куриная грудка — 200 г','Киноа сухая — 80 г','Брокколи — 150 г','Оливковое масло — 1 ст.л.','Лимонный сок — 1 ст.л.','Чеснок — 1 зубчик','Соль, перец, паприка'],
+    steps:['Киноа промойте и варите 15 мин в подсоленной воде (1:2).','Грудку нарежьте, посолите, поперчите, добавьте паприку. Жарьте 6–7 мин на среднем огне.','Брокколи отварите 5 мин или приготовьте на пару.','Смешайте масло, лимонный сок и чеснок — заправьте киноа.','Соберите тарелку: киноа, курица, брокколи.']
+  },
+  {
+    name:'Лосось с брокколи на пару', emoji:'🐟', kcal:460, p:40, f:22, c:18, meal:'lunch',
+    tags:['Обед','Омега-3','ПП'],
+    ingredients:['Филе лосося — 180 г','Брокколи — 200 г','Лимон — ½ шт','Оливковое масло — 1 ч.л.','Соль, перец, укроп'],
+    steps:['Лосось посолите, поперчите, полейте лимонным соком.','Готовьте на пару или в духовке 180°C 15–18 мин.','Брокколи приготовьте на пару 7 мин — должна остаться упругой.','Подавайте с долькой лимона и свежим укропом.']
+  },
+  {
+    name:'Чечевичный суп', emoji:'🍲', kcal:390, p:20, f:6, c:62, meal:'lunch',
+    tags:['Обед','Вегет.','Сытное'],
+    ingredients:['Красная чечевица — 120 г','Морковь — 1 шт','Лук — 1 шт','Томаты в собственном соку — 200 г','Чеснок — 2 зубчика','Оливковое масло — 1 ст.л.','Тмин, куркума, соль — по вкусу','Вода или бульон — 700 мл'],
+    steps:['Лук и морковь нарежьте, обжарьте на масле 5 мин.','Добавьте чеснок, тмин, куркуму — ещё 1 мин.','Добавьте чечевицу, томаты и бульон. Варите 20 мин.','Пробейте блендером до кремовой консистенции. Подавайте с хлебом.']
+  },
+  {
+    name:'Салат Цезарь с курицей', emoji:'🥗', kcal:350, p:28, f:18, c:20, meal:'lunch',
+    tags:['Обед','Лёгкое'],
+    ingredients:['Куриная грудка — 150 г','Листья салата романо — 100 г','Пармезан — 20 г','Цельнозерновые гренки — 30 г','Соус цезарь лёгкий — 2 ст.л.','Лимонный сок — 1 ч.л.'],
+    steps:['Курицу обжарьте или запеките, нарежьте слайсами.','Листья промойте и обсушите, крупно нарвите.','Смешайте листья с соусом и лимонным соком.','Добавьте курицу, гренки, натрите пармезан сверху.']
+  },
+  {
+    name:'Говядина с бурым рисом', emoji:'🥩', kcal:580, p:42, f:18, c:58, meal:'dinner',
+    tags:['Ужин','Сытное','Белковое'],
+    ingredients:['Говяжья вырезка — 180 г','Бурый рис — 80 г сухого','Болгарский перец — 1 шт','Лук — ½ шт','Соевый соус — 1 ст.л.','Оливковое масло — 1 ст.л.','Чеснок — 1 зубчик'],
+    steps:['Рис варите 30–35 мин согласно инструкции.','Говядину нарежьте кусочками, обжарьте на сильном огне 3–4 мин.','Добавьте лук, перец, чеснок — тушите ещё 5 мин.','Влейте соевый соус, перемешайте. Подавайте с рисом.']
+  },
+  {
+    name:'Запечённая треска с картофелем', emoji:'🐠', kcal:430, p:38, f:8, c:48, meal:'dinner',
+    tags:['Ужин','ПП'],
+    ingredients:['Филе трески — 200 г','Картофель — 200 г','Лимон — ½ шт','Оливковое масло — 1 ст.л.','Чеснок — 2 зубчика','Розмарин, соль, перец'],
+    steps:['Картофель нарежьте дольками, смешайте с маслом, чесноком и розмарином.','Запекайте при 200°C 20 мин.','Добавьте треску рядом, полейте лимоном. Ещё 15 мин в духовке.','Готово когда рыба легко разбирается вилкой.']
+  },
+  {
+    name:'Паста с томатным соусом', emoji:'🍝', kcal:580, p:32, f:16, c:72, meal:'dinner',
+    tags:['Ужин','Сытное'],
+    ingredients:['Паста (пенне) — 100 г сухой','Говяжий фарш — 150 г','Томаты в соку — 300 г','Лук — ½ шт','Чеснок — 2 зубчика','Оливковое масло — 1 ст.л.','Базилик, орегано, соль, перец'],
+    steps:['Сварите пасту до состояния al dente согласно инструкции.','Обжарьте лук и чеснок на масле 3 мин.','Добавьте фарш, разбейте комки, жарьте 6 мин.','Добавьте томаты и специи, тушите 15 мин на медленном огне.','Смешайте с пастой, подавайте сразу.']
+  },
+  {
+    name:'Тофу с овощами и соевым соусом', emoji:'🥦', kcal:320, p:22, f:12, c:30, meal:'dinner',
+    tags:['Ужин','Вегет.','Лёгкое'],
+    ingredients:['Твёрдый тофу — 200 г','Брокколи — 150 г','Морковь — 1 шт','Болгарский перец — 1 шт','Соевый соус — 2 ст.л.','Кунжутное масло — 1 ч.л.','Имбирь — 1 ч.л.','Крахмал — 1 ч.л.'],
+    steps:['Тофу нарежьте кубиками и обжарьте до золотистой корочки.','Отдельно обжарьте овощи на сильном огне 4–5 мин.','Смешайте соевый соус, масло, имбирь и крахмал с 2 ст.л. воды.','Добавьте тофу и соус к овощам, перемешайте. Тушите 2 мин.']
+  },
+  {
+    name:'Протеиновый смузи', emoji:'🥤', kcal:280, p:25, f:6, c:32, meal:'snack',
+    tags:['Перекус','Белковое','Быстро'],
+    ingredients:['Молоко 2.5% — 250 мл','Протеин ванильный — 1 мерная ложка (30 г)','Банан — ½ шт','Арахисовая паста — 1 ст.л.','Лёд — 3–4 кубика'],
+    steps:['Все ингредиенты сложите в блендер.','Взбейте до однородности 30–40 секунд.','Перелейте в стакан и подавайте сразу.']
+  },
+  {
+    name:'Яблоко с миндальной пастой', emoji:'🍎', kcal:200, p:5, f:10, c:25, meal:'snack',
+    tags:['Перекус','Лёгкое','Вегет.'],
+    ingredients:['Яблоко — 1 большое','Миндальная паста — 2 ст.л. (30 г)','Корица — щепотка'],
+    steps:['Яблоко нарежьте дольками.','Выложите рядом миндальную пасту.','Посыпьте корицей и наслаждайтесь.']
+  },
+  {
+    name:'Творог с мёдом и орехами', emoji:'🍯', kcal:270, p:22, f:8, c:28, meal:'snack',
+    tags:['Перекус','Белковое','Вегет.'],
+    ingredients:['Творог 5% — 200 г','Мёд — 1 ч.л.','Грецкие орехи — 15 г','Ванилин — щепотка'],
+    steps:['Творог выложите в миску, разомните вилкой для нежной текстуры.','Добавьте ванилин и перемешайте.','Сверху полейте мёдом и посыпьте дроблёными орехами.']
+  },
+];
+
+let gender = 'male';
+let userGoal = 'maintain';
+let profile = null;
+let activeFilter = 'all';
+
+// Load saved profile
+try {
+  const saved = localStorage.getItem('kcalc_profile');
+  if (saved) {
+    profile = JSON.parse(saved);
+    gender = profile.gender;
+    userGoal = profile.userGoal;
+    fillForm();
+  }
+} catch(e) {}
+
+function fillForm() {
+  if (!profile) return;
+  document.getElementById('name').value = profile.name || '';
+  document.getElementById('age').value = profile.a || '';
+  document.getElementById('height').value = profile.h || '';
+  document.getElementById('weight').value = profile.w || '';
+  document.getElementById('waist').value = profile.waist || '';
+  document.getElementById('hips').value = profile.hips || '';
+  document.getElementById('neck').value = profile.neck || '';
+  document.getElementById('activity').value = profile.act || 1.55;
+  setGender(gender);
+  setGoal(userGoal);
+}
+
+function setGender(g) {
+  gender = g;
+  document.getElementById('g-male').classList.toggle('sel', g === 'male');
+  document.getElementById('g-female').classList.toggle('sel', g === 'female');
+}
+
+function setGoal(g) {
+  userGoal = g;
+  ['lose','maintain','gain'].forEach(x =>
+    document.getElementById('goal-'+x).classList.toggle('sel', x === g));
+}
+
+function calcBMR(w, h, a, g) {
+  return g === 'male' ? 10*w + 6.25*h - 5*a + 5 : 10*w + 6.25*h - 5*a - 161;
+}
+
+function calcBF(w, h, waist, hips, neck, g) {
+  if (!waist || !neck || !h) return null;
+  try {
+    if (g === 'male') {
+      return Math.max(3, Math.min(60, 495/(1.0324 - 0.19077*Math.log10(waist-neck) + 0.15456*Math.log10(h)) - 450));
+    } else {
+      if (!hips) return null;
+      return Math.max(8, Math.min(70, 495/(1.29579 - 0.35004*Math.log10(waist+hips-neck) + 0.22100*Math.log10(h)) - 450));
+    }
+  } catch(e) { return null; }
+}
+
+function saveProfile() {
+  const w = parseFloat(document.getElementById('weight').value);
+  const h = parseFloat(document.getElementById('height').value);
+  const a = parseFloat(document.getElementById('age').value);
+  if (!w || !h || !a) { showToast('Введите вес, рост и возраст'); return; }
+
+  const waist = parseFloat(document.getElementById('waist').value) || 0;
+  const hips = parseFloat(document.getElementById('hips').value) || 0;
+  const neck = parseFloat(document.getElementById('neck').value) || 0;
+  const act = parseFloat(document.getElementById('activity').value);
+  const name = document.getElementById('name').value || 'Пользователь';
+
+  const bmr = calcBMR(w, h, a, gender);
+  const tdee = Math.round(bmr * act);
+  const bf = calcBF(w, h, waist, hips, neck, gender);
+  const bmi = w / ((h/100) ** 2);
+
+  profile = {
+    name, w, h, a, waist, hips, neck, gender, act, userGoal,
+    tdee, bmr: Math.round(bmr),
+    bf: bf ? Math.round(bf) : null,
+    bmi,
+    loseCals: tdee - 500,
+    gainCals: tdee + 300
+  };
+
+  try { localStorage.setItem('kcalc_profile', JSON.stringify(profile)); } catch(e) {}
+  showToast('✓ Профиль сохранён!');
+  setTimeout(() => showPage('dashboard'), 700);
+}
+
+function showPage(p) {
+  ['profile','dashboard','recipes'].forEach(x => {
+    document.getElementById('page-'+x).classList.toggle('active', x === p);
+    document.getElementById('nav-'+x).classList.toggle('active', x === p);
+  });
+  if (p === 'dashboard') renderDashboard();
+  if (p === 'recipes') renderRecipes();
+}
+
+function renderDashboard() {
+  const el = document.getElementById('dashboard-content');
+  if (!profile) {
+    el.innerHTML = `<div class="empty"><div class="empty-icon">📊</div><p>Заполните профиль, чтобы увидеть ваш план питания.</p></div>`;
+    return;
+  }
+  const { name, w, bmi, bf, tdee, bmr, loseCals, gainCals } = profile;
+  const cals = profile.userGoal === 'lose' ? loseCals : profile.userGoal === 'gain' ? gainCals : tdee;
+  const protein = Math.round(w * 1.8);
+  const fat = Math.round(cals * 0.25 / 9);
+  const carbs = Math.round((cals - protein*4 - fat*9) / 4);
+  const bmiLabel = bmi < 18.5 ? 'Недовес' : bmi < 25 ? 'Норма' : bmi < 30 ? 'Избыток' : 'Ожирение';
+  const pPct = Math.min(100, Math.round(protein*4*100/cals));
+  const fPct = Math.min(100, Math.round(fat*9*100/cals));
+  const cPct = Math.min(100, Math.round(carbs*4*100/cals));
+
+  el.innerHTML = `
+    <div class="page-title">Привет, ${name} 👋</div>
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-label">ИМТ</div>
+        <div class="stat-value">${bmi.toFixed(1)}<span class="stat-unit">${bmiLabel}</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">${bf !== null ? 'Жир тела' : 'Базовый обмен'}</div>
+        <div class="stat-value">${bf !== null ? bf+'%' : bmr}<span class="stat-unit">${bf !== null ? '' : 'ккал'}</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">TDEE</div>
+        <div class="stat-value">${tdee}<span class="stat-unit">ккал</span></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Базовый обмен</div>
+        <div class="stat-value">${bmr}<span class="stat-unit">ккал</span></div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Выберите цель</div>
+      <div class="kcal-cards">
+        <div class="kcal-card ${profile.userGoal==='lose'?'sel':''}" onclick="selectGoal('lose')">
+          <div class="kcal-title">Похудение</div>
+          <div class="kcal-num">${loseCals}</div>
+          <div class="kcal-sub">ккал/день</div>
+        </div>
+        <div class="kcal-card ${profile.userGoal==='maintain'?'sel':''}" onclick="selectGoal('maintain')">
+          <div class="kcal-title">Поддержание</div>
+          <div class="kcal-num">${tdee}</div>
+          <div class="kcal-sub">ккал/день</div>
+        </div>
+        <div class="kcal-card ${profile.userGoal==='gain'?'sel':''}" onclick="selectGoal('gain')">
+          <div class="kcal-title">Набор массы</div>
+          <div class="kcal-num">${gainCals}</div>
+          <div class="kcal-sub">ккал/день</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Макросы на день — ${cals} ккал</div>
+      <div class="macro">
+        <div class="macro-header"><span class="macro-name">Белки</span><span class="macro-val" style="color:var(--green)">${protein} г</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${pPct}%;background:var(--green)"></div></div>
+      </div>
+      <div class="macro">
+        <div class="macro-header"><span class="macro-name">Жиры</span><span class="macro-val" style="color:var(--amber)">${fat} г</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${fPct}%;background:var(--amber)"></div></div>
+      </div>
+      <div class="macro">
+        <div class="macro-header"><span class="macro-name">Углеводы</span><span class="macro-val" style="color:var(--blue)">${carbs} г</span></div>
+        <div class="bar-bg"><div class="bar-fill" style="width:${cPct}%;background:var(--blue)"></div></div>
+      </div>
+    </div>
+  `;
+}
+
+function selectGoal(g) {
+  if (!profile) return;
+  profile.userGoal = g;
+  userGoal = g;
+  try { localStorage.setItem('kcalc_profile', JSON.stringify(profile)); } catch(e) {}
+  renderDashboard();
+}
+
+function renderRecipes() {
+  const el = document.getElementById('recipes-content');
+  const targetCals = profile ? (profile.userGoal === 'lose' ? profile.loseCals : profile.userGoal === 'gain' ? profile.gainCals : profile.tdee) : null;
+
+  const filters = [
+    { id:'all', label:'Все' }, { id:'breakfast', label:'Завтрак' },
+    { id:'lunch', label:'Обед' }, { id:'dinner', label:'Ужин' }, { id:'snack', label:'Перекус' }
+  ];
+
+  let filtered = RECIPES.filter(r => activeFilter === 'all' || r.meal === activeFilter);
+  if (targetCals) {
+    const mealRatio = { breakfast: 0.25, lunch: 0.35, dinner: 0.35, snack: 0.15 };
+    filtered = [...filtered].sort((a,b) => {
+      const ta = (mealRatio[a.meal]||0.25)*targetCals;
+      const tb = (mealRatio[b.meal]||0.25)*targetCals;
+      return Math.abs(a.kcal-ta) - Math.abs(b.kcal-tb);
+    });
+  }
+
+  el.innerHTML = `
+    <div class="page-title">Рецепты</div>
+    ${targetCals ? `<p style="font-size:13px;color:var(--text3);margin-bottom:12px;">Подобрано под ${targetCals} ккал/день</p>` : ''}
+    <div class="filters">
+      ${filters.map(f=>`<div class="chip ${activeFilter===f.id?'active':''}" onclick="setFilter('${f.id}')">${f.label}</div>`).join('')}
+    </div>
+    ${filtered.map((r,i) => `
+      <div class="recipe-card" onclick="openRecipe(${RECIPES.indexOf(r)})">
+        <div class="recipe-emoji">${r.emoji}</div>
+        <div class="recipe-info">
+          <div class="recipe-name">${r.name}</div>
+          <div class="recipe-tags">${r.tags.map(t=>`<span class="recipe-tag">${t}</span>`).join('')}</div>
+        </div>
+        <div class="recipe-kcal">${r.kcal} ккал</div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function setFilter(f) {
+  activeFilter = f;
+  renderRecipes();
+}
+
+function openRecipe(i) {
+  const r = RECIPES[i];
+  document.getElementById('modal-content').innerHTML = `
+    <span class="modal-close" onclick="closeModal()">✕</span>
+    <div style="font-size:40px;margin-bottom:8px">${r.emoji}</div>
+    <div class="modal-title">${r.name}</div>
+    <div class="modal-kcal">${r.kcal} ккал</div>
+    <div class="macros-row">
+      <div class="macro-pill"><div class="macro-pill-val" style="color:var(--green)">${r.p}г</div><div class="macro-pill-name">Белки</div></div>
+      <div class="macro-pill"><div class="macro-pill-val" style="color:var(--amber)">${r.f}г</div><div class="macro-pill-name">Жиры</div></div>
+      <div class="macro-pill"><div class="macro-pill-val" style="color:var(--blue)">${r.c}г</div><div class="macro-pill-name">Углеводы</div></div>
+    </div>
+    <div class="ingredients-title">Ингредиенты</div>
+    ${r.ingredients.map(ing=>`<div class="ingredient">${ing}</div>`).join('')}
+    <div class="steps-title">Приготовление</div>
+    ${r.steps.map((s,i)=>`<div class="step"><div class="step-num">${i+1}</div><div class="step-text">${s}</div></div>`).join('')}
+  `;
+  document.getElementById('modal-overlay').classList.add('show');
+}
+
+function closeModal(e) {
+  if (!e || e.target === document.getElementById('modal-overlay')) {
+    document.getElementById('modal-overlay').classList.remove('show');
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2200);
+}
+</script>
+</body>
+</html>

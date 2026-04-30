@@ -5,8 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 <meta name="apple-mobile-web-app-capable" content="yes" />
 <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-<meta name="apple-mobile-web-app-title" content="КалоКалк" />
-<title>КалоКалк</title>
+<meta name="apple-mobile-web-app-title" content="Калории 52" />
+<title>Калории 52</title>
 <style>
   :root {
     --green: #1D9E75;
@@ -167,7 +167,7 @@
 
 <div class="app">
   <div class="header">
-    <h1>Кало<span>Калк</span></h1>
+    <h1>Калории <span>52</span></h1>
   </div>
 
   <div class="content" id="main-content">
@@ -214,10 +214,6 @@
           <div class="field">
             <label>Бёдра (см)</label>
             <input type="number" id="hips" placeholder="100" inputmode="numeric" />
-          </div>
-          <div class="field">
-            <label>Шея (см)</label>
-            <input type="number" id="neck" placeholder="38" inputmode="numeric" />
           </div>
         </div>
       </div>
@@ -439,7 +435,7 @@ function saveProfile() {
 
   const waist = parseFloat(document.getElementById('waist').value) || 0;
   const hips = parseFloat(document.getElementById('hips').value) || 0;
-  const neck = parseFloat(document.getElementById('neck').value) || 0;
+  const neck = 0;
   const act = parseFloat(document.getElementById('activity').value);
   const name = document.getElementById('name').value || 'Пользователь';
 

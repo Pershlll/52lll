@@ -225,14 +225,11 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
 </style>
-</head>
-<body>
 
-<!-- ===== SPLASH START ===== -->
 <style>
-#splash-screen {
+#splv {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
+  inset: 0;
   z-index: 9999;
   background: #09090F;
   display: flex;
@@ -240,100 +237,49 @@ input[type=date]{color-scheme:light dark}
   align-items: center;
   justify-content: center;
   gap: 16px;
-  font-family: 'Nunito', sans-serif;
-  pointer-events: none !important;
-  -webkit-user-select: none;
-  user-select: none;
+  font-family: Nunito, sans-serif;
+  pointer-events: none;
+  transition: opacity 0.4s ease;
 }
-#splash-screen .sp-title {
-  font-size: 40px;
-  font-weight: 900;
-  color: #fff;
-  letter-spacing: -1px;
-  text-align: center;
-  line-height: 1;
+#splv.done {
+  opacity: 0;
+  pointer-events: none;
+  display: none;
 }
-#splash-screen .sp-grad {
-  background: linear-gradient(135deg, #A78BFA, #EC4899);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-#splash-screen .sp-emojis {
-  display: flex;
-  gap: 14px;
-  font-size: 36px;
-}
-#splash-screen .sp-bar-wrap {
-  width: 160px;
-  height: 5px;
-  background: rgba(255,255,255,0.12);
-  border-radius: 99px;
-  overflow: hidden;
-}
-#splash-screen .sp-bar-inner {
-  height: 100%;
+#splv-bar {
   width: 0%;
-  background: linear-gradient(90deg, #7C3AED, #EC4899);
+  height: 5px;
+  background: linear-gradient(90deg,#7C3AED,#EC4899);
   border-radius: 99px;
-}
-#splash-screen .sp-by {
-  font-size: 12px;
-  font-weight: 700;
-  letter-spacing: 2px;
-  color: rgba(255,255,255,0.3);
-}
-#splash-screen.sp-hidden {
-  display: none !important;
-  pointer-events: none !important;
-  visibility: hidden !important;
+  transition: width 2.2s linear;
 }
 </style>
-
-<div id="splash-screen">
-  <div class="sp-title">Калории <span class="sp-grad">52</span></div>
-  <div class="sp-emojis">
-    <span>🍎</span><span>❤️</span><span>⚡</span><span>🥗</span>
-  </div>
-  <div class="sp-bar-wrap">
-    <div class="sp-bar-inner" id="splash-bar"></div>
-  </div>
-  <div class="sp-by">by Persh</div>
+</head>
+<body>
+<div id="splv">
+  <div style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center;line-height:1">Калории <span style="background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">52</span></div>
+  <div style="display:flex;gap:16px;font-size:36px"><span>🍎</span><span>❤️</span><span>⚡</span><span>🥗</span></div>
+  <div style="width:160px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden"><div id="splv-bar"></div></div>
+  <div style="font-size:12px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3)">by Persh</div>
 </div>
-
 <script>
-(function() {
-  var el = document.getElementById('splash-screen');
-  var bar = document.getElementById('splash-bar');
-  if (!el) return;
-
-  // Hide function — use class with !important to override everything
-  function hideSplash() {
-    el.className = 'sp-hidden';
-    el.setAttribute('style', 'display:none!important;pointer-events:none!important;visibility:hidden!important;position:static!important;');
-    el.style.cssText = 'display:none;pointer-events:none;visibility:hidden;position:static;z-index:-1;';
-    if (el.parentNode) el.parentNode.removeChild(el);
+// Runs immediately after the div is parsed
+var _spl = document.getElementById('splv');
+var _bar = document.getElementById('splv-bar');
+// Start bar animation on next frame
+setTimeout(function(){ if(_bar) _bar.style.width = '100%'; }, 50);
+// Remove splash after 2.8s
+setTimeout(function(){
+  if(_spl){ 
+    _spl.style.opacity = '0';
+    _spl.style.transition = 'opacity 0.35s ease';
+    setTimeout(function(){ 
+      if(_spl && _spl.parentNode) _spl.parentNode.removeChild(_spl);
+      _spl = null;
+    }, 380);
   }
-
-  // Animate bar
-  var pct = 0;
-  var iv = setInterval(function() {
-    pct += 1.5;
-    if (bar) bar.style.width = Math.min(pct, 100) + '%';
-    if (pct >= 100) {
-      clearInterval(iv);
-      hideSplash();
-    }
-  }, 30); // 30ms * 67 steps ≈ 2 seconds
-
-  // Absolute fallback
-  setTimeout(function() {
-    clearInterval(iv);
-    hideSplash();
-  }, 4000);
-}());
+}, 2800);
 </script>
-<!-- ===== SPLASH END ===== -->
 
 <div class="app">
   <div class="hdr">

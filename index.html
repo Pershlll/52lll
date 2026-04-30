@@ -286,6 +286,27 @@ input[type=date]{color-scheme:light dark}
   <div class="kb-by">by Persh</div>
 </div>
 
+<script>
+// Splash - own script tag, runs immediately, independent of main JS
+(function(){
+  function hideSplash(){
+    var el=document.getElementById('kb-splash');
+    if(!el)return;
+    el.style.transition='opacity .4s ease';
+    el.style.opacity='0';
+    setTimeout(function(){el.style.display='none';},420);
+  }
+  // Primary: hide when bar animation ends
+  var bar=document.querySelector('.kb-bf');
+  if(bar){
+    bar.addEventListener('animationend',function(){
+      setTimeout(hideSplash,200);
+    });
+  }
+  // Fallback: always hide after 3s no matter what
+  setTimeout(hideSplash,3000);
+})();
+</script>
 <div class="app">
   <div class="hdr">
     <div>
@@ -1224,14 +1245,5 @@ document.addEventListener('click',function(e){
 
 
 
-// SPLASH
-(function(){
-  var el=document.getElementById('kb-splash');
-  if(!el)return;
-  setTimeout(function(){
-    el.classList.add('kb-out');
-    setTimeout(function(){el.style.display='none';},460);
-  },2400);
-})();
 
 </script>

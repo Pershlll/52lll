@@ -225,80 +225,109 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
 </style>
-
-<style>
-#K52splash{
-  position:fixed;top:0;left:0;right:0;bottom:0;
-  z-index:9999;
-  background:#09090F;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-  pointer-events:none;
-  font-family:Nunito,sans-serif;
-  gap:14px;
-}
-#K52splash h1{
-  font-size:36px;
-  font-weight:900;
-  color:#fff;
-  letter-spacing:-1px;
-  margin:0;
-}
-#K52splash h1 span{
-  background:linear-gradient(135deg,#A78BFA,#EC4899);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-#K52splash .sp-row{
-  font-size:38px;
-}
-#K52splash .sp-by{
-  font-size:12px;
-  font-weight:700;
-  letter-spacing:2px;
-  color:rgba(255,255,255,0.35);
-}
-</style>
 </head>
 <body>
-<div id="K52splash">
-  <h1>Калории <span>52</span></h1>
-  <div class="sp-row">🍎 ❤️ ⚡ 🥗</div>
+
+<!-- ===== SPLASH START ===== -->
+<style>
+#splash-screen {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  z-index: 9999;
+  background: #09090F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  pointer-events: none;
+  font-family: 'Nunito', sans-serif;
+}
+#splash-screen .sp-title {
+  font-size: 40px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1px;
+  text-align: center;
+  line-height: 1;
+}
+#splash-screen .sp-title .sp-grad {
+  background: linear-gradient(135deg, #A78BFA, #EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#splash-screen .sp-emojis {
+  display: flex;
+  gap: 14px;
+  font-size: 36px;
+}
+#splash-screen .sp-bar-wrap {
+  width: 160px;
+  height: 5px;
+  background: rgba(255,255,255,0.12);
+  border-radius: 99px;
+  overflow: hidden;
+}
+#splash-screen .sp-bar-inner {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #7C3AED, #EC4899);
+  border-radius: 99px;
+}
+#splash-screen .sp-by {
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+}
+</style>
+
+<div id="splash-screen">
+  <div class="sp-title">Калории <span class="sp-grad">52</span></div>
+  <div class="sp-emojis">
+    <span>🍎</span>
+    <span>❤️</span>
+    <span>⚡</span>
+    <span>🥗</span>
+  </div>
+  <div class="sp-bar-wrap">
+    <div class="sp-bar-inner" id="splash-bar"></div>
+  </div>
   <div class="sp-by">by Persh</div>
 </div>
+
 <script>
-(function(){
-  var el = document.getElementById('K52splash');
-  if (!el) return;
-  // Hide after 2.5 seconds
-  setTimeout(function(){
-    el.style.opacity = '0';
-    el.style.transition = 'opacity 0.4s';
-    setTimeout(function(){ el.style.display = 'none'; }, 450);
-  }, 2500);
-})();
+// Splash screen — own isolated script
+(function() {
+  var screen = document.getElementById('splash-screen');
+  var bar = document.getElementById('splash-bar');
+  if (!screen || !bar) return;
+
+  // Animate bar with setInterval (works in all browsers including old Safari)
+  var progress = 0;
+  var interval = setInterval(function() {
+    progress += 1;
+    bar.style.width = progress + '%';
+    if (progress >= 100) {
+      clearInterval(interval);
+      // Hide splash
+      screen.style.transition = 'opacity 0.4s ease';
+      screen.style.opacity = '0';
+      setTimeout(function() {
+        screen.style.display = 'none';
+      }, 450);
+    }
+  }, 22); // 22ms * 100 steps = ~2.2 seconds
+
+  // Hard fallback — hide after 5 seconds no matter what
+  setTimeout(function() {
+    clearInterval(interval);
+    screen.style.display = 'none';
+  }, 5000);
+}());
 </script>
-
-<div id="sp-ov">
-  <div id="sp-glow"></div>
-  <div id="sp-logo">Калории <em>52</em></div>
-  <div id="sp-icons">
-    <div id="sp-db">
-      <div id="sp-db-bar"></div>
-      <div id="sp-db-l1"></div><div id="sp-db-l2"></div>
-      <div id="sp-db-r1"></div><div id="sp-db-r2"></div>
-    </div>
-    <div id="sp-i0">🍎</div>
-    <div id="sp-i1">❤️</div>
-    <div id="sp-i2">⚡</div>
-    <div id="sp-i3">🥗</div>
-  </div>
-  <div id="sp-bar-wrap"><div id="sp-bar-fill"></div></div>
-  <div id="sp-by">by Persh</div>
-</div>
-
+<!-- ===== SPLASH END ===== -->
 
 <div class="app">
   <div class="hdr">
@@ -411,7 +440,6 @@ input[type=date]{color-scheme:light dark}
 
 <script>
 
-// Haptic feedback
 function hap(t){try{if(navigator.vibrate)navigator.vibrate(t==='s'?[10,20,10]:10);}catch(e){}}
 document.addEventListener('click',function(e){
   if(e.target.closest('.btn,.chip,.gc,.ni,.food-option,.fl-del,.pe-del,.fri,.ir-edit'))hap();

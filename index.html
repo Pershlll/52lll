@@ -224,89 +224,126 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 .cl-item li{font-size:12px;font-weight:600;color:var(--tx2);line-height:1.7}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
-
-
-/* SPLASH */
-@keyframes KB_out{to{opacity:0;pointer-events:none}}
-@keyframes KB_rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
-@keyframes KB_bar{from{width:0%}to{width:100%}}
-@keyframes KB_pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.18);opacity:1}}
-@keyframes KB_spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes KB_bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
-@keyframes KB_pop0{0%,89%,100%{opacity:0;transform:scale(.5)}90%{opacity:1;transform:scale(1.2)}95%{opacity:1;transform:scale(1)}}
-@keyframes KB_pop1{0%,14%,35%,100%{opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1.2)}25%{opacity:1;transform:scale(1)}}
-@keyframes KB_pop2{0%,49%,69%,100%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.2)}60%{opacity:1;transform:scale(1)}}
-@keyframes KB_pop3{0%,64%,84%,100%{opacity:0;transform:scale(.5)}65%{opacity:1;transform:scale(1.2)}75%{opacity:1;transform:scale(1)}}
-@keyframes KB_hb{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
-.kb-splash{position:fixed;inset:0;z-index:9999;background:#09090F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-family:'Nunito',sans-serif}
-.kb-splash.kb-out{animation:KB_out .45s ease forwards}
-.kb-glow{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.38) 0%,transparent 68%);animation:KB_pulse 2.4s ease-in-out infinite}
-.kb-title{font-size:38px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center;position:relative;z-index:2;opacity:0;animation:KB_rise .5s .05s ease forwards}
-.kb-title em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.kb-scene{width:200px;height:200px;position:relative;z-index:2;flex-shrink:0}
-/* Dumbbell */
-.kb-db{position:absolute;top:50%;left:50%;width:140px;height:30px;margin:-15px 0 0 -70px;animation:KB_spin 5s linear infinite}
-.kb-bar{position:absolute;top:50%;left:50%;width:80px;height:7px;margin:-3.5px 0 0 -40px;background:linear-gradient(135deg,#9D5CF6,#7C3AED);border-radius:4px}
-.kb-pl{position:absolute;top:50%;height:28px;width:16px;margin-top:-14px;border-radius:5px;background:linear-gradient(135deg,#9D5CF6,#EC4899)}
-.kb-pl.l1{left:4px}.kb-pl.l2{left:0px;width:12px;height:22px;margin-top:-11px;background:#7C3AED}
-.kb-pl.r1{right:4px}.kb-pl.r2{right:0px;width:12px;height:22px;margin-top:-11px;background:#7C3AED}
-/* Icons */
-.kb-ico{position:absolute;font-size:26px;z-index:3;opacity:0;transform-origin:center}
-.kb-ico.i0{top:10px;left:10px;animation:KB_pop0 2.4s .7s ease infinite}
-.kb-ico.i1{top:10px;right:10px;animation:KB_pop1 2.4s .7s ease infinite;display:inline-block}
-.kb-ico.i1 span{display:inline-block;animation:KB_hb 1.1s ease infinite}
-.kb-ico.i2{bottom:10px;left:10px;animation:KB_pop2 2.4s .7s ease infinite}
-.kb-ico.i3{bottom:10px;right:10px;animation:KB_pop3 2.4s .7s ease infinite}
-/* Bar */
-.kb-bw{width:160px;height:5px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;position:relative;z-index:2}
-.kb-bf{height:100%;border-radius:99px;background:linear-gradient(90deg,#7C3AED,#EC4899);animation:KB_bar 2.1s .1s ease forwards}
-.kb-by{font-size:11px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.28);position:relative;z-index:2;opacity:0;animation:KB_rise .4s .55s ease forwards}
-
 </style>
+
+<style id="sp-css">
+#sp-ov{position:fixed;inset:0;z-index:9999;background:#09090F;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:8px;font-family:'Nunito',sans-serif;transition:opacity .45s ease}
+#sp-ov.sp-gone{opacity:0;pointer-events:none}
+#sp-logo{font-size:38px;font-weight:900;color:#fff;letter-spacing:-1px;
+  opacity:0;transform:translateY(-20px);transition:opacity .5s ease,transform .5s ease}
+#sp-logo em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#sp-icons{font-size:36px;width:190px;height:190px;position:relative;flex-shrink:0}
+#sp-db{position:absolute;top:50%;left:50%;width:130px;height:26px;
+  margin:-13px 0 0 -65px;border-radius:5px;overflow:visible}
+#sp-db-bar{position:absolute;top:50%;left:50%;width:80px;height:7px;margin:-3.5px 0 0 -40px;
+  background:linear-gradient(90deg,#9D5CF6,#EC4899);border-radius:4px}
+#sp-db-l1,#sp-db-l2,#sp-db-r1,#sp-db-r2{position:absolute;top:50%;border-radius:4px;background:linear-gradient(135deg,#9D5CF6,#7C3AED)}
+#sp-db-l1{left:0;width:16px;height:26px;margin-top:-13px}
+#sp-db-l2{left:-9px;width:12px;height:20px;margin-top:-10px;background:#7C3AED}
+#sp-db-r1{right:0;width:16px;height:26px;margin-top:-13px}
+#sp-db-r2{right:-9px;width:12px;height:20px;margin-top:-10px;background:#7C3AED}
+#sp-i0,#sp-i1,#sp-i2,#sp-i3{position:absolute;font-size:30px;opacity:0;
+  transition:opacity .35s ease,transform .35s ease;transform:scale(.5)}
+#sp-i0{top:8px;left:8px}#sp-i1{top:8px;right:8px}
+#sp-i2{bottom:8px;left:8px}#sp-i3{bottom:8px;right:8px}
+#sp-bar-wrap{width:160px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+#sp-bar-fill{height:100%;width:0;border-radius:99px;
+  background:linear-gradient(90deg,#7C3AED,#EC4899)}
+#sp-by{font-size:11px;font-weight:700;letter-spacing:1.5px;
+  color:rgba(255,255,255,.28);opacity:0;transition:opacity .5s ease}
+#sp-glow{position:absolute;width:280px;height:280px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.35) 0%,transparent 68%);pointer-events:none}
+</style>
+
 </head>
 <body>
-<!-- SPLASH -->
-<div class="kb-splash" id="kb-splash">
-  <div class="kb-glow"></div>
-  <div class="kb-title">Калории <em>52</em></div>
-  <div class="kb-scene">
-    <div class="kb-db">
-      <div class="kb-bar"></div>
-      <div class="kb-pl l1"></div>
-      <div class="kb-pl l2"></div>
-      <div class="kb-pl r1"></div>
-      <div class="kb-pl r2"></div>
+
+<div id="sp-ov">
+  <div id="sp-glow"></div>
+  <div id="sp-logo">Калории <em>52</em></div>
+  <div id="sp-icons">
+    <div id="sp-db">
+      <div id="sp-db-bar"></div>
+      <div id="sp-db-l1"></div><div id="sp-db-l2"></div>
+      <div id="sp-db-r1"></div><div id="sp-db-r2"></div>
     </div>
-    <div class="kb-ico i0">🍎</div>
-    <div class="kb-ico i1"><span>❤️</span></div>
-    <div class="kb-ico i2">⚡</div>
-    <div class="kb-ico i3">🥗</div>
+    <div id="sp-i0">🍎</div>
+    <div id="sp-i1">❤️</div>
+    <div id="sp-i2">⚡</div>
+    <div id="sp-i3">🥗</div>
   </div>
-  <div class="kb-bw"><div class="kb-bf"></div></div>
-  <div class="kb-by">by Persh</div>
+  <div id="sp-bar-wrap"><div id="sp-bar-fill"></div></div>
+  <div id="sp-by">by Persh</div>
 </div>
 
+
 <script>
-// Splash - own script tag, runs immediately, independent of main JS
+// === SPLASH - standalone script, no deps ===
 (function(){
-  function hideSplash(){
-    var el=document.getElementById('kb-splash');
-    if(!el)return;
-    el.style.transition='opacity .4s ease';
-    el.style.opacity='0';
-    setTimeout(function(){el.style.display='none';},420);
+  var ov   = document.getElementById('sp-ov');
+  var logo = document.getElementById('sp-logo');
+  var byEl = document.getElementById('sp-by');
+  var bar  = document.getElementById('sp-bar-fill');
+  var db   = document.getElementById('sp-db');
+  var icons= ['sp-i0','sp-i1','sp-i2','sp-i3'];
+
+  if(!ov) return;
+
+  function hide(){
+    ov.classList.add('sp-gone');
+    setTimeout(function(){ ov.style.display='none'; }, 500);
   }
-  // Primary: hide when bar animation ends
-  var bar=document.querySelector('.kb-bf');
-  if(bar){
-    bar.addEventListener('animationend',function(){
-      setTimeout(hideSplash,200);
-    });
+
+  // Hard fallback — ALWAYS hides after 3s regardless of everything
+  var killTimer = setTimeout(hide, 3000);
+
+  // Animate logo + by in
+  setTimeout(function(){
+    logo.style.opacity='1';
+    logo.style.transform='translateY(0)';
+    byEl.style.opacity='1';
+  }, 80);
+
+  // Spin dumbbell with JS (no CSS animation needed)
+  var angle = 0;
+  var spinTimer = setInterval(function(){
+    angle = (angle + 3) % 360;
+    db.style.transform = 'rotate('+angle+'deg)';
+  }, 16);
+
+  // Pop icons sequentially
+  var delays = [300, 550, 800, 1050];
+  icons.forEach(function(id, i){
+    setTimeout(function(){
+      var el = document.getElementById(id);
+      if(el){ el.style.opacity='1'; el.style.transform='scale(1)'; }
+    }, delays[i]);
+  });
+
+  // Animate progress bar with JS (requestAnimationFrame)
+  var startTime = null;
+  var duration  = 2200; // ms
+  function animBar(ts){
+    if(!startTime) startTime = ts;
+    var pct = Math.min(1, (ts - startTime) / duration);
+    bar.style.width = (pct * 100) + '%';
+    if(pct < 1){
+      requestAnimationFrame(animBar);
+    } else {
+      // Bar complete → hide after short pause
+      clearTimeout(killTimer);
+      clearInterval(spinTimer);
+      setTimeout(hide, 250);
+    }
   }
-  // Fallback: always hide after 3s no matter what
-  setTimeout(hideSplash,3000);
+  requestAnimationFrame(animBar);
+
 })();
 </script>
+
 <div class="app">
   <div class="hdr">
     <div>
@@ -394,6 +431,14 @@ input[type=date]{color-scheme:light dark}
 <div class="fs-ov" id="fs-ov" onclick="closeFs()"><div class="fs-close" onclick="closeFs()">✕</div><img class="fs-img" id="fs-img" src="" alt=""/></div>
 
 <script>
+
+// Haptic feedback
+function hap(t){try{if(navigator.vibrate)navigator.vibrate(t==='s'?[10,20,10]:10);}catch(e){}}
+document.addEventListener('click',function(e){
+  if(e.target.closest('.btn,.chip,.gc,.ni,.food-option,.fl-del,.pe-del,.fri,.ir-edit'))hap();
+  if(e.target.closest('.btn-p,.btn-g,.btn-o'))hap('s');
+},true);
+
 // ══════════════ FOOD DATABASE (100+ items) ══════════════
 const FOODS=[
   // ПТИЦА
@@ -1172,7 +1217,6 @@ function addFl(){
 function rmFl(i){foodLog.splice(i,1);sv('k52_fl_'+td(),foodLog);rCalc();}
 function clrFl(){foodLog=[];sv('k52_fl_'+td(),foodLog);selMeal=null;selCat=null;rCalc();}
 
-
 // ══════════════ CHANGELOG ══════════════
 function rLog(){
   document.getElementById('log-b').innerHTML=`<div class="ptitle">📋 История обновлений</div>
@@ -1220,30 +1264,6 @@ function rLog(){
 // ══════════════ MODAL / TOAST ══════════════
 function closeMo(e){if(!e||e.target===document.getElementById('mo'))document.getElementById('mo').classList.remove('on');}
 function showT(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
-
-// ══════ HAPTICS ══════
-function hap(type){
-  try{
-    if(navigator.vibrate){
-      if(type==='light')navigator.vibrate(8);
-      else if(type==='success')navigator.vibrate([10,30,10]);
-      else navigator.vibrate(12);
-    }
-  }catch(e){}
-}
-// Inject haptics on all .btn, .chip, .gc, .ni, .food-option clicks
-document.addEventListener('click',function(e){
-  const el=e.target.closest('.btn,.chip,.gc,.ni,.food-option,.fl-del,.ci-chk,.pe-del,.ir-edit,.fri');
-  if(el)hap('light');
-},true);
-document.addEventListener('click',function(e){
-  const el=e.target.closest('.btn-p,.btn-g,.btn-o,.btn-r');
-  if(el)hap('success');
-},true);
-
-
-
-
-
-
 </script>
+</body>
+</html>

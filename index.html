@@ -1,3 +1,4 @@
+<!-- v5-clean -->
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -225,62 +226,8 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
 </style>
-
-<style>
-#splv {
-  position: fixed;
-  inset: 0;
-  z-index: 9999;
-  background: #09090F;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 16px;
-  font-family: Nunito, sans-serif;
-  pointer-events: none;
-  transition: opacity 0.4s ease;
-}
-#splv.done {
-  opacity: 0;
-  pointer-events: none;
-  display: none;
-}
-#splv-bar {
-  width: 0%;
-  height: 5px;
-  background: linear-gradient(90deg,#7C3AED,#EC4899);
-  border-radius: 99px;
-  transition: width 2.2s linear;
-}
-</style>
 </head>
 <body>
-<div id="splv">
-  <div style="font-size:40px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center;line-height:1">Калории <span style="background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">52</span></div>
-  <div style="display:flex;gap:16px;font-size:36px"><span>🍎</span><span>❤️</span><span>⚡</span><span>🥗</span></div>
-  <div style="width:160px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden"><div id="splv-bar"></div></div>
-  <div style="font-size:12px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3)">by Persh</div>
-</div>
-<script>
-// Runs immediately after the div is parsed
-var _spl = document.getElementById('splv');
-var _bar = document.getElementById('splv-bar');
-// Start bar animation on next frame
-setTimeout(function(){ if(_bar) _bar.style.width = '100%'; }, 50);
-// Remove splash after 2.8s
-setTimeout(function(){
-  if(_spl){ 
-    _spl.style.opacity = '0';
-    _spl.style.transition = 'opacity 0.35s ease';
-    setTimeout(function(){ 
-      if(_spl && _spl.parentNode) _spl.parentNode.removeChild(_spl);
-      _spl = null;
-    }, 380);
-  }
-}, 2800);
-</script>
-
 <div class="app">
   <div class="hdr">
     <div>

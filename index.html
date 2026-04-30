@@ -224,9 +224,55 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 .cl-item li{font-size:12px;font-weight:600;color:var(--tx2);line-height:1.7}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
+
+/* SPLASH */
+.splash{position:fixed;inset:0;z-index:9999;background:#0D0D14;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
+.splash.hide{animation:splashOut .55s ease forwards}
+@keyframes splashOut{to{opacity:0;transform:scale(1.06);pointer-events:none}}
+.sp-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(124,58,237,.35) 0%,transparent 70%)}
+.sp-title{font-size:38px;font-weight:900;letter-spacing:-1px;color:#fff;opacity:0;transform:translateY(-40px);animation:spT .6s .2s cubic-bezier(.34,1.4,.64,1) forwards;text-align:center;font-family:'Nunito',sans-serif}
+.sp-title span{background:linear-gradient(135deg,#9D5CF6,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.sp-sub{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);margin-top:6px;opacity:0;animation:spT .5s .5s ease forwards;font-family:'Nunito',sans-serif;letter-spacing:.5px}
+@keyframes spT{to{opacity:1;transform:translateY(0)}}
+.sp-figure{position:relative;width:180px;height:220px;margin:20px 0}
+.sp-body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:90px;height:160px;background:linear-gradient(180deg,#9D5CF6 0%,#7C3AED 100%);border-radius:45px 45px 30px 30px;animation:bodyBob 1.8s ease-in-out infinite}
+.sp-head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:54px;height:54px;background:linear-gradient(135deg,#F9C784,#E8A86A);border-radius:50%;animation:bodyBob 1.8s ease-in-out infinite}
+.sp-arm-l,.sp-arm-r{position:absolute;bottom:60px;width:28px;height:70px;background:linear-gradient(180deg,#7C3AED,#6D28D9);border-radius:14px;animation:flex 1.8s ease-in-out infinite}
+.sp-arm-l{left:8px;transform-origin:top center;transform:rotate(30deg);animation-name:armL}
+.sp-arm-r{right:8px;transform-origin:top center;transform:rotate(-30deg);animation-name:armR}
+.sp-bicep-l,.sp-bicep-r{position:absolute;width:22px;height:22px;background:linear-gradient(135deg,#A78BFA,#7C3AED);border-radius:50%;top:18px}
+.sp-bicep-l{left:-2px;animation:bicep 1.8s ease-in-out infinite}
+.sp-bicep-r{right:-2px;animation:bicep 1.8s ease-in-out infinite}
+.sp-star{position:absolute;font-size:14px;animation:starPop .4s ease forwards;pointer-events:none}
+@keyframes starPop{0%{opacity:0;transform:scale(0) rotate(0deg)}60%{opacity:1;transform:scale(1.3) rotate(20deg)}100%{opacity:0;transform:scale(.8) rotate(40deg) translateY(-30px)}}
+@keyframes bodyBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
+@keyframes armL{0%,100%{transform:rotate(30deg)}50%{transform:rotate(55deg)}}
+@keyframes armR{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(-55deg)}}
+@keyframes bicep{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
+.sp-bar{width:160px;height:4px;background:rgba(255,255,255,.12);border-radius:99px;margin-top:10px;overflow:hidden}
+.sp-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#7C3AED,#EC4899);animation:barFill 1.8s ease forwards}
+@keyframes barFill{from{width:0}to{width:100%}}
+.sp-loading{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);margin-top:8px;font-family:'Nunito',sans-serif;letter-spacing:.5px}
+
 </style>
 </head>
 <body>
+
+<!-- SPLASH SCREEN -->
+<div class="splash" id="splash">
+  <div class="sp-bg"></div>
+  <div class="sp-title">Калории <span>52</span></div>
+  <div class="sp-sub">by Persh</div>
+  <div class="sp-figure" id="sp-fig">
+    <div class="sp-body"></div>
+    <div class="sp-head"></div>
+    <div class="sp-arm-l"><div class="sp-bicep-l"></div></div>
+    <div class="sp-arm-r"><div class="sp-bicep-r"></div></div>
+  </div>
+  <div class="sp-bar"><div class="sp-bar-fill"></div></div>
+  <div class="sp-loading">Загрузка...</div>
+</div>
+
 <div class="app">
   <div class="hdr">
     <div>
@@ -843,111 +889,217 @@ function addE(){
 function delE(i){entries.splice(i,1);sv('k52_en',entries);rProg();}
 function fmtD(d){return new Date(d+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});}
 
-// ══════════════ CALCULATOR-CONSTRUCTOR ══════════════
+// ══════════════ CALCULATOR-CONSTRUCTOR (MEAL MODE) ══════════════
+// meal split: breakfast 25%, lunch 35%, dinner 30%, snack 10%
+const MEAL_SPLIT={breakfast:.25,lunch:.35,dinner:.30,snack:.10};
+const MEAL_NAMES={breakfast:'🌅 Завтрак',lunch:'🍽️ Обед',dinner:'🌙 Ужин',snack:'🍎 Перекус'};
+let selMeal=null; // which meal user is building
+let selCat=null;  // which category inside meal
+
+function getMealTargets(meal){
+  const cals=getCals()||2000;
+  const split=MEAL_SPLIT[meal]||.25;
+  const mealCals=Math.round(cals*split);
+  const prot=pro?Math.round(pro.w*1.8):Math.round(cals*.30/4);
+  const fat=Math.round(cals*.25/9);
+  const carb=Math.round((cals-prot*4-fat*9)/4);
+  // Scale macros to meal proportion
+  return{
+    cals:mealCals,
+    p:Math.round(prot*split),
+    f:Math.round(fat*split),
+    c:Math.round(carb*split),
+  };
+}
+
+// Calories eaten in this meal today (from foodLog, tagged by meal)
+function getMealEaten(meal){
+  const items=foodLog.filter(x=>x.meal===meal);
+  return items.reduce((a,x)=>({k:a.k+x.k,p:a.p+x.p,f:a.f+x.f,c:a.c+x.c}),{k:0,p:0,f:0,c:0});
+}
+
 function rCalc(){
   const el=document.getElementById('calc-b');
   const cals=getCals()||2000;
+
+  // Full day totals
+  const totDay={k:0,p:0,f:0,c:0};
+  foodLog.forEach(x=>{totDay.k+=x.k;totDay.p+=x.p;totDay.f+=x.f;totDay.c+=x.c;});
+  const pct=Math.min(100,Math.round(totDay.k/cals*100));
   const prot=pro?Math.round(pro.w*1.8):Math.round(cals*.30/4);
   const fat=Math.round(cals*.25/9);
   const carb=Math.round((cals-prot*4-fat*9)/4);
 
-  // Daily totals from log
-  const tot={k:0,p:0,f:0,c:0};foodLog.forEach(x=>{tot.k+=x.k;tot.p+=x.p;tot.f+=x.f;tot.c+=x.c;});
-  const pct=Math.min(100,Math.round(tot.k/cals*100));
-
-  // Remaining
-  const remP=Math.max(0,prot-Math.round(tot.p));
-  const remF=Math.max(0,fat-Math.round(tot.f));
-  const remC=Math.max(0,carb-Math.round(tot.c));
-  const remK=Math.max(0,cals-Math.round(tot.k));
-
-  const cats=[
-    {id:'protein',ico:'🥩',nm:'Белки',cal:remP*4,col:'var(--gr)',rem:remP,unit:'г'},
-    {id:'fat',ico:'🥑',nm:'Жиры',cal:remF*9,col:'var(--am)',rem:remF,unit:'г'},
-    {id:'carb',ico:'🍚',nm:'Углеводы',cal:remC*4,col:'var(--bl)',rem:remC,unit:'г'},
-    {id:'other',ico:'💧',nm:'Напитки',cal:0,col:'var(--cy)',rem:0,unit:''},
-  ];
-
-  let constructorHtml='';
-  if(selCat){
-    const cat=cats.find(c=>c.id===selCat);
-    const foods=FOODS.filter(f=>f.cat===selCat);
-    const remKcal=remK;
-
-    constructorHtml=`<div class="card">
-      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <div style="font-size:15px;font-weight:900">${cat?cat.ico:''} ${cat?cat.nm:'Все продукты'}</div>
-        <button class="btn btn-ghost btn-sm" onclick="selCat=null;rCalc()">← Назад</button>
+  // If no meal selected — show meal picker
+  if(!selMeal){
+    const meals=['breakfast','lunch','dinner','snack'];
+    el.innerHTML=`<div class="ptitle">Счётчик-конструктор 🧮</div>
+    <div style="text-align:center;margin-bottom:12px">
+      <div class="dt-n">${Math.round(totDay.k)}</div>
+      <div class="dt-l">из ${cals} ккал сегодня</div>
+      <div class="dt-bar"><div class="dt-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx3)">осталось ${Math.max(0,cals-Math.round(totDay.k))} ккал</div>
+    </div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="fr3">
+        <div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--gr)">${Math.round(totDay.p)}/${prot}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Белки</div></div>
+        <div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--am)">${Math.round(totDay.f)}/${fat}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Жиры</div></div>
+        <div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--bl)">${Math.round(totDay.c)}/${carb}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Углеводы</div></div>
       </div>
-      <div style="font-size:12px;font-weight:700;color:var(--tx3);margin-bottom:12px">
-        Осталось: <span style="color:var(--pu);font-weight:900">${remK} ккал</span>
-        ${cat&&cat.rem>0?' · '+cat.nm+': <span style="color:var(--pu);font-weight:900">'+cat.rem+cat.unit+'</span>':''}
-      </div>
-      ${foods.map(fd=>{
-        // How many grams can you eat from this food within remaining kcal
-        const maxG=fd.k>0?Math.round(remKcal/fd.k*100):9999;
-        const status=maxG>=150?'ok':maxG>=70?'warn':'no';
-        const badge=status==='ok'?'✅ Ок':status==='warn'?'⚠️ Немного':'❌ Много';
-        const desc=fd.k>0?`${maxG}г · Б:${(fd.p*maxG/100).toFixed(0)}г Ж:${(fd.f*maxG/100).toFixed(0)}г У:${(fd.c*maxG/100).toFixed(0)}г`:'Без калорий';
-        return`<div class="food-option ${status}" onclick="quickAddFood('${fd.n.replace(/'/g,"\\'")}',${maxG>0&&fd.k>0?Math.min(maxG,500):200})">
-          <div class="fo-ico">${fd.e}</div>
+    </div>
+    <div class="card">
+      <div class="lbl">Выберите приём пищи</div>
+      ${meals.map(m=>{
+        const tgt=getMealTargets(m);
+        const eaten=getMealEaten(m);
+        const remK=Math.max(0,tgt.cals-Math.round(eaten.k));
+        const done=eaten.k>=tgt.cals*.9;
+        return`<div class="food-option ${done?'ok':''}" onclick="hap();selMeal='${m}';selCat=null;rCalc()" style="margin-bottom:8px">
+          <div class="fo-ico" style="font-size:28px;width:44px;height:44px">${MEAL_NAMES[m].split(' ')[0]}</div>
           <div class="fo-info">
-            <div class="fo-name">${fd.n}</div>
-            <div class="fo-desc">${fd.k} ккал/100г · можно: ${desc}</div>
+            <div class="fo-name">${MEAL_NAMES[m].split(' ').slice(1).join(' ')}</div>
+            <div class="fo-desc">Цель: ${tgt.cals} ккал · Б:${tgt.p}г Ж:${tgt.f}г У:${tgt.c}г</div>
+            <div style="font-size:11px;font-weight:800;color:${done?'var(--gr)':'var(--pu)'};margin-top:3px">${done?'✅ Выполнено':'Осталось: '+remK+' ккал'}</div>
           </div>
-          <div class="fo-badge ${status}">${badge}</div>
+          <div style="font-size:11px;font-weight:900;color:${done?'var(--gr)':'var(--tx3)'};white-space:nowrap">${Math.round(eaten.k)}/${tgt.cals}<br>ккал</div>
         </div>`;
       }).join('')}
-    </div>`;
+    </div>
+    <div class="card">
+      <div class="lbl">Быстрый поиск продукта</div>
+      <div class="sw"><span class="si-ico">🔍</span><input class="si" type="text" id="fs" placeholder="Название продукта..." oninput="srchFd()" autocomplete="off"/></div>
+      <div class="fres" id="fres"></div>
+      <div id="pb" style="display:none">
+        <div style="font-size:13px;font-weight:800;color:var(--tx2);margin-bottom:8px" id="sfn"></div>
+        <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px">Приём пищи: <select id="meal-sel" style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;padding:4px 8px;border-radius:8px;border:2px solid var(--bd2);background:var(--bg);color:var(--tx)"><option value="breakfast">Завтрак</option><option value="lunch">Обед</option><option value="dinner">Ужин</option><option value="snack">Перекус</option></select></div>
+        <div class="pr-row"><input class="pi" type="number" id="pg" placeholder="100" inputmode="decimal" step="1" value="100" oninput="updPv()"/><span style="font-size:12px;font-weight:700;color:var(--tx2)" id="pu">г</span></div>
+        <div id="pp" style="margin-bottom:10px;font-size:12px;font-weight:700;color:var(--tx3)"></div>
+        <button class="btn btn-g" onclick="addFl()">Добавить ➕</button>
+      </div>
+    </div>
+    ${renderFoodLog()}`;
+    updPv();
+    return;
   }
 
-  el.innerHTML=`<div class="ptitle">Счётчик-конструктор 🧮</div>
-  <div style="text-align:center;margin-bottom:12px">
-    <div class="dt-n">${Math.round(tot.k)}</div>
-    <div class="dt-l">из ${cals} ккал сегодня</div>
-    <div class="dt-bar"><div class="dt-fill" style="width:${pct}%"></div></div>
-    <div style="font-size:11px;font-weight:700;color:var(--tx3)">осталось ${remK} ккал</div>
-  </div>
-  <div class="card" style="margin-bottom:12px">
-    <div class="fr3">
-      <div style="text-align:center"><div style="font-size:16px;font-weight:900;color:var(--gr)">${Math.round(tot.p)}/${prot}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Белки</div></div>
-      <div style="text-align:center"><div style="font-size:16px;font-weight:900;color:var(--am)">${Math.round(tot.f)}/${fat}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Жиры</div></div>
-      <div style="text-align:center"><div style="font-size:16px;font-weight:900;color:var(--bl)">${Math.round(tot.c)}/${carb}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Углеводы</div></div>
-    </div>
-  </div>
+  // Meal selected — show macro categories
+  const tgt=getMealTargets(selMeal);
+  const eaten=getMealEaten(selMeal);
+  const remP=Math.max(0,tgt.p-Math.round(eaten.p));
+  const remF=Math.max(0,tgt.f-Math.round(eaten.f));
+  const remC=Math.max(0,tgt.c-Math.round(eaten.c));
+  const remK=Math.max(0,tgt.cals-Math.round(eaten.k));
 
-  ${!selCat?`<div class="card">
-    <div class="lbl">Выберите категорию</div>
-    <div class="cat-grid">
-      ${cats.map(c=>`<div class="cat-card" onclick="selCat='${c.id}';rCalc()">
-        <div class="cat-ico">${c.ico}</div>
-        <div class="cat-nm">${c.nm}</div>
-        <div class="cat-cal">${c.rem>0?'осталось '+c.rem+c.unit:'✅'}</div>
+  const cats=[
+    {id:'protein',ico:'🥩',nm:'Белки',target:tgt.p,eaten:Math.round(eaten.p),rem:remP,unit:'г',col:'var(--gr)'},
+    {id:'fat',ico:'🥑',nm:'Жиры',target:tgt.f,eaten:Math.round(eaten.f),rem:remF,unit:'г',col:'var(--am)'},
+    {id:'carb',ico:'🍚',nm:'Углеводы',target:tgt.c,eaten:Math.round(eaten.c),rem:remC,unit:'г',col:'var(--bl)'},
+    {id:'other',ico:'💧',nm:'Напитки',target:0,eaten:0,rem:0,unit:'',col:'var(--cy)'},
+  ];
+
+  if(!selCat){
+    // Show category picker for this meal
+    el.innerHTML=`<div class="ptitle">${MEAL_NAMES[selMeal]}</div>
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>
+          <div style="font-size:15px;font-weight:900">Цель на приём: ${tgt.cals} ккал</div>
+          <div style="font-size:12px;font-weight:700;color:var(--tx3)">Съедено: ${Math.round(eaten.k)} ккал · Осталось: ${remK} ккал</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="hap();selMeal=null;rCalc()">← Назад</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+        ${cats.slice(0,3).map(c=>{
+          const pct2=c.target>0?Math.min(100,Math.round(c.eaten/c.target*100)):0;
+          return`<div style="text-align:center;background:var(--bg);border-radius:10px;padding:10px 4px">
+            <div style="font-size:18px;font-weight:900;color:${c.col}">${c.eaten}/${c.target}${c.unit}</div>
+            <div style="font-size:9px;font-weight:700;color:var(--tx3);margin-top:2px">${c.nm}</div>
+            <div style="height:5px;border-radius:99px;background:var(--bd2);overflow:hidden;margin-top:5px">
+              <div style="height:100%;border-radius:99px;background:${c.col};width:${pct2}%;transition:width .4s"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="lbl">Выберите категорию продуктов</div>
+      ${cats.map(c=>`<div class="food-option ${c.rem===0&&c.id!=='other'?'ok':''}" onclick="hap();selCat='${c.id}';rCalc()" style="margin-bottom:8px">
+        <div class="fo-ico" style="font-size:28px;width:44px;height:44px;font-size:24px">${c.ico}</div>
+        <div class="fo-info">
+          <div class="fo-name">${c.nm}</div>
+          ${c.target>0?`<div class="fo-desc">Цель: ${c.target}${c.unit} · Съедено: ${c.eaten}${c.unit}</div>
+          <div style="font-size:11px;font-weight:800;color:${c.rem===0?'var(--gr)':'var(--pu)'};margin-top:3px">${c.rem===0?'✅ Выполнено':'Осталось: '+c.rem+c.unit+' (≈'+(c.rem*(c.id==='protein'?4:c.id==='fat'?9:4))+' ккал)'}</div>`:
+          '<div class="fo-desc">Вода, чай, кофе и другое</div>'}
+        </div>
+        <div style="font-size:20px">›</div>
       </div>`).join('')}
     </div>
-    <div class="lbl" style="margin-top:10px">Или найдите продукт</div>
-    <div class="sw"><span class="si-ico">🔍</span><input class="si" type="text" id="fs" placeholder="Название продукта..." oninput="srchFd()" autocomplete="off"/></div>
-    <div class="fres" id="fres"></div>
-    <div id="pb" style="display:none">
-      <div style="font-size:13px;font-weight:800;color:var(--tx2);margin-bottom:8px" id="sfn"></div>
-      <div class="pr-row"><input class="pi" type="number" id="pg" placeholder="100" inputmode="decimal" step="1" value="100" oninput="updPv()"/><span style="font-size:12px;font-weight:700;color:var(--tx2)" id="pu">г</span></div>
-      <div id="pp" style="margin-bottom:10px;font-size:12px;font-weight:700;color:var(--tx3)"></div>
-      <button class="btn btn-g" onclick="addFl()">Добавить ➕</button>
-    </div>
-  </div>`:constructorHtml}
+    ${renderFoodLog(selMeal)}`;
+    return;
+  }
 
-  <div id="flog">
-  ${foodLog.length===0?'<div class="empty"><div class="empty-ico">🍽️</div><p>Выберите категорию выше<br>или найдите продукт</p></div>':''}
-  ${foodLog.map((f,i)=>'<div class="fl-item"><div class="fl-ico">'+f.e+'</div><div class="fl-info"><div class="fl-nm">'+f.n+'</div><div class="fl-dt">'+f.portion+' '+f.u+'</div><div class="fl-macs"><span class="fm fm-p">Б:'+f.p.toFixed(1)+'г</span><span class="fm fm-f">Ж:'+f.f.toFixed(1)+'г</span><span class="fm fm-c">У:'+f.c.toFixed(1)+'г</span></div></div><div class="fl-k">'+f.k+' ккал</div><div class="fl-del" onclick="rmFl('+i+')">✕</div></div>').join('')}
-  ${foodLog.length>0?'<button class="btn btn-ghost mt" onclick="clrFl()">Очистить 🗑️</button>':''}
-  </div>`;
-  updPv();
+  // Category selected — show food list
+  const cat=cats.find(c=>c.id===selCat);
+  const foods=FOODS.filter(f=>f.cat===selCat);
+  const remKcal=remK;
+
+  el.innerHTML=`<div class="ptitle">${cat.ico} ${cat.nm} — ${MEAL_NAMES[selMeal].split(' ').slice(1).join(' ')}</div>
+  <div class="card" style="margin-bottom:11px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:14px;font-weight:900">Нужно: <span style="color:${cat.col}">${cat.rem}${cat.unit}</span> ${cat.nm.toLowerCase()}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--tx3)">≈ ${Math.round(cat.rem*(selCat==='protein'?4:selCat==='fat'?9:4))} ккал · Осталось на приём: ${remK} ккал</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="hap();selCat=null;rCalc()">← Назад</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-top:8px;padding:8px;background:var(--bg);border-radius:8px">
+      ✅ — вписывается в норму &nbsp; ⚠️ — немного &nbsp; ❌ — превышает норму
+    </div>
+  </div>
+  <div class="card">
+  ${foods.map(fd=>{
+    // How many grams to meet the macro target for this category
+    const macroKey=selCat==='protein'?'p':selCat==='fat'?'f':selCat==='carb'?'c':null;
+    let recGrams=200;
+    if(macroKey&&fd[macroKey]>0){
+      recGrams=Math.round(cat.rem/fd[macroKey]*100);
+    }
+    recGrams=Math.max(10,Math.min(recGrams,600));
+    // Check if it fits by kcal too
+    const kcalUsed=Math.round(fd.k*recGrams/100);
+    const status=kcalUsed<=remKcal*1.1?'ok':kcalUsed<=remKcal*1.5?'warn':'no';
+    const badge=status==='ok'?'✅ Ок':status==='warn'?'⚠️ Много':'❌ Превышает';
+    const descMacro=macroKey?`${recGrams}г → ${cat.nm}: ${(fd[macroKey]*recGrams/100).toFixed(0)}${cat.unit}`:`${recGrams}г`;
+    return`<div class="food-option ${status}" onclick="hap();quickAddFood('${fd.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}',${recGrams},'${selMeal}')" style="margin-bottom:8px">
+      <div class="fo-ico">${fd.e}</div>
+      <div class="fo-info">
+        <div class="fo-name">${fd.n}</div>
+        <div class="fo-desc">${fd.k} ккал/100г · рекомендую: ${descMacro}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-top:2px">${kcalUsed} ккал за ${recGrams}г</div>
+      </div>
+      <div class="fo-badge ${status}">${badge}</div>
+    </div>`;
+  }).join('')}
+  </div>
+  ${renderFoodLog(selMeal)}`;
 }
 
-function quickAddFood(name,grams){
+function renderFoodLog(meal){
+  const items=meal?foodLog.filter(x=>x.meal===meal):foodLog;
+  if(items.length===0)return'<div class="empty"><div class="empty-ico">🍽️</div><p>'+(meal?'В этот приём пока ничего нет':'Начните добавлять продукты')+'</p></div>';
+  return'<div style="margin-top:4px">'+
+  items.map((f,i)=>{
+    const realIdx=foodLog.indexOf(f);
+    return'<div class="fl-item"><div class="fl-ico">'+f.e+'</div><div class="fl-info"><div class="fl-nm">'+f.n+'</div><div class="fl-dt">'+f.portion+' '+f.u+(f.meal?' · '+MEAL_NAMES[f.meal].split(' ').slice(1).join(' '):'')+'</div><div class="fl-macs"><span class="fm fm-p">Б:'+f.p.toFixed(1)+'г</span><span class="fm fm-f">Ж:'+f.f.toFixed(1)+'г</span><span class="fm fm-c">У:'+f.c.toFixed(1)+'г</span></div></div><div class="fl-k">'+f.k+' ккал</div><div class="fl-del" onclick="hap();rmFl('+realIdx+')">✕</div></div>';
+  }).join('')+
+  '<button class="btn btn-ghost mt" onclick="hap();clrFl()">Очистить 🗑️</button></div>';
+}
+
+function quickAddFood(name,grams,meal){
   const fd=FOODS.find(f=>f.n===name);if(!fd)return;
-  const g=Math.min(grams,500);const r=g/100;
-  foodLog.push({n:fd.n,e:fd.e,u:fd.u,portion:g,k:Math.round(fd.k*r),p:parseFloat((fd.p*r).toFixed(1)),f:parseFloat((fd.f*r).toFixed(1)),c:parseFloat((fd.c*r).toFixed(1))});
+  const g=Math.max(1,Math.min(grams,600));const r=g/100;
+  const m=meal||selMeal||'breakfast';
+  foodLog.push({n:fd.n,e:fd.e,u:fd.u,portion:g,meal:m,k:Math.round(fd.k*r),p:parseFloat((fd.p*r).toFixed(1)),f:parseFloat((fd.f*r).toFixed(1)),c:parseFloat((fd.c*r).toFixed(1))});
   sv('k52_fl_'+td(),foodLog);
   showT('✅ '+fd.n+' ('+g+'г) добавлено');
   selCat=null;rCalc();
@@ -959,7 +1111,7 @@ function srchFd(){
   if(q.length<2){res.classList.remove('on');return;}
   const found=FOODS.filter(f=>f.n.toLowerCase().includes(q)).slice(0,7);
   if(!found.length){res.innerHTML='<div class="fri"><span class="fri-n">Ничего не найдено</span></div>';res.classList.add('on');return;}
-  res.innerHTML=found.map(f=>'<div class="fri" onclick="selFd2(\''+f.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')"><div class="fri-n">'+f.e+' '+f.n+'<small>Б:'+f.p+' Ж:'+f.f+' У:'+f.c+' на 100'+f.u+'</small></div><div class="fri-k">'+f.k+'кк</div></div>').join('');
+  res.innerHTML=found.map(f=>'<div class="fri" onclick="hap();selFd2(\''+f.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')"><div class="fri-n">'+f.e+' '+f.n+'<small>Б:'+f.p+' Ж:'+f.f+' У:'+f.c+' на 100'+f.u+'</small></div><div class="fri-k">'+f.k+'кк</div></div>').join('');
   res.classList.add('on');
 }
 function selFd2(name){
@@ -978,11 +1130,14 @@ function updPv(){
 function addFl(){
   if(!selFd)return;
   const g=parseFloat(document.getElementById('pg').value)||100,r=g/100;
-  foodLog.push({n:selFd.n,e:selFd.e,u:selFd.u,portion:g,k:Math.round(selFd.k*r),p:parseFloat((selFd.p*r).toFixed(1)),f:parseFloat((selFd.f*r).toFixed(1)),c:parseFloat((selFd.c*r).toFixed(1))});
+  const mealEl=document.getElementById('meal-sel');
+  const m=mealEl?mealEl.value:(selMeal||'breakfast');
+  foodLog.push({n:selFd.n,e:selFd.e,u:selFd.u,portion:g,meal:m,k:Math.round(selFd.k*r),p:parseFloat((selFd.p*r).toFixed(1)),f:parseFloat((selFd.f*r).toFixed(1)),c:parseFloat((selFd.c*r).toFixed(1))});
   sv('k52_fl_'+td(),foodLog);selFd=null;document.getElementById('pb').style.display='none';rCalc();
 }
 function rmFl(i){foodLog.splice(i,1);sv('k52_fl_'+td(),foodLog);rCalc();}
-function clrFl(){foodLog=[];sv('k52_fl_'+td(),foodLog);rCalc();}
+function clrFl(){foodLog=[];sv('k52_fl_'+td(),foodLog);selMeal=null;selCat=null;rCalc();}
+
 
 // ══════════════ CHANGELOG ══════════════
 function rLog(){
@@ -1031,6 +1186,51 @@ function rLog(){
 // ══════════════ MODAL / TOAST ══════════════
 function closeMo(e){if(!e||e.target===document.getElementById('mo'))document.getElementById('mo').classList.remove('on');}
 function showT(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
+
+// ══════ HAPTICS ══════
+function hap(type){
+  try{
+    if(navigator.vibrate){
+      if(type==='light')navigator.vibrate(8);
+      else if(type==='success')navigator.vibrate([10,30,10]);
+      else navigator.vibrate(12);
+    }
+  }catch(e){}
+}
+// Inject haptics on all .btn, .chip, .gc, .ni, .food-option clicks
+document.addEventListener('click',function(e){
+  const el=e.target.closest('.btn,.chip,.gc,.ni,.food-option,.fl-del,.ci-chk,.pe-del,.ir-edit,.fri');
+  if(el)hap('light');
+},true);
+document.addEventListener('click',function(e){
+  const el=e.target.closest('.btn-p,.btn-g,.btn-o,.btn-r');
+  if(el)hap('success');
+},true);
+
+
+// SPLASH INIT
+(function(){
+  var splash=document.getElementById('splash');
+  if(!splash)return;
+  var fig=document.getElementById('sp-fig');
+  var stars=['💪','⚡','✨','🔥','💥'];
+  var t=0;
+  var si=setInterval(function(){
+    var s=document.createElement('div');
+    s.className='sp-star';
+    s.textContent=stars[Math.floor(Math.random()*stars.length)];
+    s.style.left=(20+Math.random()*130)+'px';
+    s.style.top=(20+Math.random()*100)+'px';
+    if(fig)fig.appendChild(s);
+    setTimeout(function(){if(s.parentNode)s.parentNode.removeChild(s);},650);
+    t++;if(t>10)clearInterval(si);
+  },190);
+  setTimeout(function(){
+    splash.classList.add('hide');
+    setTimeout(function(){if(splash.parentNode)splash.parentNode.removeChild(splash);},580);
+  },2300);
+})();
+
 </script>
 </body>
 </html>

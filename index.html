@@ -226,171 +226,44 @@ input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
 </style>
 
-  <script>
-    // Show splash immediately before page renders
-    document.addEventListener('DOMContentLoaded', function() {
-      var spl = document.getElementById('spl');
-      if (!spl) return;
-
-      // Show the overlay
-      spl.style.display = 'flex';
-
-      var logo  = document.getElementById('spl-logo');
-      var byEl  = document.getElementById('spl-by');
-      var bar   = document.getElementById('spl-pf');
-      var db    = document.getElementById('spl-db');
-      var angle = 0;
-      var spin;
-
-      // Fade in logo
-      setTimeout(function(){ if(logo){ logo.style.transition='opacity .4s'; logo.style.opacity='1'; } }, 50);
-      setTimeout(function(){ if(byEl){ byEl.style.transition='opacity .4s'; byEl.style.opacity='1'; } }, 300);
-
-      // Pop icons
-      [[50,'spl-i0'],[250,'spl-i1'],[450,'spl-i2'],[650,'spl-i3']].forEach(function(x){
-        setTimeout(function(){
-          var el = document.getElementById(x[1]);
-          if(el){ el.style.transition='opacity .3s'; el.style.opacity='1'; }
-        }, x[0]);
-      });
-
-      // Spin dumbbell
-      spin = setInterval(function(){
-        angle = (angle + 4) % 360;
-        if(db) db.style.transform = 'rotate('+angle+'deg)';
-      }, 16);
-
-      // Grow progress bar over 2s using timestamps
-      var t0 = null;
-      var TOTAL = 2000;
-      function frame(ts){
-        if(!t0) t0 = ts;
-        var pct = Math.min(1, (ts - t0) / TOTAL);
-        if(bar) bar.style.width = (pct * 100) + '%';
-        if(pct < 1){
-          requestAnimationFrame(frame);
-        } else {
-          clearInterval(spin);
-          // Hide splash
-          spl.style.transition = 'opacity .4s ease';
-          spl.style.opacity = '0';
-          setTimeout(function(){
-            spl.style.display = 'none';
-            spl.style.pointerEvents = 'none';
-          }, 420);
-        }
-      }
-      requestAnimationFrame(frame);
-
-      // Absolute backup: always hide after 4s
-      setTimeout(function(){
-        if(spl && spl.style.display !== 'none'){
-          clearInterval(spin);
-          spl.style.display = 'none';
-          spl.style.pointerEvents = 'none';
-        }
-      }, 4000);
-    });
-  </script>
-
-<style>
-@keyframes spl-hide{0%,80%{opacity:1;pointer-events:all}99%{opacity:0;pointer-events:none}100%{opacity:0;pointer-events:none;display:none}}
-@keyframes spl-bar{from{transform:scaleX(0)}to{transform:scaleX(1)}}
-@keyframes spl-up{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}
-@keyframes spl-spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-@keyframes spl-pop{0%,100%{opacity:0;transform:scale(.4)}15%,85%{opacity:1;transform:scale(1)}}
-#spl{
-  position:fixed;inset:0;z-index:9999;
-  background:#09090F;
-  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
-  font-family:'Nunito',sans-serif;
-  animation:spl-hide 2.8s ease forwards;
-  pointer-events:all;
-}
-#spl-logo{
-  font-size:36px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center;
-  animation:spl-up .5s .1s ease both;
-}
-#spl-logo em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-#spl-scene{width:180px;height:180px;position:relative;flex-shrink:0}
-#spl-db{
-  position:absolute;top:50%;left:50%;
-  width:120px;height:26px;margin:-13px 0 0 -60px;
-  animation:spl-spin 3s linear infinite;
-}
-#spl-db-bar{
-  position:absolute;top:50%;left:50%;
-  width:70px;height:7px;margin:-3.5px 0 0 -35px;
-  background:linear-gradient(90deg,#9D5CF6,#EC4899);border-radius:4px;
-}
-.spl-wt{position:absolute;top:50%;border-radius:4px;background:linear-gradient(135deg,#9D5CF6,#7C3AED)}
-#spl-l1{left:2px;width:15px;height:24px;margin-top:-12px}
-#spl-l2{left:-6px;width:10px;height:18px;margin-top:-9px;background:#6D28D9}
-#spl-r1{right:2px;width:15px;height:24px;margin-top:-12px}
-#spl-r2{right:-6px;width:10px;height:18px;margin-top:-9px;background:#6D28D9}
-#spl-i0,#spl-i1,#spl-i2,#spl-i3{
-  position:absolute;font-size:26px;
-  animation:spl-pop 2.8s ease both;
-}
-#spl-i0{top:6px;left:6px;animation-delay:.3s}
-#spl-i1{top:6px;right:6px;animation-delay:.55s}
-#spl-i2{bottom:6px;left:6px;animation-delay:.8s}
-#spl-i3{bottom:6px;right:6px;animation-delay:1.05s}
-#spl-glow{
-  position:absolute;width:240px;height:240px;border-radius:50%;
-  background:radial-gradient(circle,rgba(124,58,237,.32) 0%,transparent 68%);
-  pointer-events:none;
-}
-#spl-pw{width:150px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
-#spl-pf{
-  height:100%;border-radius:99px;
-  background:linear-gradient(90deg,#7C3AED,#EC4899);
-  transform-origin:left;
-  animation:spl-bar 2.2s .1s ease forwards;
-}
-#spl-by{
-  font-size:11px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.3);
-  animation:spl-up .4s .4s ease both;
-}
-</style>
 </head>
 <body>
-<div id="spl">
-  <div id="spl-glow"></div>
-  <div id="spl-logo">Калории <em>52</em></div>
-  <div id="spl-scene">
-    <div id="spl-db">
-      <div id="spl-db-bar"></div>
-      <div class="spl-wt" id="spl-l1"></div>
-      <div class="spl-wt" id="spl-l2"></div>
-      <div class="spl-wt" id="spl-r1"></div>
-      <div class="spl-wt" id="spl-r2"></div>
-    </div>
-    <div id="spl-i0">🍎</div>
-    <div id="spl-i1">❤️</div>
-    <div id="spl-i2">⚡</div>
-    <div id="spl-i3">🥗</div>
-  </div>
-  <div id="spl-pw"><div id="spl-pf"></div></div>
-  <div id="spl-by">by Persh</div>
+<style>
+@keyframes SP_fade{0%{opacity:1}70%{opacity:1}100%{opacity:0;visibility:hidden}}
+#SP{position:fixed;inset:0;z-index:9999;background:#09090F;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:12px;font-family:'Nunito',sans-serif;
+  animation:SP_fade 2.8s ease forwards;
+  pointer-events:none;
+  -webkit-animation:SP_fade 2.8s ease forwards;}
+#SP-t{font-size:38px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center}
+#SP-t em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#SP-icons{font-size:40px;letter-spacing:10px}
+#SP-by{font-size:12px;font-weight:700;letter-spacing:2px;color:rgba(255,255,255,.3)}
+</style>
+<div id="SP">
+  <div id="SP-t">Калории <em>52</em></div>
+  <div id="SP-icons">🍎❤️⚡🥗</div>
+  <div id="SP-by">by Persh</div>
 </div>
 
-        <div id="spl-logo">Калории <em>52</em></div>
-      <div id="spl-scene">
-        <div id="spl-db">
-          <div id="spl-dbbar"></div>
-          <div id="spl-l1"></div><div id="spl-l2"></div>
-          <div id="spl-r1"></div><div id="spl-r2"></div>
-        </div>
-        <div id="spl-i0">🍎</div>
-        <div id="spl-i1">❤️</div>
-        <div id="spl-i2">⚡</div>
-        <div id="spl-i3">🥗</div>
-      </div>
-      <div id="spl-pw"><div id="spl-pf"></div></div>
-      <div id="spl-by">by Persh</div>
+  <div id="sp-logo">Калории <em>52</em></div>
+  <div id="sp-icons">
+    <div id="sp-db">
+      <div id="sp-db-bar"></div>
+      <div id="sp-db-l1"></div><div id="sp-db-l2"></div>
+      <div id="sp-db-r1"></div><div id="sp-db-r2"></div>
     </div>
+    <div id="sp-i0">🍎</div>
+    <div id="sp-i1">❤️</div>
+    <div id="sp-i2">⚡</div>
+    <div id="sp-i3">🥗</div>
   </div>
+  <div id="sp-bar-wrap"><div id="sp-bar-fill"></div></div>
+  <div id="sp-by">by Persh</div>
+</div>
+
 
 <div class="app">
   <div class="hdr">
@@ -461,7 +334,7 @@ input[type=date]{color-scheme:light dark}
     <!-- CART -->
     <div id="pg-cart" class="pg"><div id="cart-b"></div></div>
     <!-- CHANGELOG -->
-    </div>
+    <div id="pg-log" class="pg"><div id="log-b"></div></div>
   </div>
   <div class="nav">
     <button class="ni on" id="n-profile" onclick="go('profile')"><span class="nic">👤</span>Профиль</button>
@@ -474,26 +347,26 @@ input[type=date]{color-scheme:light dark}
   </div>
 <div class="mo" id="mo-cl" onclick="if(event.target===this)this.classList.remove('on')">
   <div class="modal"><div class="m-bar"></div>
-  <div style="padding:16px 18px 40px">
-    <div style="font-size:18px;font-weight:900;margin-bottom:14px">📋 История обновлений</div>
-    <div class="cl-item"><div class="cl-v">Версия 3.0 — текущая</div><ul>
-      <li>🧮 Конструктор калорий по приёмам пищи</li>
-      <li>✅ Исправлено сохранение фото профиля</li>
-      <li>✅ Ручной калораж работает везде</li>
-      <li>📸 Фото прогресса — полный экран</li>
-      <li>🎬 Заставка при запуске</li>
-      <li>📳 Тактильные нажатия</li>
-    </ul></div>
-    <div class="cl-item"><div class="cl-v">Версия 2.0</div><ul>
-      <li>📈 Прогресс: замеры + фото + графики</li>
-      <li>🛒 Корзина покупок из рецептов</li>
-      <li>✏️ Редактор ингредиентов с пересчётом КБЖУ</li>
-    </ul></div>
-    <div class="cl-item"><div class="cl-v">Версия 1.0</div><ul>
-      <li>👤 Профиль и расчёт BMR/TDEE/ИМТ</li>
-      <li>🍽️ Рецепты под ваш калораж</li>
-    </ul></div>
-  </div></div>
+    <div style="padding:16px 18px 40px">
+      <div style="font-size:18px;font-weight:900;margin-bottom:14px">📋 Что нового</div>
+      <div class="cl-item"><div class="cl-v">Версия 3.0</div><ul>
+        <li>🧮 Конструктор по приёмам пищи с авторасчётом БЖУ</li>
+        <li>✅ Ручной калораж работает везде</li>
+        <li>📸 Фото прогресса в полный экран</li>
+        <li>🍽️ 22 рецепта, 100+ продуктов</li>
+        <li>📳 Тактильные нажатия</li>
+      </ul></div>
+      <div class="cl-item"><div class="cl-v">Версия 2.0</div><ul>
+        <li>📈 Прогресс: замеры + фото + графики</li>
+        <li>🛒 Корзина покупок из рецептов</li>
+        <li>✏️ Редактор ингредиентов с пересчётом КБЖУ</li>
+      </ul></div>
+      <div class="cl-item"><div class="cl-v">Версия 1.0</div><ul>
+        <li>👤 Профиль и расчёт BMR/TDEE/ИМТ</li>
+        <li>🍽️ Рецепты с подбором под калораж</li>
+      </ul></div>
+    </div>
+  </div>
 </div>
 </div>
 <div class="toast" id="toast"></div>
@@ -504,6 +377,7 @@ input[type=date]{color-scheme:light dark}
 
 <script>
 
+// Haptic feedback
 function hap(t){try{if(navigator.vibrate)navigator.vibrate(t==='s'?[10,20,10]:10);}catch(e){}}
 document.addEventListener('click',function(e){
   if(e.target.closest('.btn,.chip,.gc,.ni,.food-option,.fl-del,.pe-del,.fri,.ir-edit'))hap();

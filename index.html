@@ -225,145 +225,65 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
 
+
 /* SPLASH */
-.splash{position:fixed;inset:0;z-index:9999;background:#0D0D14;display:flex;flex-direction:column;align-items:center;justify-content:center;overflow:hidden}
-.splash.hide{animation:splashOut .55s ease forwards}
-@keyframes splashOut{to{opacity:0;transform:scale(1.06);pointer-events:none}}
-.sp-bg{position:absolute;inset:0;background:radial-gradient(ellipse at 50% 80%,rgba(124,58,237,.35) 0%,transparent 70%)}
-.sp-title{font-size:38px;font-weight:900;letter-spacing:-1px;color:#fff;opacity:0;transform:translateY(-40px);animation:spT .6s .2s cubic-bezier(.34,1.4,.64,1) forwards;text-align:center;font-family:'Nunito',sans-serif}
-.sp-title span{background:linear-gradient(135deg,#9D5CF6,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.sp-sub{font-size:13px;font-weight:700;color:rgba(255,255,255,.4);margin-top:6px;opacity:0;animation:spT .5s .5s ease forwards;font-family:'Nunito',sans-serif;letter-spacing:.5px}
-@keyframes spT{to{opacity:1;transform:translateY(0)}}
-.sp-figure{position:relative;width:180px;height:220px;margin:20px 0}
-.sp-body{position:absolute;bottom:0;left:50%;transform:translateX(-50%);width:90px;height:160px;background:linear-gradient(180deg,#9D5CF6 0%,#7C3AED 100%);border-radius:45px 45px 30px 30px;animation:bodyBob 1.8s ease-in-out infinite}
-.sp-head{position:absolute;top:0;left:50%;transform:translateX(-50%);width:54px;height:54px;background:linear-gradient(135deg,#F9C784,#E8A86A);border-radius:50%;animation:bodyBob 1.8s ease-in-out infinite}
-.sp-arm-l,.sp-arm-r{position:absolute;bottom:60px;width:28px;height:70px;background:linear-gradient(180deg,#7C3AED,#6D28D9);border-radius:14px;animation:flex 1.8s ease-in-out infinite}
-.sp-arm-l{left:8px;transform-origin:top center;transform:rotate(30deg);animation-name:armL}
-.sp-arm-r{right:8px;transform-origin:top center;transform:rotate(-30deg);animation-name:armR}
-.sp-bicep-l,.sp-bicep-r{position:absolute;width:22px;height:22px;background:linear-gradient(135deg,#A78BFA,#7C3AED);border-radius:50%;top:18px}
-.sp-bicep-l{left:-2px;animation:bicep 1.8s ease-in-out infinite}
-.sp-bicep-r{right:-2px;animation:bicep 1.8s ease-in-out infinite}
-.sp-star{position:absolute;font-size:14px;animation:starPop .4s ease forwards;pointer-events:none}
-@keyframes starPop{0%{opacity:0;transform:scale(0) rotate(0deg)}60%{opacity:1;transform:scale(1.3) rotate(20deg)}100%{opacity:0;transform:scale(.8) rotate(40deg) translateY(-30px)}}
-@keyframes bodyBob{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-6px)}}
-@keyframes armL{0%,100%{transform:rotate(30deg)}50%{transform:rotate(55deg)}}
-@keyframes armR{0%,100%{transform:rotate(-30deg)}50%{transform:rotate(-55deg)}}
-@keyframes bicep{0%,100%{transform:scale(1)}50%{transform:scale(1.25)}}
-.sp-bar{width:160px;height:4px;background:rgba(255,255,255,.12);border-radius:99px;margin-top:10px;overflow:hidden}
-.sp-bar-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,#7C3AED,#EC4899);animation:barFill 1.8s ease forwards}
-@keyframes barFill{from{width:0}to{width:100%}}
-.sp-loading{font-size:11px;font-weight:700;color:rgba(255,255,255,.3);margin-top:8px;font-family:'Nunito',sans-serif;letter-spacing:.5px}
-
-
-/* ── SPLASH ── */
-.spl{position:fixed;inset:0;z-index:9999;background:#0A0A12;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:0;font-family:'Nunito',sans-serif}
-.spl.bye{animation:splBye .5s ease forwards;pointer-events:none}
-@keyframes splBye{to{opacity:0;transform:scale(1.05)}}
-.spl-glow{position:absolute;width:340px;height:340px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.35) 0%,transparent 68%);animation:glP 2.4s ease-in-out infinite}
-@keyframes glP{0%,100%{transform:scale(1)}50%{transform:scale(1.12)}}
-.spl-title{font-size:40px;font-weight:900;color:#fff;letter-spacing:-1px;opacity:0;transform:translateY(-28px);animation:spRise .55s .1s cubic-bezier(.34,1.4,.64,1) forwards;text-align:center;position:relative;z-index:2}
-.spl-title em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.spl-art{width:200px;height:200px;position:relative;z-index:2;margin:10px 0 6px}
-.spl-bw{width:164px;height:5px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;position:relative;z-index:2}
-.spl-bf{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,#7C3AED,#EC4899);animation:spBF 2s .1s ease forwards}
-@keyframes spBF{0%{width:0}70%{width:88%}100%{width:100%}}
-.spl-by{font-size:12px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.28);opacity:0;animation:spRise .4s .6s ease forwards;margin-top:9px;position:relative;z-index:2}
-@keyframes spRise{to{opacity:1;transform:translateY(0)}}
+@keyframes KB_out{to{opacity:0;pointer-events:none}}
+@keyframes KB_rise{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+@keyframes KB_bar{from{width:0%}to{width:100%}}
+@keyframes KB_pulse{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.18);opacity:1}}
+@keyframes KB_spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+@keyframes KB_bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-5px)}}
+@keyframes KB_pop0{0%,89%,100%{opacity:0;transform:scale(.5)}90%{opacity:1;transform:scale(1.2)}95%{opacity:1;transform:scale(1)}}
+@keyframes KB_pop1{0%,14%,35%,100%{opacity:0;transform:scale(.5)}15%{opacity:1;transform:scale(1.2)}25%{opacity:1;transform:scale(1)}}
+@keyframes KB_pop2{0%,49%,69%,100%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.2)}60%{opacity:1;transform:scale(1)}}
+@keyframes KB_pop3{0%,64%,84%,100%{opacity:0;transform:scale(.5)}65%{opacity:1;transform:scale(1.2)}75%{opacity:1;transform:scale(1)}}
+@keyframes KB_hb{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+.kb-splash{position:fixed;inset:0;z-index:9999;background:#09090F;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;font-family:'Nunito',sans-serif}
+.kb-splash.kb-out{animation:KB_out .45s ease forwards}
+.kb-glow{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(124,58,237,.38) 0%,transparent 68%);animation:KB_pulse 2.4s ease-in-out infinite}
+.kb-title{font-size:38px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center;position:relative;z-index:2;opacity:0;animation:KB_rise .5s .05s ease forwards}
+.kb-title em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.kb-scene{width:200px;height:200px;position:relative;z-index:2;flex-shrink:0}
+/* Dumbbell */
+.kb-db{position:absolute;top:50%;left:50%;width:140px;height:30px;margin:-15px 0 0 -70px;animation:KB_spin 5s linear infinite}
+.kb-bar{position:absolute;top:50%;left:50%;width:80px;height:7px;margin:-3.5px 0 0 -40px;background:linear-gradient(135deg,#9D5CF6,#7C3AED);border-radius:4px}
+.kb-pl{position:absolute;top:50%;height:28px;width:16px;margin-top:-14px;border-radius:5px;background:linear-gradient(135deg,#9D5CF6,#EC4899)}
+.kb-pl.l1{left:4px}.kb-pl.l2{left:0px;width:12px;height:22px;margin-top:-11px;background:#7C3AED}
+.kb-pl.r1{right:4px}.kb-pl.r2{right:0px;width:12px;height:22px;margin-top:-11px;background:#7C3AED}
+/* Icons */
+.kb-ico{position:absolute;font-size:26px;z-index:3;opacity:0;transform-origin:center}
+.kb-ico.i0{top:10px;left:10px;animation:KB_pop0 2.4s .7s ease infinite}
+.kb-ico.i1{top:10px;right:10px;animation:KB_pop1 2.4s .7s ease infinite;display:inline-block}
+.kb-ico.i1 span{display:inline-block;animation:KB_hb 1.1s ease infinite}
+.kb-ico.i2{bottom:10px;left:10px;animation:KB_pop2 2.4s .7s ease infinite}
+.kb-ico.i3{bottom:10px;right:10px;animation:KB_pop3 2.4s .7s ease infinite}
+/* Bar */
+.kb-bw{width:160px;height:5px;background:rgba(255,255,255,.1);border-radius:99px;overflow:hidden;position:relative;z-index:2}
+.kb-bf{height:100%;border-radius:99px;background:linear-gradient(90deg,#7C3AED,#EC4899);animation:KB_bar 2.1s .1s ease forwards}
+.kb-by{font-size:11px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.28);position:relative;z-index:2;opacity:0;animation:KB_rise .4s .55s ease forwards}
 
 </style>
 </head>
 <body>
-
-
-
-
 <!-- SPLASH -->
-<div class="spl" id="spl">
-  <div class="spl-glow"></div>
-  <div class="spl-title">Калории <em>52</em></div>
-  <div class="spl-art">
-    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" width="200" height="200">
-      <defs>
-        <linearGradient id="gp" x1="0" y1="0" x2="1" y2="1"><stop offset="0%" stop-color="#9D5CF6"/><stop offset="100%" stop-color="#EC4899"/></linearGradient>
-        <linearGradient id="gg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#34D399"/><stop offset="100%" stop-color="#059669"/></linearGradient>
-        <linearGradient id="gr" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#F87171"/><stop offset="100%" stop-color="#EF4444"/></linearGradient>
-      </defs>
-
-      <!-- Outer glow ring -->
-      <circle cx="100" cy="100" r="92" fill="none" stroke="rgba(124,58,237,.18)" stroke-width="1.5">
-        <animate attributeName="stroke-opacity" values=".18;.45;.18" dur="2s" repeatCount="indefinite"/>
-      </circle>
-
-      <!-- ── DUMBBELL ── spinning slowly -->
-      <g style="transform-origin:100px 100px;animation:spin360 8s linear infinite">
-        <!-- bar -->
-        <rect x="42" y="97" width="116" height="6" rx="3" fill="url(#gp)"/>
-        <!-- left collar -->
-        <rect x="36" y="92" width="10" height="16" rx="3" fill="#7C3AED"/>
-        <!-- left weights -->
-        <rect x="22" y="88" width="16" height="24" rx="5" fill="url(#gp)"/>
-        <rect x="14" y="91" width="11" height="18" rx="4" fill="#9D5CF6"/>
-        <!-- right collar -->
-        <rect x="154" y="92" width="10" height="16" rx="3" fill="#7C3AED"/>
-        <!-- right weights -->
-        <rect x="162" y="88" width="16" height="24" rx="5" fill="url(#gp)"/>
-        <rect x="175" y="91" width="11" height="18" rx="4" fill="#9D5CF6"/>
-        <!-- shine -->
-        <rect x="42" y="97" width="116" height="2" rx="1" fill="rgba(255,255,255,.25)"/>
-      </g>
-      <style>@keyframes spin360{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}</style>
-
-      <!-- ── APPLE (top-left) ── -->
-      <g transform="translate(30 28)" opacity="0" style="animation:spRise .5s .7s ease forwards">
-        <ellipse cx="19" cy="25" rx="14" ry="17" fill="url(#gr)"/>
-        <!-- leaf + stem -->
-        <path d="M19 10 Q21 3 27 5" stroke="#34D399" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-        <ellipse cx="22" cy="6" rx="5" ry="3" fill="#34D399" transform="rotate(-30 22 6)"/>
-        <!-- shine -->
-        <ellipse cx="13" cy="19" rx="4" ry="6" fill="rgba(255,255,255,.22)" transform="rotate(-20 13 19)"/>
-      </g>
-
-      <!-- ── HEART (top-right) ── -->
-      <g transform="translate(138 26)" opacity="0" style="animation:spRise .5s .85s ease forwards">
-        <path d="M19 30 C19 30 3 18 3 9 C3 4 7 1 12 4 C15 5 17 8 19 10 C21 8 23 5 26 4 C31 1 35 4 35 9 C35 18 19 30 19 30Z" fill="#EC4899"/>
-        <animateTransform attributeName="transform" type="scale" values="1;1.12;1" dur="1.1s" repeatCount="indefinite" additive="sum"/>
-        <ellipse cx="12" cy="12" rx="4" ry="5" fill="rgba(255,255,255,.25)" transform="rotate(-25 12 12)"/>
-      </g>
-
-      <!-- ── LIGHTNING (bottom-left) ── -->
-      <g transform="translate(28 140)" opacity="0" style="animation:spRise .5s 1s ease forwards">
-        <polygon points="20,2 7,20 16,20 7,38 28,16 18,16" fill="#F59E0B"/>
-        <polygon points="20,2 7,20 16,20 7,38 28,16 18,16" fill="rgba(255,255,255,.22)"/>
-      </g>
-
-      <!-- ── SALAD BOWL (bottom-right) ── -->
-      <g transform="translate(138 140)" opacity="0" style="animation:spRise .5s 1.1s ease forwards">
-        <ellipse cx="22" cy="26" rx="22" ry="11" fill="#059669"/>
-        <ellipse cx="22" cy="22" rx="19" ry="9" fill="url(#gg)"/>
-        <!-- veggies -->
-        <circle cx="15" cy="20" r="5" fill="#EF4444" opacity=".9"/>
-        <circle cx="26" cy="18" r="4" fill="#F59E0B" opacity=".9"/>
-        <circle cx="22" cy="24" r="4.5" fill="#34D399"/>
-        <circle cx="13" cy="27" r="3" fill="#10B981"/>
-        <!-- shine -->
-        <ellipse cx="15" cy="16" rx="3" ry="2" fill="rgba(255,255,255,.3)"/>
-      </g>
-
-      <!-- Center pulse -->
-      <circle cx="100" cy="100" r="18" fill="rgba(124,58,237,.12)" stroke="rgba(124,58,237,.5)" stroke-width="1.5">
-        <animate attributeName="r" values="18;24;18" dur="1.8s" repeatCount="indefinite"/>
-        <animate attributeName="opacity" values="1;.3;1" dur="1.8s" repeatCount="indefinite"/>
-      </circle>
-
-      <!-- Sparkles -->
-      <circle cx="68" cy="72" r="3" fill="#EC4899" opacity="0"><animate attributeName="opacity" values="0;1;0" dur=".9s" begin=".2s" repeatCount="indefinite"/></circle>
-      <circle cx="132" cy="72" r="3" fill="#A78BFA" opacity="0"><animate attributeName="opacity" values="0;1;0" dur=".9s" begin=".6s" repeatCount="indefinite"/></circle>
-      <circle cx="68" cy="128" r="2.5" fill="#F59E0B" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="1.1s" begin=".9s" repeatCount="indefinite"/></circle>
-      <circle cx="132" cy="128" r="2.5" fill="#34D399" opacity="0"><animate attributeName="opacity" values="0;1;0" dur="1.1s" begin=".4s" repeatCount="indefinite"/></circle>
-    </svg>
+<div class="kb-splash" id="kb-splash">
+  <div class="kb-glow"></div>
+  <div class="kb-title">Калории <em>52</em></div>
+  <div class="kb-scene">
+    <div class="kb-db">
+      <div class="kb-bar"></div>
+      <div class="kb-pl l1"></div>
+      <div class="kb-pl l2"></div>
+      <div class="kb-pl r1"></div>
+      <div class="kb-pl r2"></div>
+    </div>
+    <div class="kb-ico i0">🍎</div>
+    <div class="kb-ico i1"><span>❤️</span></div>
+    <div class="kb-ico i2">⚡</div>
+    <div class="kb-ico i3">🥗</div>
   </div>
-  <div class="spl-bw"><div class="spl-bf"></div></div>
-  <div class="spl-by">by Persh</div>
+  <div class="kb-bw"><div class="kb-bf"></div></div>
+  <div class="kb-by">by Persh</div>
 </div>
 
 <div class="app">
@@ -1301,14 +1221,17 @@ document.addEventListener('click',function(e){
 },true);
 
 
-// ── SPLASH ──
+
+
+
+// SPLASH
 (function(){
-  var s=document.getElementById('spl');
-  if(!s)return;
+  var el=document.getElementById('kb-splash');
+  if(!el)return;
   setTimeout(function(){
-    s.classList.add('bye');
-    setTimeout(function(){s.style.display='none';},520);
-  },2300);
+    el.classList.add('kb-out');
+    setTimeout(function(){el.style.display='none';},460);
+  },2400);
 })();
 
 </script>

@@ -1,0 +1,1306 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8"/>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate"/>
+<meta http-equiv="Pragma" content="no-cache"/>
+<meta http-equiv="Expires" content="0"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Калории 52"/>
+<title>Калории 52</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --pu:#7C3AED;--pu2:#9D5CF6;--pul:rgba(124,58,237,.12);
+  --gr:#10B981;--grl:rgba(16,185,129,.12);
+  --am:#F59E0B;--aml:rgba(245,158,11,.12);
+  --rd:#EF4444;--rdl:rgba(239,68,68,.12);
+  --bl:#3B82F6;--bll:rgba(59,130,246,.12);
+  --pk:#EC4899;--cy:#06B6D4;--cyl:rgba(6,182,212,.12);
+  --tx:#111827;--tx2:#6B7280;--tx3:#9CA3AF;
+  --bg:#F3F4F6;--sf:#FFF;
+  --bd:rgba(0,0,0,.08);--bd2:rgba(0,0,0,.15);
+  --r:16px;--rs:10px;
+  --sh:0 2px 12px rgba(0,0,0,.07);--shl:0 8px 32px rgba(0,0,0,.14);
+}
+@media(prefers-color-scheme:dark){:root{
+  --tx:#F9FAFB;--tx2:#9CA3AF;--tx3:#6B7280;
+  --bg:#0F0F14;--sf:#1C1C28;
+  --bd:rgba(255,255,255,.07);--bd2:rgba(255,255,255,.14);
+  --sh:0 2px 12px rgba(0,0,0,.4);
+}}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background:var(--bg);overflow:hidden}
+.app{display:flex;flex-direction:column;height:100vh;height:100dvh;max-width:430px;margin:0 auto}
+.hdr{padding:50px 16px 12px;background:var(--sf);border-bottom:.5px solid var(--bd);display:flex;align-items:center;justify-content:space-between}
+.logo{font-size:22px;font-weight:900;letter-spacing:-.5px}
+.logo span{background:linear-gradient(135deg,var(--pu),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hdr-sub{font-size:11px;font-weight:700;color:var(--tx3);margin-top:2px}
+.av{width:44px;height:44px;border-radius:50%;border:2.5px solid var(--pu);background:var(--pul);cursor:pointer;overflow:hidden;display:flex;align-items:center;justify-content:center;font-size:22px;position:relative;flex-shrink:0}
+.av img{width:100%;height:100%;object-fit:cover;display:none}
+.av-ed{position:absolute;bottom:-1px;right:-1px;width:15px;height:15px;background:var(--pu);border-radius:50%;font-size:8px;display:flex;align-items:center;justify-content:center;color:#fff;pointer-events:none}
+.nav{display:flex;background:var(--sf);border-top:.5px solid var(--bd);padding:5px 0 max(16px,env(safe-area-inset-bottom))}
+.ni{flex:1;display:flex;flex-direction:column;align-items:center;gap:2px;padding:4px 0;cursor:pointer;border:none;background:none;color:var(--tx3);font-size:8px;font-family:'Nunito',sans-serif;font-weight:800;transition:color .15s}
+.ni.on{color:var(--pu)}.nic{font-size:18px;line-height:1;transition:transform .2s}.ni.on .nic{transform:scale(1.15)}
+.scr{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:13px}
+.pg{display:none}.pg.on{display:block}
+.card{background:var(--sf);border-radius:var(--r);padding:15px;margin-bottom:11px;box-shadow:var(--sh)}
+.lbl{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--tx3);margin-bottom:9px}
+.f{margin-bottom:11px}.f:last-child{margin-bottom:0}
+.f label{display:block;font-size:12px;font-weight:700;color:var(--tx2);margin-bottom:5px}
+.f input,.f select{width:100%;padding:11px 13px;font-size:15px;font-family:'Nunito',sans-serif;font-weight:600;border:2px solid var(--bd2);border-radius:var(--rs);background:var(--bg);color:var(--tx);-webkit-appearance:none;transition:border-color .15s}
+.f input:focus,.f select:focus{outline:none;border-color:var(--pu)}
+.fr2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.fr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.seg{display:flex;background:var(--bg);border-radius:var(--rs);padding:3px;gap:2px}
+.sb{flex:1;padding:8px 4px;text-align:center;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;border-radius:8px;cursor:pointer;color:var(--tx3);border:none;background:none;transition:all .15s}
+.sb.on{background:var(--sf);color:var(--pu);box-shadow:0 2px 6px rgba(0,0,0,.1)}
+.btn{width:100%;padding:13px;font-size:14px;font-weight:900;font-family:'Nunito',sans-serif;border:none;border-radius:var(--r);cursor:pointer;transition:all .15s}
+.btn:active{transform:scale(.98)}
+.btn-p{background:linear-gradient(135deg,var(--pu),var(--pu2));color:#fff;box-shadow:0 4px 14px rgba(124,58,237,.3)}
+.btn-g{background:linear-gradient(135deg,var(--gr),#059669);color:#fff}
+.btn-o{background:linear-gradient(135deg,var(--am),#D97706);color:#fff}
+.btn-r{background:linear-gradient(135deg,var(--rd),#DC2626);color:#fff}
+.btn-ghost{background:var(--bg);color:var(--tx2);border:2px solid var(--bd2)}
+.btn-sm{padding:7px 13px;font-size:12px;width:auto;border-radius:99px}
+.mt{margin-top:10px}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:11px}
+.sc{border-radius:var(--r);padding:13px;color:#fff;overflow:hidden;position:relative}
+.sc::after{content:'';position:absolute;top:-15px;right:-15px;width:65px;height:65px;background:rgba(255,255,255,.12);border-radius:50%}
+.sc-l{font-size:10px;font-weight:700;opacity:.8;margin-bottom:3px}
+.sc-v{font-size:22px;font-weight:900;line-height:1}
+.sc-u{font-size:10px;font-weight:600;opacity:.7;margin-left:2px}
+.sc1{background:linear-gradient(135deg,#7C3AED,#9D5CF6)}.sc2{background:linear-gradient(135deg,#10B981,#059669)}
+.sc3{background:linear-gradient(135deg,#F59E0B,#D97706)}.sc4{background:linear-gradient(135deg,#3B82F6,#2563EB)}
+.gcards{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:10px}
+.gc{border-radius:var(--rs);padding:11px 6px;text-align:center;cursor:pointer;border:2px solid var(--bd);background:var(--sf);transition:all .15s}
+.gc.on{border-color:var(--pu);background:var(--pul)}
+.gc-t{font-size:9px;font-weight:800;color:var(--tx3);margin-bottom:2px}.gc.on .gc-t{color:var(--pu)}
+.gc-n{font-size:17px;font-weight:900;color:var(--tx)}.gc.on .gc-n{color:var(--pu)}
+.gc-s{font-size:9px;color:var(--tx3);font-weight:700;margin-top:2px}
+.mac{margin-bottom:10px}
+.mac-h{display:flex;justify-content:space-between;align-items:center;margin-bottom:5px}
+.mac-n{font-size:13px;font-weight:700;color:var(--tx2)}.mac-v{font-size:13px;font-weight:900}
+.bar{height:7px;border-radius:99px;background:var(--bg);overflow:hidden}
+.bf{height:100%;border-radius:99px;transition:width .5s ease}
+.rgrid{display:grid;gap:10px}
+.rc{background:var(--sf);border-radius:var(--r);overflow:hidden;box-shadow:var(--sh);cursor:pointer;transition:transform .15s}
+.rc:active{transform:scale(.98)}
+.rc-img{width:100%;height:135px;object-fit:cover;background:var(--bg)}
+.rc-ph{width:100%;height:135px;display:flex;align-items:center;justify-content:center;font-size:50px;background:var(--bg)}
+.rc-body{padding:11px}.rc-name{font-size:14px;font-weight:800;margin-bottom:5px}
+.rc-row{display:flex;align-items:center;justify-content:space-between}
+.rc-tags{display:flex;gap:4px;flex-wrap:wrap}
+.rc-tag{font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px;background:var(--bg);color:var(--tx3)}
+.rc-kcal{font-size:12px;font-weight:900;color:#fff;padding:3px 8px;border-radius:99px;background:linear-gradient(135deg,#EF4444,#F59E0B);white-space:nowrap}
+.rc-macs{display:flex;gap:6px;margin-top:7px}
+.rc-mac{flex:1;text-align:center;background:var(--bg);border-radius:8px;padding:5px 2px}
+.rc-mv{font-size:12px;font-weight:900}.rc-mn{font-size:9px;font-weight:700;color:var(--tx3)}
+.fit{display:inline-flex;align-items:center;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;margin-bottom:4px}
+.fit-ok{background:var(--grl);color:var(--gr)}.fit-gd{background:var(--aml);color:var(--am)}.fit-hi{background:var(--rdl);color:var(--rd)}
+.filt{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;margin-bottom:11px;scrollbar-width:none}
+.filt::-webkit-scrollbar{display:none}
+.chip{padding:6px 12px;border-radius:99px;font-size:12px;font-weight:800;font-family:'Nunito',sans-serif;white-space:nowrap;cursor:pointer;border:2px solid var(--bd2);color:var(--tx2);background:var(--sf);transition:all .15s;flex-shrink:0}
+.chip.on{background:var(--pu);color:#fff;border-color:var(--pu)}
+/* PROGRESS */
+.ph{background:linear-gradient(135deg,var(--pu),var(--pk));border-radius:var(--r);padding:15px;margin-bottom:11px;color:#fff}
+.ph-t{font-size:17px;font-weight:900;margin-bottom:3px}.ph-s{font-size:12px;font-weight:600;opacity:.8}
+.ph-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-top:11px}
+.ps{background:rgba(255,255,255,.15);border-radius:10px;padding:9px 5px;text-align:center}
+.ps-v{font-size:18px;font-weight:900}.ps-l{font-size:9px;font-weight:700;opacity:.8;margin-top:2px}
+.ps-d{font-size:9px;font-weight:800;margin-top:2px}.ps-d.up{color:#FFD700}.ps-d.dn{color:#90EE90}
+.cw{background:var(--sf);border-radius:var(--r);padding:13px;margin-bottom:11px;box-shadow:var(--sh)}
+.ct-tabs{display:flex;gap:5px;margin-bottom:10px}
+.ct{padding:4px 10px;border-radius:99px;font-size:11px;font-weight:800;cursor:pointer;border:2px solid var(--bd2);color:var(--tx3);background:none;font-family:'Nunito',sans-serif;transition:all .15s}
+.ct.on{background:var(--pu);color:#fff;border-color:var(--pu)}
+.pe{background:var(--sf);border-radius:var(--r);margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)}
+.pe-hd{display:flex;align-items:center;gap:10px;padding:12px}
+.pe-ph{width:52px;height:52px;border-radius:10px;background:var(--bg);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;cursor:pointer}
+.pe-ph img{width:100%;height:100%;object-fit:cover}
+.pe-info{flex:1}.pe-date{font-size:12px;font-weight:800;margin-bottom:3px}
+.pe-vals{display:flex;gap:7px}
+.pe-val{font-size:11px;font-weight:700;color:var(--tx2)}.pe-val span{color:var(--pu);font-weight:900}
+.pe-del{font-size:16px;color:var(--tx3);cursor:pointer;padding:4px}
+.pe-big{width:100%;object-fit:cover;display:block;cursor:pointer;max-height:220px}
+.af{background:var(--sf);border-radius:var(--r);padding:14px;margin-bottom:11px;box-shadow:var(--sh);border:2px dashed var(--bd2)}
+.pup{width:100%;height:75px;border-radius:var(--rs);border:2px dashed var(--bd2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;cursor:pointer;background:var(--bg);font-size:11px;font-weight:700;color:var(--tx3);overflow:hidden;position:relative}
+.pup img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:8px}
+/* CALCULATOR CONSTRUCTOR */
+.cat-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin-bottom:12px}
+.cat-card{border-radius:var(--rs);padding:12px 6px;text-align:center;cursor:pointer;border:2px solid var(--bd2);background:var(--sf);transition:all .15s}
+.cat-card.on{border-color:var(--pu);background:var(--pul)}
+.cat-ico{font-size:24px;margin-bottom:4px}
+.cat-nm{font-size:11px;font-weight:800;color:var(--tx2)}.cat-card.on .cat-nm{color:var(--pu)}
+.cat-cal{font-size:10px;font-weight:700;color:var(--tx3);margin-top:2px}.cat-card.on .cat-cal{color:var(--pu)}
+.macro-targets{display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px;margin-bottom:12px}
+.mt-card{border-radius:var(--rs);padding:10px;text-align:center;background:var(--sf);box-shadow:var(--sh)}
+.mt-v{font-size:18px;font-weight:900}
+.mt-l{font-size:10px;font-weight:700;color:var(--tx3);margin-top:2px}
+.mt-rem{font-size:11px;font-weight:800;margin-top:3px}
+.food-option{border-radius:var(--rs);padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:10px;cursor:pointer;border:2px solid var(--bd2);background:var(--sf);transition:all .15s;box-shadow:var(--sh)}
+.food-option.ok{border-color:var(--gr);background:var(--grl)}
+.food-option.warn{border-color:var(--am);background:var(--aml)}
+.food-option.no{border-color:var(--rd);background:var(--rdl);opacity:.7}
+.fo-ico{font-size:22px;width:38px;height:38px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fo-info{flex:1}
+.fo-name{font-size:13px;font-weight:800;margin-bottom:2px}
+.fo-desc{font-size:11px;font-weight:700;color:var(--tx2)}
+.fo-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.fo-badge.ok{background:var(--gr);color:#fff}
+.fo-badge.warn{background:var(--am);color:#fff}
+.fo-badge.no{background:var(--rd);color:#fff}
+.fo-gram{font-size:13px;font-weight:900;color:var(--pu);white-space:nowrap}
+/* FOOD LOG */
+.dt-n{font-size:46px;font-weight:900;line-height:1;background:linear-gradient(135deg,var(--pu),var(--pk));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.dt-l{font-size:12px;font-weight:700;color:var(--tx3);margin-top:2px}
+.dt-bar{height:9px;border-radius:99px;background:var(--bg);overflow:hidden;margin:9px 0 5px}
+.dt-fill{height:100%;border-radius:99px;background:linear-gradient(90deg,var(--gr),var(--pu));transition:width .4s}
+.sw{position:relative;margin-bottom:10px}
+.si{width:100%;padding:11px 13px 11px 38px;font-size:14px;font-family:'Nunito',sans-serif;font-weight:700;border:2px solid var(--bd2);border-radius:var(--rs);background:var(--bg);color:var(--tx);-webkit-appearance:none;transition:border-color .15s}
+.si:focus{outline:none;border-color:var(--pu)}
+.si-ico{position:absolute;left:11px;top:50%;transform:translateY(-50%);font-size:16px;pointer-events:none}
+.fres{background:var(--sf);border-radius:var(--r);box-shadow:var(--shl);margin-bottom:10px;overflow:hidden;display:none}
+.fres.on{display:block}
+.fri{padding:10px 13px;display:flex;align-items:center;justify-content:space-between;border-bottom:.5px solid var(--bd);cursor:pointer;transition:background .15s}
+.fri:last-child{border-bottom:none}.fri:active{background:var(--bg)}
+.fri-n{font-size:13px;font-weight:700}.fri-n small{display:block;font-size:10px;font-weight:600;color:var(--tx3);margin-top:1px}
+.fri-k{font-size:13px;font-weight:900;color:var(--pu);white-space:nowrap}
+.pr-row{display:flex;gap:8px;align-items:center;margin-bottom:10px}
+.pi{flex:1;padding:10px 12px;font-size:15px;font-family:'Nunito',sans-serif;font-weight:700;border:2px solid var(--bd2);border-radius:var(--rs);background:var(--bg);color:var(--tx);-webkit-appearance:none}
+.pi:focus{outline:none;border-color:var(--pu)}
+.fl-item{background:var(--sf);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:9px;box-shadow:var(--sh)}
+.fl-ico{font-size:20px;width:35px;height:35px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fl-info{flex:1}.fl-nm{font-size:13px;font-weight:800;margin-bottom:2px}.fl-dt{font-size:10px;font-weight:700;color:var(--tx3)}
+.fl-macs{display:flex;gap:5px;margin-top:5px}
+.fm{font-size:10px;font-weight:700;padding:2px 6px;border-radius:99px}
+.fm-p{background:var(--grl);color:var(--gr)}.fm-f{background:var(--aml);color:var(--am)}.fm-c{background:var(--bll);color:var(--bl)}
+.fl-k{font-size:14px;font-weight:900;color:var(--pu);white-space:nowrap}.fl-del{font-size:15px;color:var(--tx3);cursor:pointer;padding:4px;flex-shrink:0}
+/* CART */
+.ci{background:var(--sf);border-radius:var(--rs);padding:11px 13px;margin-bottom:7px;display:flex;align-items:center;gap:9px;box-shadow:var(--sh)}
+.ci.done .ci-nm{text-decoration:line-through;color:var(--tx3)}
+.ci-ico{font-size:20px;width:35px;height:35px;background:var(--bg);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ci-info{flex:1}.ci-nm{font-size:13px;font-weight:800;margin-bottom:2px}.ci-qty{font-size:12px;font-weight:700;color:var(--pu)}
+.ci-chk{width:22px;height:22px;border-radius:50%;border:2px solid var(--bd2);background:none;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:all .15s}
+.ci-chk.done{background:var(--gr);border-color:var(--gr);color:#fff}
+/* MODAL */
+.mo{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:200;display:flex;align-items:flex-end;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(4px)}
+.mo.on{opacity:1;pointer-events:all}
+.modal{background:var(--sf);border-radius:24px 24px 0 0;width:100%;max-height:90vh;overflow-y:auto;transform:translateY(100%);transition:transform .3s cubic-bezier(.34,1.2,.64,1)}
+.mo.on .modal{transform:translateY(0)}
+.m-bar{width:36px;height:4px;background:var(--bd2);border-radius:99px;margin:12px auto 0}
+.m-img{width:100%;height:195px;object-fit:cover}.m-ph{width:100%;height:170px;display:flex;align-items:center;justify-content:center;font-size:68px;background:var(--bg)}
+.m-body{padding:15px 16px 40px}.m-title{font-size:20px;font-weight:900;margin-bottom:5px}
+.m-kcal{font-size:30px;font-weight:900;background:linear-gradient(135deg,#EF4444,#F59E0B);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:10px}
+.mpills{display:flex;gap:7px;margin-bottom:13px}
+.mp{flex:1;border-radius:10px;padding:9px 3px;text-align:center}
+.mp-p{background:linear-gradient(135deg,#10B981,#059669)}.mp-f{background:linear-gradient(135deg,#F59E0B,#D97706)}.mp-c{background:linear-gradient(135deg,#3B82F6,#2563EB)}
+.mp-v{font-size:16px;font-weight:900;color:#fff}.mp-n{font-size:9px;font-weight:700;color:rgba(255,255,255,.8)}
+.sec-t{font-size:13px;font-weight:800;color:var(--tx2);margin:12px 0 7px}
+.ir{display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:.5px solid var(--bd)}
+.ir-ico{font-size:14px}.ir-name{flex:1;font-size:13px;font-weight:700}.ir-qty{font-size:12px;font-weight:800;color:var(--tx2);white-space:nowrap}
+.ir-edit{font-size:11px;cursor:pointer;color:var(--pu);padding:2px 7px;border-radius:6px;background:var(--pul);font-weight:700;white-space:nowrap;border:none;font-family:'Nunito',sans-serif}
+.stp{display:flex;gap:9px;margin-bottom:10px}
+.sn{min-width:24px;height:24px;background:var(--pu);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900;flex-shrink:0;margin-top:2px}
+.st{font-size:13px;font-weight:600;line-height:1.5}
+.eip{background:var(--sf);border-radius:var(--r);padding:13px;margin-top:10px;border:2px solid var(--pu);box-shadow:var(--shl)}
+/* PHOTO FULLSCREEN */
+.fs-ov{position:fixed;inset:0;background:rgba(0,0,0,.95);z-index:500;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .2s}
+.fs-ov.on{opacity:1;pointer-events:all}
+.fs-img{max-width:100%;max-height:100%;object-fit:contain}
+.fs-close{position:absolute;top:20px;right:20px;font-size:28px;color:#fff;cursor:pointer;width:44px;height:44px;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.15);border-radius:50%}
+.welcome{background:linear-gradient(135deg,var(--pu),var(--pk));border-radius:var(--r);padding:15px;margin-bottom:11px;color:#fff;position:relative;overflow:hidden}
+.welcome::after{content:'🥗';position:absolute;right:13px;top:50%;transform:translateY(-50%);font-size:42px;opacity:.2}
+.wn{font-size:20px;font-weight:900;margin-bottom:2px}.ws{font-size:12px;font-weight:600;opacity:.8}
+.ptitle{font-size:20px;font-weight:900;margin-bottom:12px;letter-spacing:-.3px}
+.empty{text-align:center;padding:32px 14px}.empty-ico{font-size:46px;margin-bottom:10px}
+.empty p{font-size:13px;font-weight:600;color:var(--tx3);line-height:1.6}.empty a{color:var(--pu);cursor:pointer}
+.toast{position:fixed;bottom:95px;left:50%;transform:translateX(-50%);background:#111827;color:#fff;padding:9px 18px;border-radius:99px;font-size:12px;font-weight:700;font-family:'Nunito',sans-serif;opacity:0;transition:opacity .2s;pointer-events:none;z-index:999;white-space:nowrap;box-shadow:0 4px 16px rgba(0,0,0,.3)}
+.toast.on{opacity:1}
+.tag-sat{background:linear-gradient(135deg,#7C3AED,#EC4899);color:#fff;font-size:10px;font-weight:800;padding:2px 7px;border-radius:99px;display:inline-block;margin-bottom:4px}
+/* CHANGELOG */
+.cl-item{border-left:3px solid var(--pu);padding:10px 14px;margin-bottom:10px;background:var(--sf);border-radius:0 var(--rs) var(--rs) 0;box-shadow:var(--sh)}
+.cl-v{font-size:12px;font-weight:900;color:var(--pu);margin-bottom:3px}
+.cl-d{font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:6px}
+.cl-item ul{padding-left:14px}
+.cl-item li{font-size:12px;font-weight:600;color:var(--tx2);line-height:1.7}
+input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
+input[type=date]{color-scheme:light dark}
+</style>
+
+<style>
+#spl{position:fixed;inset:0;z-index:9999;background:#09090F;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;
+  font-family:'Nunito',sans-serif;pointer-events:all}
+#spl-logo{font-size:36px;font-weight:900;color:#fff;letter-spacing:-1px;text-align:center}
+#spl-logo em{font-style:normal;background:linear-gradient(135deg,#A78BFA,#EC4899);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent}
+#spl-icons{width:180px;height:180px;position:relative}
+#spl-db{position:absolute;top:50%;left:50%;width:130px;height:28px;
+  margin:-14px 0 0 -65px}
+#spl-bar{position:absolute;top:50%;left:50%;width:76px;height:7px;
+  margin:-3.5px 0 0 -38px;background:linear-gradient(90deg,#9D5CF6,#EC4899);border-radius:4px}
+.spl-pl{position:absolute;top:50%;border-radius:4px}
+#spl-l1{left:2px;width:16px;height:26px;margin-top:-13px;background:linear-gradient(135deg,#9D5CF6,#7C3AED)}
+#spl-l2{left:-6px;width:11px;height:20px;margin-top:-10px;background:#6D28D9}
+#spl-r1{right:2px;width:16px;height:26px;margin-top:-13px;background:linear-gradient(135deg,#9D5CF6,#7C3AED)}
+#spl-r2{right:-6px;width:11px;height:20px;margin-top:-10px;background:#6D28D9}
+#spl-i0,#spl-i1,#spl-i2,#spl-i3{position:absolute;font-size:28px;opacity:0}
+#spl-i0{top:8px;left:8px}#spl-i1{top:8px;right:8px}
+#spl-i2{bottom:8px;left:8px}#spl-i3{bottom:8px;right:8px}
+#spl-pw{width:155px;height:5px;background:rgba(255,255,255,.12);border-radius:99px;overflow:hidden}
+#spl-pf{height:100%;width:0;background:linear-gradient(90deg,#7C3AED,#EC4899);border-radius:99px}
+#spl-by{font-size:11px;font-weight:700;letter-spacing:1.5px;color:rgba(255,255,255,.3)}
+#spl-glow{position:absolute;width:260px;height:260px;border-radius:50%;
+  background:radial-gradient(circle,rgba(124,58,237,.32) 0%,transparent 68%);pointer-events:none}
+</style>
+</head>
+<body>
+<div id="spl">
+  <div id="spl-glow"></div>
+  <div id="spl-logo">Калории <em>52</em></div>
+  <div id="spl-icons">
+    <div id="spl-db">
+      <div id="spl-bar"></div>
+      <div class="spl-pl" id="spl-l1"></div><div class="spl-pl" id="spl-l2"></div>
+      <div class="spl-pl" id="spl-r1"></div><div class="spl-pl" id="spl-r2"></div>
+    </div>
+    <div id="spl-i0">🍎</div><div id="spl-i1">❤️</div>
+    <div id="spl-i2">⚡</div><div id="spl-i3">🥗</div>
+  </div>
+  <div id="spl-pw"><div id="spl-pf"></div></div>
+  <div id="spl-by">by Persh</div>
+</div>
+<script>
+(function(){
+  var DURATION = 2000; // total ms
+  var start = null;
+  var db = document.getElementById('spl-db');
+  var bar = document.getElementById('spl-pf');
+  var spl = document.getElementById('spl');
+  var angle = 0;
+
+  if(!spl){ return; }
+
+  // Fade in logo
+  var logo = document.getElementById('spl-logo');
+  var byEl = document.getElementById('spl-by');
+  if(logo){ logo.style.opacity='0'; setTimeout(function(){ logo.style.transition='opacity .4s'; logo.style.opacity='1'; },50); }
+  if(byEl){ byEl.style.opacity='0'; setTimeout(function(){ byEl.style.transition='opacity .5s'; byEl.style.opacity='1'; },200); }
+
+  // Pop icons
+  [['spl-i0',300],['spl-i1',550],['spl-i2',800],['spl-i3',1050]].forEach(function(x){
+    setTimeout(function(){
+      var el=document.getElementById(x[0]);
+      if(el){ el.style.transition='opacity .3s'; el.style.opacity='1'; }
+    }, x[1]);
+  });
+
+  // Spin dumbbell
+  var spinId = setInterval(function(){
+    angle=(angle+3)%360;
+    if(db) db.style.transform='rotate('+angle+'deg)';
+  },16);
+
+  // Animate progress bar with timestamps
+  function step(ts){
+    if(!start) start=ts;
+    var p = Math.min(1,(ts-start)/DURATION);
+    if(bar) bar.style.width=(p*100)+'%';
+    if(p<1){ requestAnimationFrame(step); }
+    else{ done(); }
+  }
+
+  function done(){
+    clearInterval(spinId);
+    if(!spl) return;
+    spl.style.transition='opacity .4s ease';
+    spl.style.opacity='0';
+    spl.style.pointerEvents='none';
+    setTimeout(function(){ if(spl){ spl.style.display='none'; } }, 450);
+  }
+
+  // Start animation immediately
+  requestAnimationFrame(step);
+
+  // Absolute hard kill — 4s no matter what
+  setTimeout(function(){
+    clearInterval(spinId);
+    if(spl && spl.style.display!=='none'){ done(); }
+  }, 4000);
+
+})();
+</script>
+
+  <div id="sp-logo">Калории <em>52</em></div>
+  <div id="sp-icons">
+    <div id="sp-db">
+      <div id="sp-db-bar"></div>
+      <div id="sp-db-l1"></div><div id="sp-db-l2"></div>
+      <div id="sp-db-r1"></div><div id="sp-db-r2"></div>
+    </div>
+    <div id="sp-i0">🍎</div>
+    <div id="sp-i1">❤️</div>
+    <div id="sp-i2">⚡</div>
+    <div id="sp-i3">🥗</div>
+  </div>
+  <div id="sp-bar-wrap"><div id="sp-bar-fill"></div></div>
+  <div id="sp-by">by Persh</div>
+</div>
+
+
+<div class="app">
+  <div class="hdr">
+    <div>
+      <div class="logo">Калории <span>52</span></div>
+      <div class="hdr-sub" id="hdr-sub">Ваш личный нутрициолог</div>
+    </div>
+    <div class="av" id="av" onclick="document.getElementById('av-f').click()">
+      <span id="av-ico">👤</span><img id="av-img" src="" alt=""/>
+      <div class="av-ed">✏️</div>
+      <input type="file" id="av-f" accept="image/*" style="display:none" onchange="onAv(event)"/>
+    </div>
+    <button class="ni" id="n-more" onclick="openChangelog()"><span class="nic">•••</span>Ещё</button>
+  </div>
+  <div class="scr" id="scr">
+    <!-- PROFILE -->
+    <div id="pg-profile" class="pg on">
+      <div class="card">
+        <div class="lbl">Личные данные</div>
+        <div class="fr2">
+          <div class="f"><label>Имя</label><input type="text" id="f-name" placeholder="Ваше имя"/></div>
+          <div class="f"><label>Возраст</label><input type="number" id="f-age" placeholder="30" inputmode="numeric"/></div>
+        </div>
+        <div class="f"><label>Пол</label><div class="seg"><button class="sb on" id="g-male" onclick="setG('male')">Мужской</button><button class="sb" id="g-female" onclick="setG('female')">Женский</button></div></div>
+        <div class="f"><label>Рост (см)</label><input type="number" id="f-height" placeholder="170" inputmode="numeric"/></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Размеры тела</div>
+        <div class="fr2">
+          <div class="f"><label>Вес (кг)</label><input type="number" id="f-weight" placeholder="70" inputmode="decimal" step=".1"/></div>
+          <div class="f"><label>Талия (см)</label><input type="number" id="f-waist" placeholder="80" inputmode="numeric"/></div>
+        </div>
+        <div class="f"><label>Бёдра (см)</label><input type="number" id="f-hips" placeholder="100" inputmode="numeric"/></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Активность</div>
+        <div class="f"><select id="f-act">
+          <option value="1.2">😴 Сидячий образ жизни</option>
+          <option value="1.375">🚶 Лёгкая (1–3 тренировки/нед.)</option>
+          <option value="1.55" selected>🏃 Умеренная (3–5 тренировок)</option>
+          <option value="1.725">💪 Высокая (6–7 тренировок)</option>
+          <option value="1.9">🔥 Очень высокая</option>
+        </select></div>
+      </div>
+      <div class="card">
+        <div class="lbl">Цель</div>
+        <div class="seg">
+          <button class="sb" id="goal-lose" onclick="setGoal('lose')">🔻 Минус</button>
+          <button class="sb on" id="goal-maintain" onclick="setGoal('maintain')">⚖️ Норма</button>
+          <button class="sb" id="goal-gain" onclick="setGoal('gain')">💪 Масса</button>
+        </div>
+      </div>
+      <div class="card" style="border:2px solid var(--pu)">
+        <div class="lbl">✏️ Свой калораж (приоритет)</div>
+        <div class="f"><label>Ккал/день вручную — перезапишет авторасчёт</label><input type="number" id="f-custom" placeholder="Например: 1800" inputmode="numeric"/></div>
+        <div id="custom-hint" style="font-size:11px;font-weight:700;color:var(--tx3)">Оставьте пустым для автоматического расчёта</div>
+      </div>
+      <button class="btn btn-p mt" onclick="savePro()">Сохранить и рассчитать ✨</button>
+    </div>
+    <!-- DASHBOARD -->
+    <div id="pg-dash" class="pg"><div id="dash-b"></div></div>
+    <!-- RECIPES -->
+    <div id="pg-rec" class="pg"><div id="rec-b"></div></div>
+    <!-- PROGRESS -->
+    <div id="pg-prog" class="pg"><div id="prog-b"></div></div>
+    <!-- CALCULATOR -->
+    <div id="pg-calc" class="pg"><div id="calc-b"></div></div>
+    <!-- CART -->
+    <div id="pg-cart" class="pg"><div id="cart-b"></div></div>
+    <!-- CHANGELOG -->
+    </div>
+  </div>
+  <div class="nav">
+    <button class="ni on" id="n-profile" onclick="go('profile')"><span class="nic">👤</span>Профиль</button>
+    <button class="ni" id="n-dash" onclick="go('dash')"><span class="nic">📊</span>План</button>
+    <button class="ni" id="n-rec" onclick="go('rec')"><span class="nic">🍽️</span>Рецепты</button>
+    <button class="ni" id="n-prog" onclick="go('prog')"><span class="nic">📈</span>Прогресс</button>
+    <button class="ni" id="n-calc" onclick="go('calc')"><span class="nic">🧮</span>Счётчик</button>
+    <button class="ni" id="n-cart" onclick="go('cart')"><span class="nic">🛒</span>Корзина</button>
+    
+  </div>
+<div class="mo" id="mo-cl" onclick="if(event.target===this)this.classList.remove('on')">
+  <div class="modal">
+    <div class="m-bar"></div>
+    <div style="padding:16px 18px 40px">
+      <div style="font-size:18px;font-weight:900;margin-bottom:16px">📋 История обновлений</div>
+      <div class="cl-item"><div class="cl-v">Версия 3.0 — текущая</div><ul>
+        <li>🧮 Счётчик-конструктор по приёмам пищи с авторасчётом БЖУ</li>
+        <li>✅ Исправлено сохранение фото профиля</li>
+        <li>✅ Ручной калораж работает везде</li>
+        <li>📸 Фото прогресса открываются на весь экран</li>
+        <li>🍽️ 22 рецепта, 100+ продуктов</li>
+        <li>📳 Тактильные нажатия</li>
+        <li>🎬 Заставка при запуске</li>
+      </ul></div>
+      <div class="cl-item"><div class="cl-v">Версия 2.0</div><ul>
+        <li>📈 Прогресс: замеры + фото + графики</li>
+        <li>🛒 Корзина покупок из рецептов</li>
+        <li>✏️ Редактор ингредиентов с пересчётом КБЖУ</li>
+      </ul></div>
+      <div class="cl-item"><div class="cl-v">Версия 1.0</div><ul>
+        <li>👤 Профиль и расчёт BMR/TDEE/ИМТ</li>
+        <li>🍽️ Рецепты с подбором под калораж</li>
+        <li>📊 Макросы: белки, жиры, углеводы</li>
+      </ul></div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="toast" id="toast"></div>
+<!-- RECIPE MODAL -->
+<div class="mo" id="mo" onclick="closeMo(event)"><div class="modal" id="modal"><div class="m-bar"></div><div id="m-in"></div></div></div>
+<!-- FULLSCREEN PHOTO -->
+<div class="fs-ov" id="fs-ov" onclick="closeFs()"><div class="fs-close" onclick="closeFs()">✕</div><img class="fs-img" id="fs-img" src="" alt=""/></div>
+
+<script>
+
+// Haptic feedback
+function hap(t){try{if(navigator.vibrate)navigator.vibrate(t==='s'?[10,20,10]:10);}catch(e){}}
+document.addEventListener('click',function(e){
+  if(e.target.closest('.btn,.chip,.gc,.ni,.food-option,.fl-del,.pe-del,.fri,.ir-edit'))hap();
+  if(e.target.closest('.btn-p,.btn-g,.btn-o'))hap('s');
+},true);
+
+// ══════════════ FOOD DATABASE (100+ items) ══════════════
+const FOODS=[
+  // ПТИЦА
+  {n:'Куриная грудка (сырая)',e:'🍗',k:113,p:23,f:1.8,c:0,u:'г',cat:'protein'},
+  {n:'Куриное бедро без кожи (сырое)',e:'🍗',k:143,p:18,f:7.5,c:0,u:'г',cat:'protein'},
+  {n:'Куриное бедро с кожей (сырое)',e:'🍗',k:209,p:16,f:16,c:0,u:'г',cat:'protein'},
+  {n:'Куриная голень (сырая)',e:'🍗',k:161,p:17,f:10,c:0,u:'г',cat:'protein'},
+  {n:'Куриные крылья (сырые)',e:'🍗',k:203,p:17,f:15,c:0,u:'г',cat:'protein'},
+  {n:'Куриный фарш (сырой)',e:'🍗',k:143,p:17,f:8,c:0,u:'г',cat:'protein'},
+  {n:'Индейка грудка (сырая)',e:'🦃',k:104,p:22,f:1.7,c:0,u:'г',cat:'protein'},
+  {n:'Индейка бедро (сырое)',e:'🦃',k:148,p:20,f:7.5,c:0,u:'г',cat:'protein'},
+  // ГОВЯДИНА
+  {n:'Говядина вырезка (сырая)',e:'🥩',k:158,p:21,f:8.1,c:0,u:'г',cat:'protein'},
+  {n:'Говяжий фарш 5% (сырой)',e:'🥩',k:121,p:22,f:5,c:0,u:'г',cat:'protein'},
+  {n:'Говяжий фарш 15% (сырой)',e:'🥩',k:176,p:20,f:11,c:0,u:'г',cat:'protein'},
+  {n:'Говяжий фарш 20% (сырой)',e:'🥩',k:215,p:19,f:15,c:0,u:'г',cat:'protein'},
+  {n:'Говяжья шея (сырая)',e:'🥩',k:201,p:19,f:14,c:0,u:'г',cat:'protein'},
+  {n:'Говяжье ребро (сырое)',e:'🥩',k:272,p:17,f:22,c:0,u:'г',cat:'protein'},
+  // СВИНИНА
+  {n:'Свинина вырезка (сырая)',e:'🥩',k:142,p:21,f:6.5,c:0,u:'г',cat:'protein'},
+  {n:'Свиная шея (сырая)',e:'🥩',k:276,p:16,f:23,c:0,u:'г',cat:'fat'},
+  {n:'Свиной фарш (сырой)',e:'🥩',k:263,p:16,f:22,c:0,u:'г',cat:'fat'},
+  // РЫБА
+  {n:'Лосось (сырой)',e:'🐟',k:208,p:20,f:13,c:0,u:'г',cat:'protein'},
+  {n:'Сёмга (сырая)',e:'🐟',k:201,p:21,f:13,c:0,u:'г',cat:'protein'},
+  {n:'Треска (сырая)',e:'🐠',k:82,p:18,f:0.7,c:0,u:'г',cat:'protein'},
+  {n:'Тунец (сырой)',e:'🐟',k:144,p:23,f:5,c:0,u:'г',cat:'protein'},
+  {n:'Тунец консервированный',e:'🐟',k:116,p:26,f:1,c:0,u:'г',cat:'protein'},
+  {n:'Скумбрия (сырая)',e:'🐟',k:205,p:19,f:14,c:0,u:'г',cat:'protein'},
+  {n:'Форель (сырая)',e:'🐟',k:119,p:21,f:3.5,c:0,u:'г',cat:'protein'},
+  {n:'Минтай (сырой)',e:'🐠',k:72,p:16,f:0.9,c:0,u:'г',cat:'protein'},
+  {n:'Креветки (сырые)',e:'🦐',k:85,p:18,f:1.2,c:0.9,u:'г',cat:'protein'},
+  {n:'Кальмар (сырой)',e:'🦑',k:92,p:18,f:1.4,c:2,u:'г',cat:'protein'},
+  // ЯЙЦА
+  {n:'Яйцо куриное',e:'🥚',k:155,p:13,f:11,c:1.1,u:'г',cat:'protein'},
+  {n:'Яичный белок',e:'🥚',k:52,p:11,f:0.2,c:0.7,u:'г',cat:'protein'},
+  {n:'Яичный желток',e:'🥚',k:322,p:16,f:27,c:3.6,u:'г',cat:'fat'},
+  // МОЛОЧНОЕ
+  {n:'Творог 0%',e:'🧀',k:71,p:18,f:0,c:3.3,u:'г',cat:'protein'},
+  {n:'Творог 2%',e:'🧀',k:103,p:16,f:2,c:3.5,u:'г',cat:'protein'},
+  {n:'Творог 5%',e:'🧀',k:121,p:17,f:5,c:3,u:'г',cat:'protein'},
+  {n:'Творог 9%',e:'🧀',k:159,p:16,f:9,c:2.8,u:'г',cat:'protein'},
+  {n:'Творог 18%',e:'🧀',k:236,p:14,f:18,c:2.8,u:'г',cat:'fat'},
+  {n:'Йогурт греческий 0%',e:'🥛',k:59,p:10,f:0.4,c:3.6,u:'г',cat:'protein'},
+  {n:'Йогурт греческий 2%',e:'🥛',k:73,p:10,f:2,c:4,u:'г',cat:'protein'},
+  {n:'Йогурт греческий 5%',e:'🥛',k:97,p:9,f:5,c:4,u:'г',cat:'protein'},
+  {n:'Молоко 0.5%',e:'🥛',k:31,p:3,f:0.5,c:4.7,u:'мл',cat:'protein'},
+  {n:'Молоко 1.5%',e:'🥛',k:44,p:2.9,f:1.5,c:4.7,u:'мл',cat:'protein'},
+  {n:'Молоко 2.5%',e:'🥛',k:52,p:2.8,f:2.5,c:4.7,u:'мл',cat:'protein'},
+  {n:'Молоко 3.2%',e:'🥛',k:60,p:2.8,f:3.2,c:4.7,u:'мл',cat:'fat'},
+  {n:'Кефир 1%',e:'🥛',k:40,p:3.4,f:1,c:3.8,u:'мл',cat:'protein'},
+  {n:'Кефир 2.5%',e:'🥛',k:53,p:3.2,f:2.5,c:3.9,u:'мл',cat:'protein'},
+  {n:'Ряженка 2.5%',e:'🥛',k:54,p:2.8,f:2.5,c:4.2,u:'мл',cat:'protein'},
+  {n:'Сметана 10%',e:'🥛',k:115,p:2.9,f:10,c:4,u:'г',cat:'fat'},
+  {n:'Сметана 20%',e:'🥛',k:204,p:2.8,f:20,c:3.5,u:'г',cat:'fat'},
+  {n:'Сыр твёрдый',e:'🧀',k:380,p:23,f:31,c:0,u:'г',cat:'fat'},
+  {n:'Сыр моцарелла',e:'🧀',k:280,p:18,f:22,c:2.2,u:'г',cat:'fat'},
+  {n:'Сыр фета',e:'🧀',k:264,p:14,f:21,c:4,u:'г',cat:'fat'},
+  {n:'Протеин порошок',e:'💪',k:380,p:75,f:5,c:10,u:'г',cat:'protein'},
+  // ЗЕРНО
+  {n:'Овсянка (сырая)',e:'🌾',k:370,p:13,f:7,c:64,u:'г',cat:'carb'},
+  {n:'Рис белый (сырой)',e:'🍚',k:365,p:7,f:0.7,c:79,u:'г',cat:'carb'},
+  {n:'Рис бурый (сырой)',e:'🍚',k:354,p:8,f:2.7,c:73,u:'г',cat:'carb'},
+  {n:'Гречка (сырая)',e:'🌾',k:343,p:13,f:3.4,c:71,u:'г',cat:'carb'},
+  {n:'Киноа (сырая)',e:'🌾',k:368,p:14,f:6.1,c:64,u:'г',cat:'carb'},
+  {n:'Паста сухая',e:'🍝',k:371,p:13,f:1.5,c:74,u:'г',cat:'carb'},
+  {n:'Хлеб цельнозерновой',e:'🍞',k:247,p:13,f:4.2,c:41,u:'г',cat:'carb'},
+  {n:'Хлеб белый',e:'🍞',k:265,p:8,f:3.3,c:49,u:'г',cat:'carb'},
+  {n:'Картофель (сырой)',e:'🥔',k:77,p:2,f:0.1,c:17,u:'г',cat:'carb'},
+  {n:'Батат (сырой)',e:'🍠',k:86,p:1.6,f:0.1,c:20,u:'г',cat:'carb'},
+  {n:'Гранола',e:'🌾',k:471,p:10,f:20,c:64,u:'г',cat:'carb'},
+  // БОБОВЫЕ
+  {n:'Чечевица (сырая)',e:'🫘',k:297,p:24,f:1,c:53,u:'г',cat:'carb'},
+  {n:'Нут (сырой)',e:'🫘',k:364,p:19,f:6,c:61,u:'г',cat:'carb'},
+  {n:'Фасоль (сухая)',e:'🫘',k:337,p:22,f:1.6,c:60,u:'г',cat:'carb'},
+  {n:'Хумус готовый',e:'🫘',k:177,p:8,f:10,c:16,u:'г',cat:'fat'},
+  {n:'Тофу',e:'🥛',k:76,p:8,f:4.8,c:1.9,u:'г',cat:'protein'},
+  // ЖИРЫ
+  {n:'Оливковое масло',e:'🫙',k:884,p:0,f:100,c:0,u:'мл',cat:'fat'},
+  {n:'Сливочное масло',e:'🧈',k:748,p:0.8,f:82,c:0.6,u:'г',cat:'fat'},
+  {n:'Авокадо',e:'🥑',k:160,p:2,f:15,c:9,u:'г',cat:'fat'},
+  {n:'Арахисовая паста',e:'🥜',k:588,p:25,f:50,c:20,u:'г',cat:'fat'},
+  {n:'Миндаль',e:'🌰',k:579,p:21,f:50,c:22,u:'г',cat:'fat'},
+  {n:'Грецкий орех',e:'🌰',k:654,p:15,f:65,c:14,u:'г',cat:'fat'},
+  {n:'Кешью',e:'🌰',k:553,p:18,f:44,c:30,u:'г',cat:'fat'},
+  // ФРУКТЫ
+  {n:'Банан',e:'🍌',k:89,p:1.1,f:0.3,c:23,u:'г',cat:'carb'},
+  {n:'Яблоко',e:'🍎',k:52,p:0.3,f:0.2,c:14,u:'г',cat:'carb'},
+  {n:'Апельсин',e:'🍊',k:47,p:0.9,f:0.1,c:12,u:'г',cat:'carb'},
+  {n:'Манго',e:'🥭',k:60,p:0.8,f:0.4,c:15,u:'г',cat:'carb'},
+  {n:'Черника',e:'🫐',k:57,p:0.7,f:0.3,c:14,u:'г',cat:'carb'},
+  {n:'Клубника',e:'🍓',k:33,p:0.7,f:0.3,c:8,u:'г',cat:'carb'},
+  {n:'Киви',e:'🥝',k:61,p:1.1,f:0.5,c:15,u:'г',cat:'carb'},
+  {n:'Груша',e:'🍐',k:57,p:0.4,f:0.1,c:15,u:'г',cat:'carb'},
+  {n:'Виноград',e:'🍇',k:67,p:0.6,f:0.2,c:17,u:'г',cat:'carb'},
+  // ОВОЩИ
+  {n:'Брокколи',e:'🥦',k:34,p:2.8,f:0.4,c:7,u:'г',cat:'carb'},
+  {n:'Шпинат',e:'🥬',k:23,p:2.9,f:0.4,c:3.6,u:'г',cat:'carb'},
+  {n:'Огурец',e:'🥒',k:16,p:0.7,f:0.1,c:3.6,u:'г',cat:'carb'},
+  {n:'Помидор',e:'🍅',k:18,p:0.9,f:0.2,c:3.9,u:'г',cat:'carb'},
+  {n:'Морковь',e:'🥕',k:41,p:0.9,f:0.2,c:10,u:'г',cat:'carb'},
+  {n:'Болгарский перец',e:'🫑',k:31,p:1,f:0.3,c:6,u:'г',cat:'carb'},
+  {n:'Кабачок',e:'🥒',k:17,p:1.2,f:0.3,c:3.1,u:'г',cat:'carb'},
+  {n:'Баклажан',e:'🍆',k:25,p:1,f:0.2,c:6,u:'г',cat:'carb'},
+  {n:'Лук репчатый',e:'🧅',k:40,p:1.1,f:0.1,c:9,u:'г',cat:'carb'},
+  {n:'Чеснок',e:'🧄',k:149,p:6.4,f:0.5,c:33,u:'г',cat:'carb'},
+  {n:'Цветная капуста',e:'🥦',k:25,p:1.9,f:0.3,c:5,u:'г',cat:'carb'},
+  {n:'Белокочанная капуста',e:'🥬',k:27,p:1.8,f:0.1,c:6.1,u:'г',cat:'carb'},
+  {n:'Свёкла (сырая)',e:'🫑',k:43,p:1.6,f:0.2,c:10,u:'г',cat:'carb'},
+  // НАПИТКИ
+  {n:'Вода',e:'💧',k:0,p:0,f:0,c:0,u:'мл',cat:'other'},
+  {n:'Кофе чёрный',e:'☕',k:2,p:0.3,f:0,c:0,u:'мл',cat:'other'},
+  {n:'Чай зелёный',e:'🍵',k:1,p:0,f:0,c:0.2,u:'мл',cat:'other'},
+  {n:'Молоко 2.5%',e:'🥛',k:52,p:2.8,f:2.5,c:4.7,u:'мл',cat:'protein'},
+  {n:'Апельсиновый сок',e:'🍊',k:45,p:0.7,f:0.2,c:10,u:'мл',cat:'carb'},
+  {n:'Кокосовое молоко',e:'🥥',k:197,p:2,f:21,c:3,u:'мл',cat:'fat'},
+  // РАЗНОЕ
+  {n:'Мёд',e:'🍯',k:304,p:0.3,f:0,c:82,u:'г',cat:'carb'},
+  {n:'Соевый соус',e:'🫙',k:53,p:5.7,f:0,c:7,u:'мл',cat:'other'},
+  {n:'Шоколад тёмный 70%',e:'🍫',k:598,p:7.8,f:43,c:46,u:'г',cat:'fat'},
+  {n:'Шоколад молочный',e:'🍫',k:535,p:7,f:30,c:59,u:'г',cat:'fat'},
+];
+
+// ══════════════ RECIPES ══════════════
+const RECIPES=[
+  {id:1,meal:'breakfast',name:'Высокобелковая овсянка',emoji:'🥣',sat:true,img:'https://images.unsplash.com/photo-1517673400267-0251440c45dc?w=600&q=80',bp:.25,tags:['Завтрак','Насыщающее'],p:28,f:14,c:52,kcal:450,ingredients:[{n:'Овсянка (сырая)',q:80,u:'г',e:'🌾'},{n:'Молоко 2.5%',q:250,u:'мл',e:'🥛'},{n:'Яичный белок',q:100,u:'г',e:'🥚'},{n:'Банан',q:100,u:'г',e:'🍌'},{n:'Миндаль',q:15,u:'г',e:'🌰'}],steps:['Сварите овсянку на молоке 7 мин.','Взбейте белки и вмешайте в горячую кашу.','Добавьте банан и миндаль.']},
+  {id:2,meal:'breakfast',name:'Яичница с авокадо',emoji:'🍳',img:'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80',bp:.25,tags:['Завтрак','Белковое'],p:18,f:22,c:32,kcal:420,ingredients:[{n:'Яйцо куриное',q:120,u:'г',e:'🥚'},{n:'Авокадо',q:75,u:'г',e:'🥑'},{n:'Хлеб цельнозерновой',q:40,u:'г',e:'🍞'},{n:'Оливковое масло',q:5,u:'мл',e:'🫙'}],steps:['Разогрейте сковороду с маслом.','Жарьте яйца 3–4 мин.','Авокадо разомните на тосте.']},
+  {id:3,meal:'breakfast',name:'Протеиновые блины',emoji:'🥞',sat:true,img:'https://images.unsplash.com/photo-1565299543923-37dd37887442?w=600&q=80',bp:.25,tags:['Завтрак','Белковое'],p:35,f:9,c:42,kcal:390,ingredients:[{n:'Творог 5%',q:200,u:'г',e:'🧀'},{n:'Яйцо куриное',q:120,u:'г',e:'🥚'},{n:'Протеин порошок',q:25,u:'г',e:'💪'},{n:'Банан',q:60,u:'г',e:'🍌'},{n:'Овсянка (сырая)',q:30,u:'г',e:'🌾'}],steps:['Все в блендер.','Жарьте без масла 2 мин с каждой стороны.','С ягодами или мёдом.']},
+  {id:4,meal:'breakfast',name:'Греческий йогурт с ягодами',emoji:'🫐',img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80',bp:.20,tags:['Завтрак','Лёгкое'],p:14,f:5,c:38,kcal:250,ingredients:[{n:'Йогурт греческий 5%',q:200,u:'г',e:'🥛'},{n:'Черника',q:80,u:'г',e:'🫐'},{n:'Гранола',q:30,u:'г',e:'🌾'},{n:'Мёд',q:10,u:'г',e:'🍯'}],steps:['Йогурт в миску.','Ягоды, гранола, мёд сверху.']},
+  {id:5,meal:'breakfast',name:'Омлет с овощами и сыром',emoji:'🍳',sat:true,img:'https://images.unsplash.com/photo-1510693206972-df098062cb71?w=600&q=80',bp:.28,tags:['Завтрак','Насыщающее'],p:30,f:22,c:8,kcal:360,ingredients:[{n:'Яйцо куриное',q:180,u:'г',e:'🥚'},{n:'Сыр твёрдый',q:30,u:'г',e:'🧀'},{n:'Болгарский перец',q:60,u:'г',e:'🫑'},{n:'Шпинат',q:50,u:'г',e:'🥬'},{n:'Молоко 2.5%',q:30,u:'мл',e:'🥛'}],steps:['Взбейте яйца с молоком.','Шпинат и перец 2 мин.','Залейте, 3–4 мин под крышкой.','Сыр, сложите пополам.']},
+  {id:6,meal:'lunch',name:'Куриная грудка с киноа',emoji:'🍗',sat:true,img:'https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80',bp:.35,tags:['Обед','Белковое'],p:48,f:10,c:55,kcal:500,ingredients:[{n:'Куриная грудка (сырая)',q:220,u:'г',e:'🍗'},{n:'Киноа (сырая)',q:80,u:'г',e:'🌾'},{n:'Брокколи',q:150,u:'г',e:'🥦'},{n:'Оливковое масло',q:10,u:'мл',e:'🫙'}],steps:['Киноа 15 мин.','Грудку 6–7 мин.','Брокколи на пару 5 мин.']},
+  {id:7,meal:'lunch',name:'Лосось с брокколи',emoji:'🐟',sat:true,img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80',bp:.35,tags:['Обед','Омега-3'],p:40,f:22,c:18,kcal:440,ingredients:[{n:'Лосось (сырой)',q:200,u:'г',e:'🐟'},{n:'Брокколи',q:200,u:'г',e:'🥦'},{n:'Картофель (сырой)',q:120,u:'г',e:'🥔'},{n:'Оливковое масло',q:10,u:'мл',e:'🫙'}],steps:['Лосось посолите, лимон.','На пару 15 мин.','Брокколи и картофель 10 мин.']},
+  {id:8,meal:'lunch',name:'Говяжий боул с рисом',emoji:'🥩',sat:true,img:'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80',bp:.38,tags:['Обед','Сытное'],p:44,f:16,c:60,kcal:570,ingredients:[{n:'Говяжий фарш 5% (сырой)',q:200,u:'г',e:'🥩'},{n:'Рис бурый (сырой)',q:80,u:'г',e:'🍚'},{n:'Болгарский перец',q:80,u:'г',e:'🫑'},{n:'Лук репчатый',q:60,u:'г',e:'🧅'},{n:'Соевый соус',q:15,u:'мл',e:'🫙'}],steps:['Рис 30 мин.','Лук + фарш 7 мин.','Перец, соус, тушить 5 мин.']},
+  {id:9,meal:'lunch',name:'Индейка с гречкой',emoji:'🦃',sat:true,img:'https://images.unsplash.com/photo-1432139555190-58524dae6a55?w=600&q=80',bp:.35,tags:['Обед','Белковое'],p:46,f:9,c:55,kcal:490,ingredients:[{n:'Индейка грудка (сырая)',q:220,u:'г',e:'🦃'},{n:'Гречка (сырая)',q:80,u:'г',e:'🌾'},{n:'Лук репчатый',q:60,u:'г',e:'🧅'},{n:'Морковь',q:60,u:'г',e:'🥕'}],steps:['Гречка 15 мин.','Индейку с луком и морковью 8 мин.','Тушить 5 мин.']},
+  {id:10,meal:'lunch',name:'Чечевичный суп',emoji:'🍲',sat:true,img:'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=600&q=80',bp:.30,tags:['Обед','Вегет.'],p:22,f:6,c:62,kcal:390,ingredients:[{n:'Чечевица (сырая)',q:100,u:'г',e:'🫘'},{n:'Морковь',q:80,u:'г',e:'🥕'},{n:'Лук репчатый',q:80,u:'г',e:'🧅'},{n:'Помидор',q:200,u:'г',e:'🍅'},{n:'Оливковое масло',q:10,u:'мл',e:'🫙'}],steps:['Лук и морковь 5 мин.','Чечевица+томаты+вода. 22 мин.','Блендер.']},
+  {id:11,meal:'lunch',name:'Поке-боул с тунцом',emoji:'🐠',img:'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80',bp:.35,tags:['Обед','ПП'],p:35,f:14,c:52,kcal:475,ingredients:[{n:'Тунец (сырой)',q:150,u:'г',e:'🐟'},{n:'Рис белый (сырой)',q:80,u:'г',e:'🍚'},{n:'Авокадо',q:70,u:'г',e:'🥑'},{n:'Огурец',q:80,u:'г',e:'🥒'},{n:'Соевый соус',q:15,u:'мл',e:'🫙'}],steps:['Рис остудите.','Тунец нарежьте, соус.','Собрать боул.']},
+  {id:12,meal:'lunch',name:'Цезарь с курицей',emoji:'🥗',img:'https://images.unsplash.com/photo-1546793665-c74683f339c1?w=600&q=80',bp:.28,tags:['Обед','Лёгкое'],p:28,f:18,c:20,kcal:350,ingredients:[{n:'Куриная грудка (сырая)',q:150,u:'г',e:'🍗'},{n:'Шпинат',q:80,u:'г',e:'🥬'},{n:'Сыр твёрдый',q:25,u:'г',e:'🧀'},{n:'Хлеб цельнозерновой',q:30,u:'г',e:'🍞'},{n:'Оливковое масло',q:10,u:'мл',e:'🫙'}],steps:['Курицу обжарьте, нарежьте.','Шпинат+заправка.','Курица, сыр, гренки.']},
+  {id:13,meal:'dinner',name:'Треска с картофелем',emoji:'🐟',img:'https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&q=80',bp:.35,tags:['Ужин','ПП'],p:38,f:8,c:48,kcal:420,ingredients:[{n:'Треска (сырая)',q:220,u:'г',e:'🐠'},{n:'Картофель (сырой)',q:200,u:'г',e:'🥔'},{n:'Оливковое масло',q:10,u:'мл',e:'🫙'}],steps:['Картофель 200°C 20 мин.','Треска с лимоном 15 мин.']},
+  {id:14,meal:'dinner',name:'Куриные котлеты на пару',emoji:'🍖',sat:true,img:'https://images.unsplash.com/photo-1598103442097-8b74394b95c7?w=600&q=80',bp:.32,tags:['Ужин','Насыщающее'],p:45,f:10,c:18,kcal:350,ingredients:[{n:'Куриная грудка (сырая)',q:300,u:'г',e:'🍗'},{n:'Яйцо куриное',q:60,u:'г',e:'🥚'},{n:'Лук репчатый',q:60,u:'г',e:'🧅'},{n:'Овсянка (сырая)',q:30,u:'г',e:'🌾'}],steps:['Грудку измельчите с луком.','Яйцо, овсянка, соль.','На пару 20–25 мин.']},
+  {id:15,meal:'dinner',name:'Паста болоньезе',emoji:'🍝',img:'https://images.unsplash.com/photo-1598866594230-a7c12756260f?w=600&q=80',bp:.38,tags:['Ужин','Сытное'],p:36,f:18,c:72,kcal:590,ingredients:[{n:'Паста сухая',q:90,u:'г',e:'🍝'},{n:'Говяжий фарш 15% (сырой)',q:150,u:'г',e:'🥩'},{n:'Помидор',q:300,u:'г',e:'🍅'},{n:'Лук репчатый',q:70,u:'г',e:'🧅'}],steps:['Пасту сварите.','Лук+фарш 7 мин.','Томаты 15 мин. Смешайте.']},
+  {id:16,meal:'dinner',name:'Запечённая курица с овощами',emoji:'🍗',sat:true,img:'https://images.unsplash.com/photo-1598103442097-8b74394b95c7?w=600&q=80',bp:.35,tags:['Ужин','Насыщающее'],p:46,f:15,c:25,kcal:430,ingredients:[{n:'Куриное бедро без кожи (сырое)',q:250,u:'г',e:'🍗'},{n:'Кабачок',q:120,u:'г',e:'🥒'},{n:'Баклажан',q:100,u:'г',e:'🍆'},{n:'Помидор',q:150,u:'г',e:'🍅'},{n:'Оливковое масло',q:15,u:'мл',e:'🫙'}],steps:['Овощи с маслом и травами.','Курицу посолите.','Всё 200°C 35 мин.']},
+  {id:17,meal:'dinner',name:'Тофу вок с овощами',emoji:'🥦',img:'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&q=80',bp:.30,tags:['Ужин','Вегет.'],p:22,f:12,c:30,kcal:320,ingredients:[{n:'Тофу',q:200,u:'г',e:'🥛'},{n:'Брокколи',q:150,u:'г',e:'🥦'},{n:'Морковь',q:80,u:'г',e:'🥕'},{n:'Соевый соус',q:20,u:'мл',e:'🫙'}],steps:['Тофу 4 мин.','Овощи 4–5 мин.','Соус, тушить 2 мин.']},
+  {id:18,meal:'dinner',name:'Скумбрия с гречкой',emoji:'🐟',sat:true,img:'https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=600&q=80',bp:.35,tags:['Ужин','Омега-3'],p:36,f:20,c:44,kcal:500,ingredients:[{n:'Скумбрия (сырая)',q:200,u:'г',e:'🐟'},{n:'Гречка (сырая)',q:80,u:'г',e:'🌾'},{n:'Лимон',q:30,u:'г',e:'🍋'},{n:'Оливковое масло',q:10,u:'мл',e:'🫙'}],steps:['Гречку сварите.','Скумбрию посолите, сбрызните лимоном.','Запекайте 200°C 20 мин.']},
+  {id:19,meal:'snack',name:'Протеиновый смузи',emoji:'🥤',img:'https://images.unsplash.com/photo-1553530666-ba11a7da3888?w=600&q=80',bp:.12,tags:['Перекус','Белковое'],p:25,f:6,c:32,kcal:280,ingredients:[{n:'Молоко 2.5%',q:250,u:'мл',e:'🥛'},{n:'Протеин порошок',q:30,u:'г',e:'💪'},{n:'Банан',q:60,u:'г',e:'🍌'},{n:'Арахисовая паста',q:15,u:'г',e:'🥜'}],steps:['Все в блендер.','Взбить 30 сек.']},
+  {id:20,meal:'snack',name:'Творог с мёдом',emoji:'🍯',img:'https://images.unsplash.com/photo-1488477181946-6428a0291777?w=600&q=80',bp:.12,tags:['Перекус','Белковое'],p:22,f:8,c:28,kcal:270,ingredients:[{n:'Творог 5%',q:200,u:'г',e:'🧀'},{n:'Мёд',q:10,u:'г',e:'🍯'},{n:'Грецкий орех',q:15,u:'г',e:'🌰'}],steps:['Творог разомните.','Мёд и орехи сверху.']},
+  {id:21,meal:'snack',name:'Хумус с овощами',emoji:'🥕',img:'https://images.unsplash.com/photo-1514190051997-0f6f39ca5cde?w=600&q=80',bp:.12,tags:['Перекус','Вегет.'],p:8,f:10,c:22,kcal:215,ingredients:[{n:'Хумус готовый',q:80,u:'г',e:'🫘'},{n:'Морковь',q:100,u:'г',e:'🥕'},{n:'Болгарский перец',q:80,u:'г',e:'🫑'}],steps:['Хумус в миску.','Овощи палочками.']},
+  {id:22,meal:'snack',name:'Яйца вкрутую',emoji:'🥚',sat:true,img:'https://images.unsplash.com/photo-1525351484163-7529414344d8?w=600&q=80',bp:.10,tags:['Перекус','Белковое'],p:16,f:12,c:1,kcal:185,ingredients:[{n:'Яйцо куриное',q:120,u:'г',e:'🥚'},{n:'Болгарский перец',q:60,u:'г',e:'🫑'}],steps:['Варите яйца 10 мин.','Очистите, с овощами.']},
+];
+
+// ══════════════ STATE ══════════════
+let gender='male',goal='maintain',rF='all',cM='weight';
+let pro=null,entries=[],foodLog=[],cart=[],chkd=new Set(),selFd=null,editRid=null,custIngr={};
+let selCat=null,constrFoods=[];
+
+// ══════════════ INIT ══════════════
+(function(){
+  try{
+    const p=localStorage.getItem('k52_p');
+    if(p){pro=JSON.parse(p);gender=pro.gender;goal=pro.userGoal||'maintain';fillF();updHdr();}
+    const e=localStorage.getItem('k52_en');if(e)entries=JSON.parse(e);
+    const fl=localStorage.getItem('k52_fl_'+td());if(fl)foodLog=JSON.parse(fl);
+    const ca=localStorage.getItem('k52_ca');if(ca)cart=JSON.parse(ca);
+    const ci=localStorage.getItem('k52_ci');if(ci)custIngr=JSON.parse(ci);
+    // Avatar
+    const av=localStorage.getItem('k52_av');
+    if(av){
+      const ico=document.getElementById('av-ico');
+      const img=document.getElementById('av-img');
+      ico.style.display='none';img.src=av;img.style.display='block';
+    }
+  }catch(x){console.log('Init error',x);}
+  setG(gender,1);setGoal(goal,1);
+  updCustomHint();
+})();
+
+function td(){return new Date().toISOString().slice(0,10)}
+function sv(k,v){
+  try{localStorage.setItem(k,JSON.stringify(v));}
+  catch(x){showT('⚠️ Мало памяти. Очистите старые фото.');}
+}
+
+function fillF(){
+  if(!pro)return;
+  const map={name:'name','age':'a','height':'h','weight':'w','waist':'waist','hips':'hips'};
+  Object.keys(map).forEach(id=>{
+    const el=document.getElementById('f-'+id);
+    if(el&&pro[map[id]]!=null)el.value=pro[map[id]];
+  });
+  if(document.getElementById('f-act'))document.getElementById('f-act').value=pro.act||1.55;
+  if(document.getElementById('f-custom'))document.getElementById('f-custom').value=pro.customKcal||'';
+  updCustomHint();
+}
+
+function updCustomHint(){
+  const el=document.getElementById('f-custom');
+  const hint=document.getElementById('custom-hint');
+  if(!el||!hint)return;
+  const v=parseInt(el.value)||0;
+  if(v>0){hint.textContent='✅ Будет использоваться: '+v+' ккал/день';hint.style.color='var(--pu)';}
+  else{hint.textContent='Оставьте пустым для автоматического расчёта';hint.style.color='var(--tx3)';}
+}
+if(document.getElementById('f-custom'))
+  document.getElementById('f-custom').addEventListener('input',updCustomHint);
+
+function updHdr(){
+  if(!pro)return;
+  document.getElementById('hdr-sub').textContent=pro.name?'Привет, '+pro.name+'! 👋':'Ваш личный нутрициолог';
+  const av=localStorage.getItem('k52_av');
+  if(!av)document.getElementById('av-ico').textContent=gender==='female'?'👩':'👨';
+}
+
+// ══════════════ AVATAR — compress & save ══════════════
+function onAv(e){
+  const file=e.target.files[0];if(!file)return;
+  const img=new Image(),fr=new FileReader();
+  fr.onload=ev=>{
+    img.onload=()=>{
+      const c=document.createElement('canvas');
+      const max=180;let w=img.naturalWidth,h=img.naturalHeight;
+      if(w>h){if(w>max){h=Math.round(h*max/w);w=max;}}
+      else{if(h>max){w=Math.round(w*max/h);h=max;}}
+      c.width=w;c.height=h;
+      c.getContext('2d').drawImage(img,0,0,w,h);
+      const data=c.toDataURL('image/jpeg',0.65);
+      // Save to localStorage
+      try{
+        localStorage.setItem('k52_av',data);
+        // Apply immediately
+        document.getElementById('av-ico').style.display='none';
+        const avImg=document.getElementById('av-img');
+        avImg.src=data;avImg.style.display='block';
+        showT('✅ Фото профиля сохранено');
+      }catch(ex){showT('⚠️ Фото слишком большое, не сохранено');}
+    };
+    img.src=ev.target.result;
+  };
+  fr.readAsDataURL(file);
+}
+
+// ══════════════ PROFILE ══════════════
+function setG(g,s){gender=g;document.getElementById('g-male').classList.toggle('on',g==='male');document.getElementById('g-female').classList.toggle('on',g==='female');}
+function setGoal(g,s){goal=g;['lose','maintain','gain'].forEach(x=>document.getElementById('goal-'+x).classList.toggle('on',x===g));}
+function bmrCalc(w,h,a,g){return g==='male'?10*w+6.25*h-5*a+5:10*w+6.25*h-5*a-161}
+
+function savePro(){
+  const w=parseFloat(document.getElementById('f-weight').value);
+  const h=parseFloat(document.getElementById('f-height').value);
+  const a=parseFloat(document.getElementById('f-age').value);
+  if(!w||!h||!a){showT('⚠️ Введите вес, рост и возраст');return;}
+  const waist=parseFloat(document.getElementById('f-waist').value)||0;
+  const hips=parseFloat(document.getElementById('f-hips').value)||0;
+  const act=parseFloat(document.getElementById('f-act').value);
+  const name=document.getElementById('f-name').value||'Пользователь';
+  const customKcal=parseInt(document.getElementById('f-custom').value)||0;
+  const bmrV=Math.round(bmrCalc(w,h,a,gender));
+  const tdee=Math.round(bmrV*act);
+  pro={name,w,h,a,waist,hips,gender,act,userGoal:goal,tdee,bmrV,
+    bmi:w/((h/100)**2),customKcal,
+    loseCals:Math.round(tdee*.8),gainCals:tdee+300};
+  sv('k52_p',pro);updHdr();
+  showT('✅ Профиль сохранён!');
+  setTimeout(()=>go('dash'),700);
+}
+
+// ══════════════ NAVIGATION ══════════════
+const PGS=['profile','dash','rec','prog','calc','cart'];
+function go(p){
+  PGS.forEach(x=>{
+    document.getElementById('pg-'+x).classList.toggle('on',x===p);
+    document.getElementById('n-'+x).classList.toggle('on',x===p);
+  });
+  document.getElementById('scr').scrollTop=0;
+  if(p==='dash')rDash();
+  if(p==='rec')rRec();
+  if(p==='prog')rProg();
+  if(p==='calc')rCalc();
+  if(p==='cart')rCart();
+}
+
+// ══════════════ CALORIES — always uses getCals() ══════════════
+function getCals(){
+  if(!pro)return null;
+  if(pro.customKcal&&pro.customKcal>0)return pro.customKcal;
+  if(goal==='lose')return pro.loseCals;
+  if(goal==='gain')return pro.gainCals;
+  return pro.tdee;
+}
+
+// ══════════════ DASHBOARD ══════════════
+function rDash(){
+  const el=document.getElementById('dash-b');
+  if(!pro){el.innerHTML='<div class="empty"><div class="empty-ico">📊</div><p>Заполните <a onclick="go(\'profile\')">профиль</a></p></div>';return;}
+  const cals=getCals();
+  const prot=Math.round(pro.w*1.8),fat=Math.round(cals*.25/9),carb=Math.round((cals-prot*4-fat*9)/4);
+  const bmiL=pro.bmi<18.5?'Недовес':pro.bmi<25?'Норма ✅':pro.bmi<30?'Избыток':'Ожирение';
+  const pP=Math.min(100,Math.round(prot*4*100/cals)),fP=Math.min(100,Math.round(fat*9*100/cals)),cP=Math.min(100,Math.round(carb*4*100/cals));
+  const activeGoal=pro.userGoal||goal;
+  const lbl=pro.customKcal?'✏️ Ручной':'авторасчёт';
+  el.innerHTML=`<div class="welcome"><div class="wn">Привет, ${pro.name}! 👋</div><div class="ws">Калораж сегодня: ${cals} ккал (${lbl})</div></div>
+  <div class="sg">
+    <div class="sc sc1"><div class="sc-l">ИМТ</div><div class="sc-v">${pro.bmi.toFixed(1)}<span class="sc-u">${bmiL}</span></div></div>
+    <div class="sc sc2"><div class="sc-l">Базовый обмен</div><div class="sc-v">${pro.bmrV}<span class="sc-u">ккал</span></div></div>
+    <div class="sc sc3"><div class="sc-l">TDEE</div><div class="sc-v">${pro.tdee}<span class="sc-u">ккал</span></div></div>
+    <div class="sc sc4"><div class="sc-l">Вес</div><div class="sc-v">${pro.w}<span class="sc-u">кг</span></div></div>
+  </div>
+  <div class="card">
+    <div class="lbl">Выберите цель <span style="font-weight:600;font-size:10px;color:var(--tx3)">${pro.customKcal?'(ручной калораж активен)':''}</span></div>
+    <div class="gcards">
+      <div class="gc ${activeGoal==='lose'?'on':''}" onclick="selGoal('lose')">
+        <div class="gc-t">🔻 Похудение</div>
+        <div class="gc-n">${pro.customKcal?pro.customKcal:pro.loseCals}</div>
+        <div class="gc-s">${pro.customKcal?'ручной':'−20% от TDEE'}</div>
+      </div>
+      <div class="gc ${activeGoal==='maintain'?'on':''}" onclick="selGoal('maintain')">
+        <div class="gc-t">⚖️ Норма</div>
+        <div class="gc-n">${pro.customKcal?pro.customKcal:pro.tdee}</div>
+        <div class="gc-s">${pro.customKcal?'ручной':'ккал/день'}</div>
+      </div>
+      <div class="gc ${activeGoal==='gain'?'on':''}" onclick="selGoal('gain')">
+        <div class="gc-t">💪 Набор</div>
+        <div class="gc-n">${pro.customKcal?pro.customKcal:pro.gainCals}</div>
+        <div class="gc-s">${pro.customKcal?'ручной':'+300 ккал'}</div>
+      </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="lbl">Макросы — ${cals} ккал</div>
+    <div class="mac"><div class="mac-h"><span class="mac-n">🥩 Белки</span><span class="mac-v" style="color:var(--gr)">${prot}г</span></div><div class="bar"><div class="bf" style="width:${pP}%;background:linear-gradient(90deg,var(--gr),#059669)"></div></div></div>
+    <div class="mac"><div class="mac-h"><span class="mac-n">🥑 Жиры</span><span class="mac-v" style="color:var(--am)">${fat}г</span></div><div class="bar"><div class="bf" style="width:${fP}%;background:linear-gradient(90deg,var(--am),#D97706)"></div></div></div>
+    <div class="mac"><div class="mac-h"><span class="mac-n">🍚 Углеводы</span><span class="mac-v" style="color:var(--bl)">${carb}г</span></div><div class="bar"><div class="bf" style="width:${cP}%;background:linear-gradient(90deg,var(--bl),#2563EB)"></div></div></div>
+  </div>
+  <button class="btn btn-g mt" onclick="go('rec')">Рецепты 🍽️</button>
+  <button class="btn btn-p mt" onclick="go('calc')">Счётчик-конструктор 🧮</button>`;
+}
+function selGoal(g){if(!pro)return;pro.userGoal=g;goal=g;sv('k52_p',pro);rDash();}
+
+// ══════════════ RECIPES ══════════════
+function scaleR(r,cals){
+  const mt=cals*r.bp,ratio=Math.min(1.5,Math.max(.7,mt/r.kcal));
+  return{...r,kS:Math.round(r.kcal*ratio),pS:Math.round(r.p*ratio),fS:Math.round(r.f*ratio),cS:Math.round(r.c*ratio),diff:Math.abs(r.kcal*ratio-mt),ratio};
+}
+function fitL(d){return d<30?{c:'fit-ok',t:'✅ Идеально'}:d<80?{c:'fit-gd',t:'👍 Подходит'}:{c:'fit-hi',t:'⚠️ Близко'};}
+
+function rRec(){
+  const el=document.getElementById('rec-b');const cals=getCals();
+  const filters=[{id:'all',l:'Все'},{id:'breakfast',l:'Завтрак'},{id:'lunch',l:'Обед'},{id:'dinner',l:'Ужин'},{id:'snack',l:'Перекус'}];
+  let list=RECIPES.filter(r=>rF==='all'||r.meal===rF);
+  let sc=list.map(r=>cals?scaleR(r,cals):{...r,kS:r.kcal,pS:r.p,fS:r.f,cS:r.c,diff:999});
+  sc.sort((a,b)=>a.diff-b.diff);
+  el.innerHTML='<div class="ptitle">Рецепты 🍽️</div>'+(cals?'<div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:10px">Порции под <span style="color:var(--pu)">'+cals+' ккал/день</span></div>':'')+'<div class="filt">'+filters.map(f=>'<div class="chip '+(rF===f.id?'on':'')+'" onclick="setRF(\''+f.id+'\')">'+f.l+'</div>').join('')+'</div><div class="rgrid">'+sc.map(r=>{const fit=cals?fitL(r.diff):null;return'<div class="rc" onclick="openRec('+r.id+')"><img class="rc-img" src="'+r.img+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="rc-ph" style="display:none">'+r.emoji+'</div><div class="rc-body">'+(r.sat?'<span class="tag-sat">🔥 Насыщающее</span>':'')+(fit?'<div class="fit '+fit.c+'">'+fit.t+'</div>':'')+'<div class="rc-name">'+r.emoji+' '+r.name+'</div><div class="rc-row"><div class="rc-tags">'+r.tags.map(t=>'<span class="rc-tag">'+t+'</span>').join('')+'</div><div class="rc-kcal">'+r.kS+' ккал</div></div><div class="rc-macs"><div class="rc-mac"><div class="rc-mv" style="color:var(--gr)">'+r.pS+'г</div><div class="rc-mn">Белки</div></div><div class="rc-mac"><div class="rc-mv" style="color:var(--am)">'+r.fS+'г</div><div class="rc-mn">Жиры</div></div><div class="rc-mac"><div class="rc-mv" style="color:var(--bl)">'+r.cS+'г</div><div class="rc-mn">Углев.</div></div></div></div></div>';}).join('')+'</div>';
+}
+function setRF(f){rF=f;rRec();}
+
+function getIngrs(rid){
+  const r=RECIPES.find(x=>x.id===rid);
+  const ov=custIngr[rid]||{};
+  return r.ingredients.map((ing,i)=>ov[i]?{...ov[i],oi:i}:{...ing,oi:i});
+}
+function calcT(ingrs,ratio){
+  let k=0,p=0,f=0,c=0;
+  ingrs.forEach(ing=>{
+    const fd=FOODS.find(x=>x.n===ing.n);
+    if(!fd)return;const g=ing.q*ratio/100;
+    k+=fd.k*g;p+=fd.p*g;f+=fd.f*g;c+=fd.c*g;
+  });
+  return{k:Math.round(k),p:Math.round(p),f:Math.round(f),c:Math.round(c)};
+}
+function rIngrs(ingrs,ratio){
+  return ingrs.map((ing,i)=>'<div class="ir"><span class="ir-ico">'+ing.e+'</span><span class="ir-name">'+ing.n+'</span><span class="ir-qty">'+Math.round(ing.q*ratio)+' '+ing.u+'</span><button class="ir-edit" onclick="showEdit('+i+')">Заменить</button></div>').join('');
+}
+function openRec(id){
+  editRid=id;
+  const r0=RECIPES.find(x=>x.id===id),cals=getCals();
+  const r=cals?scaleR(r0,cals):{...r0,kS:r0.kcal,ratio:1,diff:0};
+  const ratio=r.ratio||1;const ingrs=getIngrs(id);const tot=calcT(ingrs,ratio);
+  const fit=cals?fitL(r.diff):null;
+  document.getElementById('m-in').innerHTML='<img class="m-img" src="'+r0.img+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="m-ph" style="display:none">'+r0.emoji+'</div><div class="m-body">'+(fit?'<div class="fit '+fit.c+'" style="margin-bottom:7px">'+fit.t+'</div>':'')+(r0.sat?'<span class="tag-sat" style="display:inline-block;margin-bottom:8px">🔥 Насыщающее</span>':'')+'<div class="m-title">'+r0.emoji+' '+r0.name+'</div><div class="m-kcal" id="mk">'+tot.k+' ккал</div><div class="mpills"><div class="mp mp-p"><div class="mp-v" id="mp">'+tot.p+'г</div><div class="mp-n">Белки</div></div><div class="mp mp-f"><div class="mp-v" id="mf">'+tot.f+'г</div><div class="mp-n">Жиры</div></div><div class="mp mp-c"><div class="mp-v" id="mc">'+tot.c+'г</div><div class="mp-n">Углев.</div></div></div><div style="display:flex;justify-content:space-between;align-items:center"><div class="sec-t" style="margin-top:8px">🛒 Ингредиенты</div><button class="btn btn-o btn-sm" onclick="addToCart('+id+')">+ В корзину 🛒</button></div><div id="il">'+rIngrs(ingrs,ratio)+'</div><div id="ep"></div><div class="sec-t">👨‍🍳 Приготовление</div>'+r0.steps.map((s,i)=>'<div class="stp"><div class="sn">'+(i+1)+'</div><div class="st">'+s+'</div></div>').join('')+'</div>';
+  document.getElementById('mo').classList.add('on');
+}
+function showEdit(idx){
+  const rid=editRid,r0=RECIPES.find(x=>x.id===rid);
+  const cals=getCals(),r=cals?scaleR(r0,cals):{...r0,ratio:1};
+  const ingrs=getIngrs(rid),cur=ingrs[idx];
+  document.getElementById('ep').innerHTML='<div class="eip"><div style="font-size:12px;font-weight:800;color:var(--tx2);margin-bottom:8px">Замена: <span style="color:var(--pu)">'+cur.n+'</span></div><div class="f"><label>Кол-во ('+cur.u+')</label><input type="number" id="ei-q" value="'+Math.round(cur.q)+'" inputmode="decimal"/></div><div class="sw"><span class="si-ico">🔍</span><input class="si" type="text" id="ei-s" placeholder="Продукт для замены..." oninput="srchE('+idx+')" autocomplete="off"/></div><div id="ei-r" class="fres"></div><button class="btn btn-ghost btn-sm" style="margin-top:8px" onclick="applyE('+idx+',null)">Только количество ✓</button></div>';
+}
+function srchE(idx){
+  const q=document.getElementById('ei-s').value.toLowerCase().trim();
+  const res=document.getElementById('ei-r');
+  if(q.length<2){res.classList.remove('on');return;}
+  const found=FOODS.filter(f=>f.n.toLowerCase().includes(q)).slice(0,5);
+  res.innerHTML=found.map(f=>'<div class="fri" onclick="applyE('+idx+',\''+f.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')"><div class="fri-n">'+f.e+' '+f.n+'<small>Б:'+f.p+' Ж:'+f.f+' У:'+f.c+' на 100'+f.u+'</small></div><div class="fri-k">'+f.k+'кк</div></div>').join('');
+  res.classList.add('on');
+}
+function applyE(idx,fname){
+  const rid=editRid,r0=RECIPES.find(x=>x.id===rid);
+  const cals=getCals(),r=cals?scaleR(r0,cals):{...r0,ratio:1};
+  const ratio=r.ratio||1,ingrs=getIngrs(rid),cur=ingrs[idx];
+  const qty=parseFloat(document.getElementById('ei-q').value)||cur.q;
+  if(!custIngr[rid])custIngr[rid]={};
+  if(fname){const fd=FOODS.find(x=>x.n===fname);custIngr[rid][idx]={n:fd.n,q:qty,u:fd.u,e:fd.e};}
+  else{const ex=custIngr[rid][idx]||cur;custIngr[rid][idx]={...ex,q:qty};}
+  sv('k52_ci',custIngr);
+  const ni=getIngrs(rid),tot=calcT(ni,ratio);
+  document.getElementById('il').innerHTML=rIngrs(ni,ratio);
+  document.getElementById('mk').textContent=tot.k+' ккал';
+  document.getElementById('mp').textContent=tot.p+'г';
+  document.getElementById('mf').textContent=tot.f+'г';
+  document.getElementById('mc').textContent=tot.c+'г';
+  document.getElementById('ep').innerHTML='';
+  showT('✅ Обновлено, КБЖУ пересчитано');
+}
+
+// ══════════════ CART ══════════════
+function addToCart(rid){
+  const r=RECIPES.find(x=>x.id===rid);
+  const ex=cart.find(c=>c.rid===rid);
+  if(ex)ex.qty++;else cart.push({rid,qty:1,name:r.name,emoji:r.emoji});
+  sv('k52_ca',cart);showT('✅ "'+r.name+'" в корзину');
+}
+function buildShop(){
+  const list={};
+  cart.forEach(item=>{
+    const ingrs=getIngrs(item.rid);
+    const r0=RECIPES.find(x=>x.id===item.rid);
+    const cals=getCals();
+    const ratio=(cals?scaleR(r0,cals).ratio:1)*item.qty;
+    ingrs.forEach(ing=>{
+      if(!list[ing.n])list[ing.n]={n:ing.n,e:ing.e,qty:0,u:ing.u};
+      list[ing.n].qty+=ing.q*ratio;
+    });
+  });
+  return Object.values(list).map(x=>({...x,qty:Math.ceil(x.qty)}));
+}
+function rCart(){
+  const el=document.getElementById('cart-b');
+  const shop=cart.length>0?buildShop():[];
+  el.innerHTML='<div class="ptitle">🛒 Корзина</div>'+
+  (cart.length===0?'<div class="empty"><div class="empty-ico">🛒</div><p>Добавьте блюда из <a onclick="go(\'rec\')">рецептов</a></p></div>':
+  '<div class="card"><div class="lbl">Выбранные блюда</div>'+
+  cart.map((c,i)=>{const r=RECIPES.find(x=>x.id===c.rid);return'<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:.5px solid var(--bd)"><span style="font-size:22px">'+r.emoji+'</span><div style="flex:1"><div style="font-size:13px;font-weight:800">'+r.name+'</div></div><div style="display:flex;align-items:center;gap:8px"><button onclick="chgQ('+i+',-1)" style="width:26px;height:26px;border-radius:50%;border:2px solid var(--bd2);background:var(--bg);font-size:14px;cursor:pointer;font-weight:900">−</button><span style="font-size:14px;font-weight:900;color:var(--pu)">'+c.qty+'</span><button onclick="chgQ('+i+',1)" style="width:26px;height:26px;border-radius:50%;border:2px solid var(--bd2);background:var(--bg);font-size:14px;cursor:pointer;font-weight:900">+</button><span onclick="rmCart('+i+')" style="font-size:15px;color:var(--tx3);cursor:pointer;padding:4px">✕</span></div></div>';}).join('')+
+  '<button class="btn btn-ghost btn-sm mt" onclick="clrCart()">Очистить 🗑️</button></div>'+
+  '<div class="card"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="lbl" style="margin-bottom:0">Список покупок</div><button class="btn btn-sm btn-ghost" onclick="unchk()">Сбросить ✓</button></div>'+
+  shop.map((item,i)=>'<div class="ci '+(chkd.has(item.n)?'done':'')+'" id="cii-'+i+'"><div class="ci-ico">'+item.e+'</div><div class="ci-info"><div class="ci-nm">'+item.n+'</div><div class="ci-qty">'+item.qty+' '+item.u+'</div></div><div class="ci-chk '+(chkd.has(item.n)?'done':'')+'" onclick="tglChk(\''+item.n.replace(/'/g,"\\'")+'\','+i+')">'+(chkd.has(item.n)?'✓':'')+'</div></div>').join('')+'</div>');
+}
+function chgQ(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);sv('k52_ca',cart);rCart();}
+function rmCart(i){cart.splice(i,1);sv('k52_ca',cart);rCart();}
+function clrCart(){cart=[];chkd=new Set();sv('k52_ca',cart);rCart();}
+function tglChk(n){if(chkd.has(n))chkd.delete(n);else chkd.add(n);rCart();}
+function unchk(){chkd=new Set();rCart();}
+
+// ══════════════ PROGRESS ══════════════
+function rProg(){
+  const el=document.getElementById('prog-b');
+  const lat=entries[entries.length-1],prev=entries[entries.length-2];
+  const dlt=(f)=>{
+    if(!lat||!prev||!lat[f]||!prev[f])return'';
+    const d=lat[f]-prev[f],s=d>0?'+':'';
+    const cls=f==='weight'?(d<0?'dn':'up'):(d<0?'dn':'up');
+    return'<div class="ps-d '+cls+'">'+s+d.toFixed(1)+'</div>';
+  };
+  el.innerHTML='<div class="ph"><div class="ph-t">📈 Мой прогресс</div><div class="ph-s">Вносите замеры раз в неделю</div><div class="ph-stats"><div class="ps"><div class="ps-v">'+(lat?lat.weight||'—':'—')+'</div><div class="ps-l">Вес, кг</div>'+dlt('weight')+'</div><div class="ps"><div class="ps-v">'+(lat?lat.waist||'—':'—')+'</div><div class="ps-l">Талия, см</div>'+dlt('waist')+'</div><div class="ps"><div class="ps-v">'+(lat?lat.hips||'—':'—')+'</div><div class="ps-l">Бёдра, см</div>'+dlt('hips')+'</div></div></div>'+
+  (entries.length>1?rChart():'')+
+  '<div class="af"><div class="lbl" style="margin-bottom:10px">➕ Добавить замер</div><div class="f"><label>Дата</label><input type="date" id="pe-d" value="'+td()+'"/></div><div class="fr3"><div class="f"><label>Вес (кг)</label><input type="number" id="pe-w" placeholder="70" inputmode="decimal" step=".1"/></div><div class="f"><label>Талия</label><input type="number" id="pe-wa" placeholder="80" inputmode="numeric"/></div><div class="f"><label>Бёдра</label><input type="number" id="pe-hi" placeholder="100" inputmode="numeric"/></div></div><div class="f"><label>Фото</label><div class="pup" id="pe-pa" onclick="document.getElementById(\'pe-pf\').click()"><span style="font-size:20px">📷</span><span>Добавить фото</span><input type="file" id="pe-pf" accept="image/*" onchange="onPP(event)" style="display:none"/></div></div><button class="btn btn-p mt" onclick="addE()">Сохранить замер</button></div>'+
+  (entries.length>0?'<div class="card"><div class="lbl">История замеров</div>'+
+  [...entries].reverse().map((e,ri)=>{
+    const i=entries.length-1-ri;
+    return'<div class="pe"><div class="pe-hd"><div class="pe-ph" onclick="'+(e.photo?'openFs(\''+e.photo.substring(0,50)+'idx'+i+'\')':'')+'">'+
+    (e.photo?'<img src="'+e.photo+'" onclick="openFsI('+i+')" style="cursor:pointer"/>':'📅')+
+    '</div><div class="pe-info"><div class="pe-date">'+fmtD(e.date)+'</div><div class="pe-vals">'+
+    (e.weight?'<div class="pe-val">⚖️ <span>'+e.weight+'</span>кг</div>':'')+
+    (e.waist?'<div class="pe-val">📏 <span>'+e.waist+'</span>см</div>':'')+
+    (e.hips?'<div class="pe-val">🍑 <span>'+e.hips+'</span>см</div>':'')+
+    '</div></div><div class="pe-del" onclick="delE('+i+')">🗑️</div></div>'+
+    (e.photo?'<img class="pe-big" src="'+e.photo+'" onclick="openFsI('+i+')" title="Нажмите для просмотра"/>':'')+
+    '</div>';
+  }).join('')+'</div>':'<div class="empty"><div class="empty-ico">📏</div><p>Добавьте первый замер</p></div>');
+}
+
+function rChart(){
+  const data=entries.filter(e=>e[cM]);
+  if(data.length<2)return'<div class="cw"><div class="ct-tabs">'+['weight','waist','hips'].map(m=>'<button class="ct '+(cM===m?'on':'')+'" onclick="setCM(\''+m+'\')">'+{weight:'Вес',waist:'Талия',hips:'Бёдра'}[m]+'</button>').join('')+'</div><div style="font-size:12px;color:var(--tx3);font-weight:700">Нужно минимум 2 замера</div></div>';
+  const vals=data.map(e=>parseFloat(e[cM]));
+  const mn=Math.min(...vals)-1,mx=Math.max(...vals)+1;
+  const W=310,H=100,pd=28;
+  const x=i=>pd+(i/(data.length-1))*(W-pd*2);
+  const y=v=>H-pd-((v-mn)/(mx-mn||1))*(H-pd*1.5);
+  const pts=vals.map((v,i)=>x(i)+','+y(v)).join(' ');
+  return'<div class="cw"><div class="ct-tabs">'+['weight','waist','hips'].map(m=>'<button class="ct '+(cM===m?'on':'')+'" onclick="setCM(\''+m+'\')">'+{weight:'Вес',waist:'Талия',hips:'Бёдра'}[m]+'</button>').join('')+'</div><svg style="width:100%;overflow:visible" viewBox="0 0 '+W+' '+H+'"><defs><linearGradient id="lg" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7C3AED"/><stop offset="100%" stop-color="#EC4899"/></linearGradient></defs>'+vals.map((v,i)=>'<line x1="'+x(i)+'" y1="'+y(v)+'" x2="'+x(i)+'" y2="'+(H-pd/2)+'" stroke="rgba(124,58,237,.1)" stroke-width="1"/>').join('')+'<polyline points="'+pts+'" fill="none" stroke="url(#lg)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+vals.map((v,i)=>'<circle cx="'+x(i)+'" cy="'+y(v)+'" r="4" fill="url(#lg)"/><text x="'+x(i)+'" y="'+(y(v)-7)+'" text-anchor="middle" font-size="8" font-weight="700" fill="var(--tx3)">'+v+'</text><text x="'+x(i)+'" y="'+(H-2)+'" text-anchor="middle" font-size="7" fill="var(--tx3)">'+data[i].date.slice(5)+'</text>').join('')+'</svg></div>';
+}
+function setCM(m){cM=m;rProg();}
+
+// Fullscreen photo
+function openFsI(idx){
+  const e=entries[idx];
+  if(!e||!e.photo)return;
+  document.getElementById('fs-img').src=e.photo;
+  document.getElementById('fs-ov').classList.add('on');
+}
+function closeFs(){document.getElementById('fs-ov').classList.remove('on');}
+
+let tmpPh=null;
+function onPP(e){
+  const file=e.target.files[0];if(!file)return;
+  const img=new Image(),fr=new FileReader();
+  fr.onload=ev=>{img.onload=()=>{
+    const c=document.createElement('canvas');const max=500;
+    let w=img.naturalWidth,h=img.naturalHeight;
+    if(w>h){if(w>max){h=Math.round(h*max/w);w=max;}}else{if(h>max){w=Math.round(w*max/h);h=max;}}
+    c.width=w;c.height=h;c.getContext('2d').drawImage(img,0,0,w,h);
+    tmpPh=c.toDataURL('image/jpeg',.78);
+    document.getElementById('pe-pa').innerHTML='<img src="'+tmpPh+'"/><input type="file" id="pe-pf" accept="image/*" onchange="onPP(event)" style="display:none"/>';
+  };img.src=ev.target.result;};fr.readAsDataURL(file);
+}
+function addE(){
+  const date=document.getElementById('pe-d').value||td();
+  const weight=parseFloat(document.getElementById('pe-w').value)||null;
+  const waist=parseFloat(document.getElementById('pe-wa').value)||null;
+  const hips=parseFloat(document.getElementById('pe-hi').value)||null;
+  if(!weight&&!waist&&!hips){showT('⚠️ Введите хотя бы один параметр');return;}
+  const idx=entries.findIndex(e=>e.date===date);
+  const entry={date,weight,waist,hips,photo:tmpPh||null};
+  if(idx>=0)entries[idx]=entry;else entries.push(entry);
+  entries.sort((a,b)=>a.date.localeCompare(b.date));
+  sv('k52_en',entries);tmpPh=null;showT('✅ Замер сохранён!');rProg();
+}
+function delE(i){entries.splice(i,1);sv('k52_en',entries);rProg();}
+function fmtD(d){return new Date(d+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});}
+
+// ══════════════ CALCULATOR-CONSTRUCTOR (MEAL MODE) ══════════════
+// meal split: breakfast 25%, lunch 35%, dinner 30%, snack 10%
+const MEAL_SPLIT={breakfast:.25,lunch:.35,dinner:.30,snack:.10};
+const MEAL_NAMES={breakfast:'🌅 Завтрак',lunch:'🍽️ Обед',dinner:'🌙 Ужин',snack:'🍎 Перекус'};
+let selMeal=null; // which meal user is building
+let selCat=null;  // which category inside meal
+
+function getMealTargets(meal){
+  const cals=getCals()||2000;
+  const split=MEAL_SPLIT[meal]||.25;
+  const mealCals=Math.round(cals*split);
+  const prot=pro?Math.round(pro.w*1.8):Math.round(cals*.30/4);
+  const fat=Math.round(cals*.25/9);
+  const carb=Math.round((cals-prot*4-fat*9)/4);
+  // Scale macros to meal proportion
+  return{
+    cals:mealCals,
+    p:Math.round(prot*split),
+    f:Math.round(fat*split),
+    c:Math.round(carb*split),
+  };
+}
+
+// Calories eaten in this meal today (from foodLog, tagged by meal)
+function getMealEaten(meal){
+  const items=foodLog.filter(x=>x.meal===meal);
+  return items.reduce((a,x)=>({k:a.k+x.k,p:a.p+x.p,f:a.f+x.f,c:a.c+x.c}),{k:0,p:0,f:0,c:0});
+}
+
+function rCalc(){
+  const el=document.getElementById('calc-b');
+  const cals=getCals()||2000;
+
+  // Full day totals
+  const totDay={k:0,p:0,f:0,c:0};
+  foodLog.forEach(x=>{totDay.k+=x.k;totDay.p+=x.p;totDay.f+=x.f;totDay.c+=x.c;});
+  const pct=Math.min(100,Math.round(totDay.k/cals*100));
+  const prot=pro?Math.round(pro.w*1.8):Math.round(cals*.30/4);
+  const fat=Math.round(cals*.25/9);
+  const carb=Math.round((cals-prot*4-fat*9)/4);
+
+  // If no meal selected — show meal picker
+  if(!selMeal){
+    const meals=['breakfast','lunch','dinner','snack'];
+    el.innerHTML=`<div class="ptitle">Счётчик-конструктор 🧮</div>
+    <div style="text-align:center;margin-bottom:12px">
+      <div class="dt-n">${Math.round(totDay.k)}</div>
+      <div class="dt-l">из ${cals} ккал сегодня</div>
+      <div class="dt-bar"><div class="dt-fill" style="width:${pct}%"></div></div>
+      <div style="font-size:11px;font-weight:700;color:var(--tx3)">осталось ${Math.max(0,cals-Math.round(totDay.k))} ккал</div>
+    </div>
+    <div class="card" style="margin-bottom:12px">
+      <div class="fr3">
+        <div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--gr)">${Math.round(totDay.p)}/${prot}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Белки</div></div>
+        <div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--am)">${Math.round(totDay.f)}/${fat}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Жиры</div></div>
+        <div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--bl)">${Math.round(totDay.c)}/${carb}г</div><div style="font-size:9px;font-weight:700;color:var(--tx3)">Углеводы</div></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="lbl">Выберите приём пищи</div>
+      ${meals.map(m=>{
+        const tgt=getMealTargets(m);
+        const eaten=getMealEaten(m);
+        const remK=Math.max(0,tgt.cals-Math.round(eaten.k));
+        const done=eaten.k>=tgt.cals*.9;
+        return`<div class="food-option ${done?'ok':''}" onclick="hap();selMeal='${m}';selCat=null;rCalc()" style="margin-bottom:8px">
+          <div class="fo-ico" style="font-size:28px;width:44px;height:44px">${MEAL_NAMES[m].split(' ')[0]}</div>
+          <div class="fo-info">
+            <div class="fo-name">${MEAL_NAMES[m].split(' ').slice(1).join(' ')}</div>
+            <div class="fo-desc">Цель: ${tgt.cals} ккал · Б:${tgt.p}г Ж:${tgt.f}г У:${tgt.c}г</div>
+            <div style="font-size:11px;font-weight:800;color:${done?'var(--gr)':'var(--pu)'};margin-top:3px">${done?'✅ Выполнено':'Осталось: '+remK+' ккал'}</div>
+          </div>
+          <div style="font-size:11px;font-weight:900;color:${done?'var(--gr)':'var(--tx3)'};white-space:nowrap">${Math.round(eaten.k)}/${tgt.cals}<br>ккал</div>
+        </div>`;
+      }).join('')}
+    </div>
+    <div class="card">
+      <div class="lbl">Быстрый поиск продукта</div>
+      <div class="sw"><span class="si-ico">🔍</span><input class="si" type="text" id="fs" placeholder="Название продукта..." oninput="srchFd()" autocomplete="off"/></div>
+      <div class="fres" id="fres"></div>
+      <div id="pb" style="display:none">
+        <div style="font-size:13px;font-weight:800;color:var(--tx2);margin-bottom:8px" id="sfn"></div>
+        <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:8px">Приём пищи: <select id="meal-sel" style="font-family:'Nunito',sans-serif;font-weight:700;font-size:12px;padding:4px 8px;border-radius:8px;border:2px solid var(--bd2);background:var(--bg);color:var(--tx)"><option value="breakfast">Завтрак</option><option value="lunch">Обед</option><option value="dinner">Ужин</option><option value="snack">Перекус</option></select></div>
+        <div class="pr-row"><input class="pi" type="number" id="pg" placeholder="100" inputmode="decimal" step="1" value="100" oninput="updPv()"/><span style="font-size:12px;font-weight:700;color:var(--tx2)" id="pu">г</span></div>
+        <div id="pp" style="margin-bottom:10px;font-size:12px;font-weight:700;color:var(--tx3)"></div>
+        <button class="btn btn-g" onclick="addFl()">Добавить ➕</button>
+      </div>
+    </div>
+    ${renderFoodLog()}`;
+    updPv();
+    return;
+  }
+
+  // Meal selected — show macro categories
+  const tgt=getMealTargets(selMeal);
+  const eaten=getMealEaten(selMeal);
+  const remP=Math.max(0,tgt.p-Math.round(eaten.p));
+  const remF=Math.max(0,tgt.f-Math.round(eaten.f));
+  const remC=Math.max(0,tgt.c-Math.round(eaten.c));
+  const remK=Math.max(0,tgt.cals-Math.round(eaten.k));
+
+  const cats=[
+    {id:'protein',ico:'🥩',nm:'Белки',target:tgt.p,eaten:Math.round(eaten.p),rem:remP,unit:'г',col:'var(--gr)'},
+    {id:'fat',ico:'🥑',nm:'Жиры',target:tgt.f,eaten:Math.round(eaten.f),rem:remF,unit:'г',col:'var(--am)'},
+    {id:'carb',ico:'🍚',nm:'Углеводы',target:tgt.c,eaten:Math.round(eaten.c),rem:remC,unit:'г',col:'var(--bl)'},
+    {id:'other',ico:'💧',nm:'Напитки',target:0,eaten:0,rem:0,unit:'',col:'var(--cy)'},
+  ];
+
+  if(!selCat){
+    // Show category picker for this meal
+    el.innerHTML=`<div class="ptitle">${MEAL_NAMES[selMeal]}</div>
+    <div class="card" style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div>
+          <div style="font-size:15px;font-weight:900">Цель на приём: ${tgt.cals} ккал</div>
+          <div style="font-size:12px;font-weight:700;color:var(--tx3)">Съедено: ${Math.round(eaten.k)} ккал · Осталось: ${remK} ккал</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="hap();selMeal=null;rCalc()">← Назад</button>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:7px">
+        ${cats.slice(0,3).map(c=>{
+          const pct2=c.target>0?Math.min(100,Math.round(c.eaten/c.target*100)):0;
+          return`<div style="text-align:center;background:var(--bg);border-radius:10px;padding:10px 4px">
+            <div style="font-size:18px;font-weight:900;color:${c.col}">${c.eaten}/${c.target}${c.unit}</div>
+            <div style="font-size:9px;font-weight:700;color:var(--tx3);margin-top:2px">${c.nm}</div>
+            <div style="height:5px;border-radius:99px;background:var(--bd2);overflow:hidden;margin-top:5px">
+              <div style="height:100%;border-radius:99px;background:${c.col};width:${pct2}%;transition:width .4s"></div>
+            </div>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>
+    <div class="card">
+      <div class="lbl">Выберите категорию продуктов</div>
+      ${cats.map(c=>`<div class="food-option ${c.rem===0&&c.id!=='other'?'ok':''}" onclick="hap();selCat='${c.id}';rCalc()" style="margin-bottom:8px">
+        <div class="fo-ico" style="font-size:28px;width:44px;height:44px;font-size:24px">${c.ico}</div>
+        <div class="fo-info">
+          <div class="fo-name">${c.nm}</div>
+          ${c.target>0?`<div class="fo-desc">Цель: ${c.target}${c.unit} · Съедено: ${c.eaten}${c.unit}</div>
+          <div style="font-size:11px;font-weight:800;color:${c.rem===0?'var(--gr)':'var(--pu)'};margin-top:3px">${c.rem===0?'✅ Выполнено':'Осталось: '+c.rem+c.unit+' (≈'+(c.rem*(c.id==='protein'?4:c.id==='fat'?9:4))+' ккал)'}</div>`:
+          '<div class="fo-desc">Вода, чай, кофе и другое</div>'}
+        </div>
+        <div style="font-size:20px">›</div>
+      </div>`).join('')}
+    </div>
+    ${renderFoodLog(selMeal)}`;
+    return;
+  }
+
+  // Category selected — show food list
+  const cat=cats.find(c=>c.id===selCat);
+  const foods=FOODS.filter(f=>f.cat===selCat);
+  const remKcal=remK;
+
+  el.innerHTML=`<div class="ptitle">${cat.ico} ${cat.nm} — ${MEAL_NAMES[selMeal].split(' ').slice(1).join(' ')}</div>
+  <div class="card" style="margin-bottom:11px">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <div style="font-size:14px;font-weight:900">Нужно: <span style="color:${cat.col}">${cat.rem}${cat.unit}</span> ${cat.nm.toLowerCase()}</div>
+        <div style="font-size:12px;font-weight:700;color:var(--tx3)">≈ ${Math.round(cat.rem*(selCat==='protein'?4:selCat==='fat'?9:4))} ккал · Осталось на приём: ${remK} ккал</div>
+      </div>
+      <button class="btn btn-ghost btn-sm" onclick="hap();selCat=null;rCalc()">← Назад</button>
+    </div>
+    <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-top:8px;padding:8px;background:var(--bg);border-radius:8px">
+      ✅ — вписывается в норму &nbsp; ⚠️ — немного &nbsp; ❌ — превышает норму
+    </div>
+  </div>
+  <div class="card">
+  ${foods.map(fd=>{
+    // How many grams to meet the macro target for this category
+    const macroKey=selCat==='protein'?'p':selCat==='fat'?'f':selCat==='carb'?'c':null;
+    let recGrams=200;
+    if(macroKey&&fd[macroKey]>0){
+      recGrams=Math.round(cat.rem/fd[macroKey]*100);
+    }
+    recGrams=Math.max(10,Math.min(recGrams,600));
+    // Check if it fits by kcal too
+    const kcalUsed=Math.round(fd.k*recGrams/100);
+    const status=kcalUsed<=remKcal*1.1?'ok':kcalUsed<=remKcal*1.5?'warn':'no';
+    const badge=status==='ok'?'✅ Ок':status==='warn'?'⚠️ Много':'❌ Превышает';
+    const descMacro=macroKey?`${recGrams}г → ${cat.nm}: ${(fd[macroKey]*recGrams/100).toFixed(0)}${cat.unit}`:`${recGrams}г`;
+    return`<div class="food-option ${status}" onclick="hap();quickAddFood('${fd.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")}',${recGrams},'${selMeal}')" style="margin-bottom:8px">
+      <div class="fo-ico">${fd.e}</div>
+      <div class="fo-info">
+        <div class="fo-name">${fd.n}</div>
+        <div class="fo-desc">${fd.k} ккал/100г · рекомендую: ${descMacro}</div>
+        <div style="font-size:11px;font-weight:700;color:var(--tx3);margin-top:2px">${kcalUsed} ккал за ${recGrams}г</div>
+      </div>
+      <div class="fo-badge ${status}">${badge}</div>
+    </div>`;
+  }).join('')}
+  </div>
+  ${renderFoodLog(selMeal)}`;
+}
+
+function renderFoodLog(meal){
+  const items=meal?foodLog.filter(x=>x.meal===meal):foodLog;
+  if(items.length===0)return'<div class="empty"><div class="empty-ico">🍽️</div><p>'+(meal?'В этот приём пока ничего нет':'Начните добавлять продукты')+'</p></div>';
+  return'<div style="margin-top:4px">'+
+  items.map((f,i)=>{
+    const realIdx=foodLog.indexOf(f);
+    return'<div class="fl-item"><div class="fl-ico">'+f.e+'</div><div class="fl-info"><div class="fl-nm">'+f.n+'</div><div class="fl-dt">'+f.portion+' '+f.u+(f.meal?' · '+MEAL_NAMES[f.meal].split(' ').slice(1).join(' '):'')+'</div><div class="fl-macs"><span class="fm fm-p">Б:'+f.p.toFixed(1)+'г</span><span class="fm fm-f">Ж:'+f.f.toFixed(1)+'г</span><span class="fm fm-c">У:'+f.c.toFixed(1)+'г</span></div></div><div class="fl-k">'+f.k+' ккал</div><div class="fl-del" onclick="hap();rmFl('+realIdx+')">✕</div></div>';
+  }).join('')+
+  '<button class="btn btn-ghost mt" onclick="hap();clrFl()">Очистить 🗑️</button></div>';
+}
+
+function quickAddFood(name,grams,meal){
+  const fd=FOODS.find(f=>f.n===name);if(!fd)return;
+  const g=Math.max(1,Math.min(grams,600));const r=g/100;
+  const m=meal||selMeal||'breakfast';
+  foodLog.push({n:fd.n,e:fd.e,u:fd.u,portion:g,meal:m,k:Math.round(fd.k*r),p:parseFloat((fd.p*r).toFixed(1)),f:parseFloat((fd.f*r).toFixed(1)),c:parseFloat((fd.c*r).toFixed(1))});
+  sv('k52_fl_'+td(),foodLog);
+  showT('✅ '+fd.n+' ('+g+'г) добавлено');
+  selCat=null;rCalc();
+}
+
+function srchFd(){
+  const q=document.getElementById('fs').value.toLowerCase().trim();
+  const res=document.getElementById('fres');
+  if(q.length<2){res.classList.remove('on');return;}
+  const found=FOODS.filter(f=>f.n.toLowerCase().includes(q)).slice(0,7);
+  if(!found.length){res.innerHTML='<div class="fri"><span class="fri-n">Ничего не найдено</span></div>';res.classList.add('on');return;}
+  res.innerHTML=found.map(f=>'<div class="fri" onclick="hap();selFd2(\''+f.n.replace(/\\/g,'\\\\').replace(/'/g,"\\'")+'\')"><div class="fri-n">'+f.e+' '+f.n+'<small>Б:'+f.p+' Ж:'+f.f+' У:'+f.c+' на 100'+f.u+'</small></div><div class="fri-k">'+f.k+'кк</div></div>').join('');
+  res.classList.add('on');
+}
+function selFd2(name){
+  selFd=FOODS.find(f=>f.n===name);if(!selFd)return;
+  document.getElementById('fres').classList.remove('on');document.getElementById('fs').value='';
+  document.getElementById('sfn').textContent=selFd.e+' '+selFd.n;
+  document.getElementById('pu').textContent=selFd.u;
+  document.getElementById('pb').style.display='block';
+  document.getElementById('pg').value='100';updPv();
+}
+function updPv(){
+  if(!selFd)return;
+  const g=parseFloat(document.getElementById('pg').value)||0,r=g/100;
+  document.getElementById('pp').innerHTML='<span style="color:var(--pu);font-weight:900">'+Math.round(selFd.k*r)+' ккал</span> · Б:'+(selFd.p*r).toFixed(1)+'г · Ж:'+(selFd.f*r).toFixed(1)+'г · У:'+(selFd.c*r).toFixed(1)+'г';
+}
+function addFl(){
+  if(!selFd)return;
+  const g=parseFloat(document.getElementById('pg').value)||100,r=g/100;
+  const mealEl=document.getElementById('meal-sel');
+  const m=mealEl?mealEl.value:(selMeal||'breakfast');
+  foodLog.push({n:selFd.n,e:selFd.e,u:selFd.u,portion:g,meal:m,k:Math.round(selFd.k*r),p:parseFloat((selFd.p*r).toFixed(1)),f:parseFloat((selFd.f*r).toFixed(1)),c:parseFloat((selFd.c*r).toFixed(1))});
+  sv('k52_fl_'+td(),foodLog);selFd=null;document.getElementById('pb').style.display='none';rCalc();
+}
+function rmFl(i){foodLog.splice(i,1);sv('k52_fl_'+td(),foodLog);rCalc();}
+function clrFl(){foodLog=[];sv('k52_fl_'+td(),foodLog);selMeal=null;selCat=null;rCalc();}
+
+// ══════════════ CHANGELOG ══════════════
+function rLog(){
+  document.getElementById('log-b').innerHTML=`<div class="ptitle">📋 История обновлений</div>
+  <div class="cl-item">
+    <div class="cl-v">Версия 3.0</div>
+    <div class="cl-d">Текущее обновление</div>
+    <ul>
+      <li>✅ Исправлено сохранение фото профиля — теперь сжимается и сохраняется навсегда</li>
+      <li>✅ Ручной калораж теперь меняет суточные везде: в плане, рецептах, счётчике</li>
+      <li>✅ Похудение = TDEE × 0.80 (−20%), было −500 ккал фиксированно</li>
+      <li>🧮 Счётчик переработан в конструктор: выбор категории (белки/жиры/углеводы/напитки)</li>
+      <li>🧮 Конструктор показывает сколько можно съесть каждого продукта и подсвечивает ✅/⚠️/❌</li>
+      <li>📸 Фото в прогрессе теперь открываются в полноэкранный режим по нажатию</li>
+      <li>🍽️ Добавлены 4 новых рецепта (итого 22)</li>
+      <li>🛒 База продуктов расширена до 100+ позиций, добавлена вода и напитки</li>
+      <li>📋 Добавлена эта страница истории обновлений</li>
+    </ul>
+  </div>
+  <div class="cl-item">
+    <div class="cl-v">Версия 2.0</div>
+    <div class="cl-d">Предыдущая версия</div>
+    <ul>
+      <li>📈 Вкладка «Прогресс»: замеры веса, талии, бёдер с фото</li>
+      <li>📊 График изменений по трём параметрам</li>
+      <li>🧮 Счётчик калорий с базой ~90 продуктов</li>
+      <li>🛒 Корзина покупок из рецептов</li>
+      <li>🍽️ Редактор ингредиентов с пересчётом КБЖУ</li>
+      <li>👤 Фото профиля (аватар)</li>
+      <li>🎯 Рецепты масштабируются под ваш калораж</li>
+    </ul>
+  </div>
+  <div class="cl-item">
+    <div class="cl-v">Версия 1.0</div>
+    <div class="cl-d">Первый запуск</div>
+    <ul>
+      <li>👤 Профиль: вес, рост, возраст, активность</li>
+      <li>📊 Расчёт BMR, TDEE, ИМТ</li>
+      <li>🎯 Три режима: похудение, поддержание, набор</li>
+      <li>🍽️ 14 рецептов с фото</li>
+      <li>💪 Расчёт макросов (белки, жиры, углеводы)</li>
+    </ul>
+  </div>`;
+}
+
+// ══════════════ MODAL / TOAST ══════════════
+
+function openChangelog(){document.getElementById('mo-cl').classList.add('on');}
+
+function closeMo(e){if(!e||e.target===document.getElementById('mo'))document.getElementById('mo').classList.remove('on');}
+function showT(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
+</script>
+</body>
+</html>

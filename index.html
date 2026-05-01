@@ -864,171 +864,153 @@ function addE(){
 function delE(i){entries.splice(i,1);sv('k52_en',entries);rProg();}
 function fmtD(d){return new Date(d+'T00:00:00').toLocaleDateString('ru-RU',{day:'numeric',month:'long',year:'numeric'});}
 
+// ══════════════ CALCULATOR-CONSTRUCTOR ══════════════
 
-// ══════════════ CALCULATOR (MEAL MODE) ══════════════
 const MEAL_SPLIT={breakfast:.25,lunch:.35,dinner:.30,snack:.10};
-const MEAL_NAMES={breakfast:'🌅 Завтрак',lunch:'🍽️ Обед',dinner:'🌙 Ужин',snack:'🍎 Перекус'};
-let selMeal=null;
+const MEAL_NAMES={breakfast:'\u0001f305 \u0417\u0430\u0432\u0442\u0440\u0430\u043a',lunch:'\u0001f37d\ufe0f \u041e\u0431\u0435\u0434',dinner:'\u0001f319 \u0423\u0436\u0438\u043d',snack:'\u0001f34e \u041f\u0435\u0440\u0435\u043a\u0443\u0441'};
+
+function pickMeal(m){selMeal=m;selCat=null;rCalc();}
+function pickCat(c){selCat=c;rCalc();}
+function backMeal(){selMeal=null;rCalc();}
+function backCat(){selCat=null;rCalc();}
 
 function getMealTargets(meal){
-  const cals=getCals()||2000;
-  const split=MEAL_SPLIT[meal]||.25;
-  const mCals=Math.round(cals*split);
-  const w=pro?pro.w:70;
-  const prot=Math.round(w*1.8);
-  const fat=Math.round(cals*.25/9);
-  const carb=Math.round((cals-prot*4-fat*9)/4);
+  var cals=getCals()||2000, split=MEAL_SPLIT[meal]||.25;
+  var mCals=Math.round(cals*split);
+  var w=pro?pro.w:70;
+  var prot=Math.round(w*1.8), fat=Math.round(cals*.25/9);
+  var carb=Math.round((cals-prot*4-fat*9)/4);
   return{cals:mCals,p:Math.round(prot*split),f:Math.round(fat*split),c:Math.round(carb*split)};
 }
 
 function getMealEaten(meal){
-  const items=foodLog.filter(function(x){return x.meal===meal;});
+  var items=foodLog.filter(function(x){return x.meal===meal;});
   return items.reduce(function(a,x){return{k:a.k+x.k,p:a.p+x.p,f:a.f+x.f,c:a.c+x.c};},{k:0,p:0,f:0,c:0});
 }
 
 function rCalc(){
-  const el=document.getElementById('calc-b');
-  const cals=getCals()||2000;
-  const tot={k:0,p:0,f:0,c:0};
+  var el=document.getElementById('calc-b');
+  var cals=getCals()||2000;
+  var tot={k:0,p:0,f:0,c:0};
   foodLog.forEach(function(x){tot.k+=x.k;tot.p+=x.p;tot.f+=x.f;tot.c+=x.c;});
-  const pct=Math.min(100,Math.round(tot.k/cals*100));
-  const w=pro?pro.w:70;
-  const prot=Math.round(w*1.8);
-  const fat=Math.round(cals*.25/9);
-  const carb=Math.round((cals-prot*4-fat*9)/4);
+  var pct=Math.min(100,Math.round(tot.k/cals*100));
+  var w=pro?pro.w:70;
+  var prot=Math.round(w*1.8),fat=Math.round(cals*.25/9);
+  var carb=Math.round((cals-prot*4-fat*9)/4);
+  var remTotal=Math.max(0,cals-Math.round(tot.k));
+
+  var header='<div style="text-align:center;margin-bottom:12px">'+
+    '<div class="dt-n">'+Math.round(tot.k)+'</div>'+
+    '<div class="dt-l">из '+cals+' ккал сегодня</div>'+
+    '<div class="dt-bar"><div class="dt-fill" style="width:'+pct+'%"></div></div>'+
+    '<div style="font-size:11px;font-weight:700;color:var(--tx3)">осталось '+remTotal+' ккал</div></div>'+
+    '<div class="card" style="margin-bottom:12px"><div class="fr3">'+
+    '<div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--gr)">'+Math.round(tot.p)+'/'+prot+'\u0433</div><div style="font-size:9px;color:var(--tx3);font-weight:700">\u0411\u0435\u043b\u043a\u0438</div></div>'+
+    '<div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--am)">'+Math.round(tot.f)+'/'+fat+'\u0433</div><div style="font-size:9px;color:var(--tx3);font-weight:700">\u0416\u0438\u0440\u044b</div></div>'+
+    '<div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--bl)">'+Math.round(tot.c)+'/'+carb+'\u0433</div><div style="font-size:9px;color:var(--tx3);font-weight:700">\u0423\u0433\u043b\u0435\u0432\u043e\u0434\u044b</div></div>'+
+    '</div></div>';
 
   if(!selMeal){
-    const meals=['breakfast','lunch','dinner','snack'];
-    let mealHtml='';
+    var meals=['breakfast','lunch','dinner','snack'];
+    var html='<div class="ptitle">\u0421\u0447\u0451\u0442\u0447\u0438\u043a \ud83e\uddee</div>'+header+'<div class="card"><div class="lbl">\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u043f\u0440\u0438\u0451\u043c \u043f\u0438\u0449\u0438</div>';
     meals.forEach(function(m){
-      const tgt=getMealTargets(m);
-      const eaten=getMealEaten(m);
-      const remK=Math.max(0,tgt.cals-Math.round(eaten.k));
-      const done=eaten.k>=tgt.cals*.9;
-      const ico=MEAL_NAMES[m].split(' ')[0];
-      const name=MEAL_NAMES[m].split(' ').slice(1).join(' ');
-      mealHtml+='<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--sf);border-radius:var(--rs);margin-bottom:8px;box-shadow:var(--sh);cursor:pointer;border:2px solid '+(done?'var(--gr)':'var(--bd2)')+'" onclick="selMeal=''+m+'';selCat=null;rCalc()">'+
-        '<span style="font-size:28px">'+ico+'</span>'+
-        '<div style="flex:1"><div style="font-size:14px;font-weight:800">'+name+'</div>'+
-        '<div style="font-size:11px;color:var(--tx3);font-weight:700">Цель: '+tgt.cals+' ккал · Б:'+tgt.p+'г Ж:'+tgt.f+'г У:'+tgt.c+'г</div>'+
-        '<div style="font-size:11px;font-weight:800;color:'+(done?'var(--gr)':'var(--pu)')+'">'+( done?'✅ Выполнено':'Осталось: '+remK+' ккал')+'</div></div>'+
-        '<div style="font-size:13px;font-weight:900;color:var(--tx3)">'+Math.round(eaten.k)+'/'+tgt.cals+'<br><span style="font-size:10px">ккал</span></div>'+
-        '</div>';
+      var tgt=getMealTargets(m),eaten=getMealEaten(m);
+      var remK=Math.max(0,tgt.cals-Math.round(eaten.k));
+      var done=eaten.k>=tgt.cals*.9;
+      var parts=MEAL_NAMES[m].split(' ');
+      var ico=parts[0],nm=parts.slice(1).join(' ');
+      html+='<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:var(--rs);margin-bottom:8px;cursor:pointer;border:2px solid '+(done?'var(--gr)':'var(--bd2)')+'" onclick="pickMeal(this.dataset.m)" data-m="'+m+'">'+
+        '<span style="font-size:28px;pointer-events:none">'+ico+'</span>'+
+        '<div style="flex:1;pointer-events:none"><div style="font-size:14px;font-weight:800">'+nm+'</div>'+
+        '<div style="font-size:11px;color:var(--tx3);font-weight:700">'+tgt.cals+' \u043a\u043a\u0430\u043b &middot; \u0411:'+tgt.p+'\u0433 \u0416:'+tgt.f+'\u0433 \u0423:'+tgt.c+'\u0433</div>'+
+        '<div style="font-size:11px;font-weight:800;color:'+(done?'var(--gr)':'var(--pu)')+'">'+( done?'\u2705 \u0412\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u043e':'\u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c '+remK+' \u043a\u043a\u0430\u043b')+'</div></div>'+
+        '<div style="font-size:12px;font-weight:900;color:var(--tx3);pointer-events:none">'+Math.round(eaten.k)+'/'+tgt.cals+'</div></div>';
     });
-
-    el.innerHTML='<div class="ptitle">Счётчик 🧮</div>'+
-      '<div style="text-align:center;margin-bottom:12px">'+
-      '<div class="dt-n">'+Math.round(tot.k)+'</div>'+
-      '<div class="dt-l">из '+cals+' ккал сегодня</div>'+
-      '<div class="dt-bar"><div class="dt-fill" style="width:'+pct+'%"></div></div>'+
-      '<div style="font-size:11px;font-weight:700;color:var(--tx3)">осталось '+Math.max(0,cals-Math.round(tot.k))+' ккал</div></div>'+
-      '<div class="card" style="margin-bottom:12px"><div class="fr3">'+
-      '<div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--gr)">'+Math.round(tot.p)+'/'+prot+'г</div><div style="font-size:9px;color:var(--tx3);font-weight:700">Белки</div></div>'+
-      '<div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--am)">'+Math.round(tot.f)+'/'+fat+'г</div><div style="font-size:9px;color:var(--tx3);font-weight:700">Жиры</div></div>'+
-      '<div style="text-align:center"><div style="font-size:15px;font-weight:900;color:var(--bl)">'+Math.round(tot.c)+'/'+carb+'г</div><div style="font-size:9px;color:var(--tx3);font-weight:700">Углеводы</div></div>'+
-      '</div></div>'+
-      '<div class="card"><div class="lbl">Выберите приём пищи</div>'+mealHtml+'</div>'+
-      rLogHtml();
+    html+='</div>'+rLogHtml(null);
+    el.innerHTML=html;
     return;
   }
 
-  // Meal selected — show categories
-  const tgt=getMealTargets(selMeal);
-  const eaten=getMealEaten(selMeal);
-  const remP=Math.max(0,tgt.p-Math.round(eaten.p));
-  const remF=Math.max(0,tgt.f-Math.round(eaten.f));
-  const remC=Math.max(0,tgt.c-Math.round(eaten.c));
-  const remK=Math.max(0,tgt.cals-Math.round(eaten.k));
-  const mName=MEAL_NAMES[selMeal].split(' ').slice(1).join(' ');
+  var tgt=getMealTargets(selMeal),eaten=getMealEaten(selMeal);
+  var remP=Math.max(0,tgt.p-Math.round(eaten.p));
+  var remF=Math.max(0,tgt.f-Math.round(eaten.f));
+  var remC=Math.max(0,tgt.c-Math.round(eaten.c));
+  var remK=Math.max(0,tgt.cals-Math.round(eaten.k));
+  var mealBar='<div class="card" style="margin-bottom:11px"><div style="display:flex;justify-content:space-between;align-items:center">'+
+    '<div><div style="font-size:14px;font-weight:900">'+MEAL_NAMES[selMeal]+'</div>'+
+    '<div style="font-size:11px;color:var(--tx3);font-weight:700">\u0421\u044a\u0435\u0434\u0435\u043d\u043e: '+Math.round(eaten.k)+' &middot; \u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c: '+remK+' \u043a\u043a\u0430\u043b</div></div>'+
+    '<button class="btn btn-ghost btn-sm" onclick="backMeal()">\u2190 \u041d\u0430\u0437\u0430\u0434</button></div></div>';
 
   if(!selCat){
-    const cats=[
-      {id:'protein',ico:'🥩',nm:'Белки',rem:remP,unit:'г',hint:remP+'г ≈ '+(remP*4)+' ккал'},
-      {id:'fat',ico:'🥑',nm:'Жиры',rem:remF,unit:'г',hint:remF+'г ≈ '+(remF*9)+' ккал'},
-      {id:'carb',ico:'🍚',nm:'Углеводы',rem:remC,unit:'г',hint:remC+'г ≈ '+(remC*4)+' ккал'},
-      {id:'other',ico:'💧',nm:'Напитки',rem:0,unit:'',hint:'Вода, чай, кофе'},
+    var cats=[
+      {id:'protein',ico:'\ud83e\udd69',nm:'\u0411\u0435\u043b\u043a\u0438',rem:remP,kcal:remP*4},
+      {id:'fat',ico:'\ud83e\udd51',nm:'\u0416\u0438\u0440\u044b',rem:remF,kcal:remF*9},
+      {id:'carb',ico:'\ud83c\udf5a',nm:'\u0423\u0433\u043b\u0435\u0432\u043e\u0434\u044b',rem:remC,kcal:remC*4},
+      {id:'other',ico:'\ud83d\udca7',nm:'\u041d\u0430\u043f\u0438\u0442\u043a\u0438',rem:0,kcal:0},
     ];
-    let catHtml='';
+    var html='<div class="ptitle">'+MEAL_NAMES[selMeal]+'</div>'+mealBar+'<div class="card"><div class="lbl">\u041a\u0430\u0442\u0435\u0433\u043e\u0440\u0438\u044f</div>';
     cats.forEach(function(c){
-      catHtml+='<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--sf);border-radius:var(--rs);margin-bottom:8px;box-shadow:var(--sh);cursor:pointer;border:2px solid var(--bd2)" onclick="selCat=''+c.id+'';rCalc()">'+
-        '<span style="font-size:26px">'+c.ico+'</span>'+
-        '<div style="flex:1"><div style="font-size:14px;font-weight:800">'+c.nm+'</div>'+
-        '<div style="font-size:11px;font-weight:700;color:var(--tx3)">'+c.hint+'</div></div>'+
-        '<span style="font-size:20px;color:var(--tx3)">›</span></div>';
+      html+='<div style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:var(--rs);margin-bottom:8px;cursor:pointer;border:2px solid var(--bd2)" onclick="pickCat(this.dataset.c)" data-c="'+c.id+'">'+
+        '<span style="font-size:26px;pointer-events:none">'+c.ico+'</span>'+
+        '<div style="flex:1;pointer-events:none"><div style="font-size:14px;font-weight:800">'+c.nm+'</div>'+
+        '<div style="font-size:11px;font-weight:700;color:var(--tx3)">'+c.rem+'\u0433 &asymp; '+c.kcal+' \u043a\u043a\u0430\u043b</div></div>'+
+        '<span style="font-size:20px;color:var(--tx3);pointer-events:none">&rsaquo;</span></div>';
     });
-    el.innerHTML='<div class="ptitle">'+MEAL_NAMES[selMeal]+'</div>'+
-      '<div class="card" style="margin-bottom:12px">'+
-      '<div style="display:flex;justify-content:space-between;align-items:center">'+
-      '<div><div style="font-size:14px;font-weight:900">Цель: '+tgt.cals+' ккал</div>'+
-      '<div style="font-size:12px;color:var(--tx3);font-weight:700">Съедено: '+Math.round(eaten.k)+' · Осталось: '+remK+' ккал</div></div>'+
-      '<button class="btn btn-ghost btn-sm" onclick="selMeal=null;rCalc()">← Назад</button></div></div>'+
-      '<div class="card"><div class="lbl">Категория продуктов</div>'+catHtml+'</div>'+
-      rLogHtml(selMeal);
+    html+='</div>'+rLogHtml(selMeal);
+    el.innerHTML=html;
     return;
   }
 
-  // Category selected — show foods
-  const catNames={protein:'🥩 Белки',fat:'🥑 Жиры',carb:'🍚 Углеводы',other:'💧 Напитки'};
-  const catRem={protein:remP,fat:remF,carb:remC,other:0};
-  const macKey={protein:'p',fat:'f',carb:'c',other:null};
-  const rem=catRem[selCat];
-  const mkey=macKey[selCat];
-  const foods=FOODS.filter(function(f){return f.cat===selCat;});
-
-  let foodHtml='';
+  var mkey={protein:'p',fat:'f',carb:'c',other:null}[selCat];
+  var remMac={protein:remP,fat:remF,carb:remC,other:0}[selCat];
+  var catName={protein:'\ud83e\udd69 \u0411\u0435\u043b\u043a\u0438',fat:'\ud83e\udd51 \u0416\u0438\u0440\u044b',carb:'\ud83c\udf5a \u0423\u0433\u043b\u0435\u0432\u043e\u0434\u044b',other:'\ud83d\udca7 \u041d\u0430\u043f\u0438\u0442\u043a\u0438'}[selCat];
+  var foods=FOODS.filter(function(f){return f.cat===selCat;});
+  var html='<div class="ptitle">'+catName+'</div>'+mealBar+
+    '<div class="card" style="margin-bottom:11px"><div style="font-size:13px;font-weight:700;color:var(--tx3)">\u041d\u0443\u0436\u043d\u043e: <b style="color:var(--pu)">'+remMac+'\u0433</b> &middot; \u041e\u0441\u0442\u0430\u043b\u043e\u0441\u044c: <b style="color:var(--pu)">'+remK+' \u043a\u043a\u0430\u043b</b></div>'+
+    '<button class="btn btn-ghost btn-sm mt" onclick="backCat()">\u2190 \u041d\u0430\u0437\u0430\u0434</button></div><div class="card">';
   foods.forEach(function(fd){
-    let recG=200;
-    if(mkey&&fd[mkey]>0) recG=Math.round(rem/fd[mkey]*100);
+    var recG=mkey&&fd[mkey]>0?Math.round(remMac/fd[mkey]*100):200;
     recG=Math.max(10,Math.min(recG,500));
-    const kcalUsed=Math.round(fd.k*recG/100);
-    const fits=kcalUsed<=remK*1.15;
-    const color=fits?'var(--gr)':'var(--rd)';
-    const badge=fits?'✅':'❌';
-    const fname=fd.n.replace(/'/g,"\'");
-    foodHtml+='<div style="display:flex;align-items:center;gap:10px;padding:11px;background:var(--sf);border-radius:var(--rs);margin-bottom:7px;box-shadow:var(--sh);cursor:pointer;border:2px solid '+(fits?'var(--gr)':'var(--bd2)')+'" onclick="quickAdd(''+fname+'','+recG+',''+selMeal+'')">'+
-      '<span style="font-size:22px">'+fd.e+'</span>'+
-      '<div style="flex:1"><div style="font-size:13px;font-weight:800">'+fd.n+'</div>'+
-      '<div style="font-size:11px;font-weight:700;color:var(--tx3)">'+fd.k+' ккал/100г · '+recG+'г → '+kcalUsed+' ккал</div></div>'+
-      '<span style="font-size:13px;font-weight:900">'+badge+'</span></div>';
+    var kcalUsed=Math.round(fd.k*recG/100);
+    var fits=kcalUsed<=remK*1.2;
+    html+='<div style="display:flex;align-items:center;gap:10px;padding:11px;background:var(--bg);border-radius:var(--rs);margin-bottom:7px;cursor:pointer;border:2px solid '+(fits?'var(--gr)':'var(--bd2)')+'" onclick="quickAdd(this.dataset.n,'+recG+',&quot;'+selMeal+'&quot;)" data-n="'+fd.n.replace(/"/g,'\\"')+'">'+
+      '<span style="font-size:22px;pointer-events:none">'+fd.e+'</span>'+
+      '<div style="flex:1;pointer-events:none"><div style="font-size:13px;font-weight:800">'+fd.n+'</div>'+
+      '<div style="font-size:11px;font-weight:700;color:var(--tx3)">'+fd.k+' \u043a\u043a\u0430\u043b/100\u0433 &middot; \u0440\u0435\u043a. '+recG+'\u0433 = '+kcalUsed+' \u043a\u043a\u0430\u043b</div></div>'+
+      '<span style="pointer-events:none">'+(fits?'\u2705':'\u26a0\ufe0f')+'</span></div>';
   });
-
-  el.innerHTML='<div class="ptitle">'+catNames[selCat]+'</div>'+
-    '<div class="card" style="margin-bottom:11px">'+
-    '<div style="display:flex;justify-content:space-between;align-items:center">'+
-    '<div style="font-size:13px;font-weight:700;color:var(--tx3)">Нужно: <span style="color:var(--pu);font-weight:900">'+rem+'г</span> · Осталось на приём: <span style="font-weight:900;color:var(--pu)">'+remK+' ккал</span></div>'+
-    '<button class="btn btn-ghost btn-sm" onclick="selCat=null;rCalc()">← Назад</button></div></div>'+
-    '<div class="card">'+foodHtml+'</div>'+
-    rLogHtml(selMeal);
+  html+='</div>'+rLogHtml(selMeal);
+  el.innerHTML=html;
 }
 
 function rLogHtml(meal){
-  const items=meal?foodLog.filter(function(x){return x.meal===meal;}):foodLog;
-  if(!items.length)return'<div class="empty"><div class="empty-ico">🍽️</div><p>Пусто</p></div>';
-  let h='<div style="margin-top:8px">';
-  items.forEach(function(f,i){
-    const ri=foodLog.indexOf(f);
-    h+='<div class="fl-item"><div class="fl-ico">'+f.e+'</div><div class="fl-info"><div class="fl-nm">'+f.n+'</div><div class="fl-dt">'+f.portion+' '+f.u+'</div></div><div class="fl-k">'+f.k+' ккал</div><div class="fl-del" onclick="rmFl('+ri+')">✕</div></div>';
+  var items=meal?foodLog.filter(function(x){return x.meal===meal;}):foodLog;
+  if(!items.length)return'<div class="empty"><div class="empty-ico">\ud83c\udf7d\ufe0f</div><p>\u041f\u0443\u0441\u0442\u043e</p></div>';
+  var h='<div style="margin-top:8px">';
+  items.forEach(function(f){
+    var ri=foodLog.indexOf(f);
+    h+='<div class="fl-item"><div class="fl-ico">'+f.e+'</div><div class="fl-info"><div class="fl-nm">'+f.n+'</div><div class="fl-dt">'+f.portion+' '+f.u+'</div></div><div class="fl-k">'+f.k+' \u043a\u043a\u0430\u043b</div><div class="fl-del" onclick="rmFl('+ri+')">\u2715</div></div>';
   });
-  h+='<button class="btn btn-ghost mt" onclick="clrFl()">Очистить 🗑️</button></div>';
+  h+='<button class="btn btn-ghost mt" onclick="clrFl()">\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \ud83d\uddd1\ufe0f</button></div>';
   return h;
 }
 
 function quickAdd(name,grams,meal){
-  const fd=FOODS.find(function(f){return f.n===name;});
+  var fd=FOODS.find(function(f){return f.n===name;});
   if(!fd)return;
-  const g=Math.max(1,Math.min(grams,500));
-  const r=g/100;
-  const m=meal||selMeal||'breakfast';
+  var g=Math.max(1,Math.min(grams,500)),r=g/100;
+  var m=meal||selMeal||'breakfast';
   foodLog.push({n:fd.n,e:fd.e,u:fd.u,portion:g,meal:m,
     k:Math.round(fd.k*r),p:parseFloat((fd.p*r).toFixed(1)),
     f:parseFloat((fd.f*r).toFixed(1)),c:parseFloat((fd.c*r).toFixed(1))});
   sv('k52_fl_'+td(),foodLog);
-  showT('✅ '+fd.n+' добавлено');
+  showT('\u2705 '+fd.n+' \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u043e');
   selCat=null;rCalc();
 }
 
 function rmFl(i){foodLog.splice(i,1);sv('k52_fl_'+td(),foodLog);rCalc();}
 function clrFl(){foodLog=[];sv('k52_fl_'+td(),foodLog);selMeal=null;selCat=null;rCalc();}
+
 
 // ══════════════ CHANGELOG ══════════════
 function rLog(){

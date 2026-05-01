@@ -225,8 +225,90 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
 </style>
+<style>
+#spl-dialog {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  max-width: 100%;
+  max-height: 100%;
+  margin: 0;
+  padding: 0;
+  border: none;
+  background: #09090F;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  font-family: Nunito, sans-serif;
+  z-index: 9999;
+  pointer-events: none;
+}
+#spl-dialog h1 {
+  font-size: 38px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: -1px;
+  margin: 0;
+  text-align: center;
+}
+#spl-dialog h1 span {
+  background: linear-gradient(135deg,#A78BFA,#EC4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+#spl-row {
+  display: flex;
+  gap: 14px;
+  font-size: 34px;
+}
+#spl-bar-bg {
+  width: 160px;
+  height: 5px;
+  background: rgba(255,255,255,.15);
+  border-radius: 99px;
+  overflow: hidden;
+}
+#spl-bar-fg {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg,#7C3AED,#EC4899);
+  border-radius: 99px;
+  transition: width 2s linear;
+}
+#spl-by {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,.3);
+}
+</style>
 </head>
 <body>
+<div id="spl-dialog">
+  <h1>Калории <span>52</span></h1>
+  <div id="spl-row"><span>🍎</span><span>❤️</span><span>⚡</span><span>🥗</span></div>
+  <div id="spl-bar-bg"><div id="spl-bar-fg"></div></div>
+  <div id="spl-by">by Persh</div>
+</div>
+<script>
+(function(){
+  var el = document.getElementById('spl-dialog');
+  if (!el) return;
+  // Start bar
+  setTimeout(function(){ 
+    var fg = document.getElementById('spl-bar-fg');
+    if (fg) fg.style.width = '100%';
+  }, 50);
+  // Remove after 2.5s
+  setTimeout(function(){
+    if (el && el.parentNode) el.parentNode.removeChild(el);
+  }, 2500);
+})();
+</script>
 <div class="app">
   <div class="hdr">
     <div>

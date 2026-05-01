@@ -224,6 +224,43 @@ html,body{height:100%;font-family:'Nunito',sans-serif;color:var(--tx);background
 .cl-item li{font-size:12px;font-weight:600;color:var(--tx2);line-height:1.7}
 input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none}
 input[type=date]{color-scheme:light dark}
+/* FOOD RECOGNITION MODAL */
+.food-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:300;display:flex;align-items:flex-end;justify-content:center;opacity:0;pointer-events:none;transition:opacity .25s;backdrop-filter:blur(6px)}
+.food-modal-overlay.on{opacity:1;pointer-events:all}
+.food-modal-box{background:var(--sf);border-radius:24px 24px 0 0;width:100%;max-width:430px;max-height:85vh;overflow-y:auto;transform:translateY(100%);transition:transform .35s cubic-bezier(.34,1.2,.64,1);padding-bottom:max(24px,env(safe-area-inset-bottom))}
+.food-modal-overlay.on .food-modal-box{transform:translateY(0)}
+.fm-bar{width:36px;height:4px;background:var(--bd2);border-radius:99px;margin:12px auto 16px}
+.fm-head{padding:0 16px 12px;border-bottom:.5px solid var(--bd)}
+.fm-title{font-size:18px;font-weight:900;margin-bottom:3px}
+.fm-sub{font-size:12px;font-weight:700;color:var(--tx3)}
+.fm-photo{width:100%;height:180px;object-fit:cover;display:block}
+.fm-items{padding:12px 16px}
+.fm-item{display:flex;align-items:center;gap:12px;padding:12px;background:var(--bg);border-radius:var(--rs);margin-bottom:8px;cursor:pointer;border:2px solid var(--bd2);transition:all .15s}
+.fm-item:active{transform:scale(.98)}
+.fm-item.found{border-color:var(--gr)}
+.fm-item.notfound{opacity:.4;cursor:default}
+.fm-item-ico{font-size:24px;width:40px;height:40px;background:var(--sf);border-radius:8px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.fm-item-info{flex:1}
+.fm-item-name{font-size:14px;font-weight:800;margin-bottom:2px}
+.fm-item-sub{font-size:11px;font-weight:700;color:var(--tx3)}
+.fm-item-badge{font-size:10px;font-weight:800;padding:2px 8px;border-radius:99px;white-space:nowrap;flex-shrink:0}
+.fm-item-badge.ok{background:var(--grl);color:var(--gr)}
+.fm-item-badge.no{background:var(--bg);color:var(--tx3);border:1px solid var(--bd2)}
+.fm-gram-box{padding:14px 16px;border-top:.5px solid var(--bd);display:none}
+.fm-gram-box.on{display:block}
+.fm-gram-title{font-size:13px;font-weight:800;margin-bottom:10px;color:var(--tx)}
+.fm-gram-row{display:flex;gap:8px;align-items:center}
+.fm-gram-input{flex:1;padding:11px 13px;font-size:24px;font-weight:900;border:2px solid var(--pu);border-radius:var(--rs);background:var(--bg);color:var(--tx);font-family:'Nunito',sans-serif;text-align:center;-webkit-appearance:none}
+.fm-gram-input:focus{outline:none}
+.fm-gram-unit{font-size:14px;font-weight:800;color:var(--tx2)}
+.fm-quick-btns{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.fm-qb{padding:6px 13px;border-radius:99px;font-size:12px;font-weight:800;border:2px solid var(--bd2);background:var(--sf);cursor:pointer;font-family:'Nunito',sans-serif;transition:all .15s;color:var(--tx2)}
+.fm-qb:active{background:var(--pul);border-color:var(--pu);color:var(--pu)}
+.fm-gram-preview{font-size:12px;font-weight:700;color:var(--pu);margin-top:8px;min-height:18px}
+.fm-scan-anim{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 16px;gap:14px}
+.fm-scan-spinner{width:52px;height:52px;border-radius:50%;border:4px solid var(--pul);border-top-color:var(--pu);animation:fmspin .75s linear infinite}
+@keyframes fmspin{to{transform:rotate(360deg)}}
+.fm-scan-label{font-size:13px;font-weight:700;color:var(--tx3)}
 </style>
 <style>
 #K52{
@@ -452,14 +489,17 @@ input[type=date]{color-scheme:light dark}
     </div>
   </div>
 </div>
-<!-- Скрытый input для загрузки фото (распознавание еды) -->
-<input type="file" id="food-photo" accept="image/*" capture="environment" style="display:none" onchange="analyzeFood(event)">
 </div>
 <div class="toast" id="toast"></div>
 <!-- RECIPE MODAL -->
 <div class="mo" id="mo" onclick="closeMo(event)"><div class="modal" id="modal"><div class="m-bar"></div><div id="m-in"></div></div></div>
 <!-- FULLSCREEN PHOTO -->
 <div class="fs-ov" id="fs-ov" onclick="closeFs()"><div class="fs-close" onclick="closeFs()">✕</div><img class="fs-img" id="fs-img" src="" alt=""/></div>
+<!-- FOOD RECOGNITION MODAL -->
+<div class="food-modal-overlay" id="fm-ov" onclick="if(event.target===this)closeFoodModal()">
+  <div class="food-modal-box"><div class="fm-bar"></div><div id="fm-content"></div></div>
+</div>
+<input type="file" id="food-photo" accept="image/*" capture="environment" style="display:none" onchange="analyzeFood(event)"/>
 
 <script>
 // ══════════════ FOOD DATABASE (100+ items) ══════════════
@@ -504,7 +544,7 @@ const FOODS=[
   {n:'Творог 2%',e:'🧀',k:103,p:16,f:2,c:3.5,u:'г',cat:'protein'},
   {n:'Творог 5%',e:'🧀',k:121,p:17,f:5,c:3,u:'г',cat:'protein'},
   {n:'Творог 9%',e:'🧀',k:159,p:16,f:9,c:2.8,u:'г',cat:'protein'},
-  {n:'Творог 18%',e:'🧀',k:236,p:14,f:18,c:2.8,u:'г',cat:'protein'},
+  {n:'Творог 18%',e:'🧀',k:236,p:14,f:18,c:2.8,u:'г',cat:'fat'},
   {n:'Йогурт греческий 0%',e:'🥛',k:59,p:10,f:0.4,c:3.6,u:'г',cat:'protein'},
   {n:'Йогурт греческий 2%',e:'🥛',k:73,p:10,f:2,c:4,u:'г',cat:'protein'},
   {n:'Йогурт греческий 5%',e:'🥛',k:97,p:9,f:5,c:4,u:'г',cat:'protein'},
@@ -811,7 +851,7 @@ function rRec(){
   let list=RECIPES.filter(r=>rF==='all'||r.meal===rF);
   let sc=list.map(r=>cals?scaleR(r,cals):{...r,kS:r.kcal,pS:r.p,fS:r.f,cS:r.c,diff:999});
   sc.sort((a,b)=>a.diff-b.diff);
-  el.innerHTML='<div class="ptitle">Рецепты 🍽️</div>'+(cals?'<div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:10px">Порции под <span style="color:var(--pu)">'+cals+' ккал/день</span></div>':'')+'<div class="filt">'+filters.map(f=>'<div class="chip '+(rF===f.id?'on':'')+'" onclick="setRF(\''+f.id+'\')">'+f.l+'</div>').join('')+'</div><div class="rgrid">'+sc.map(r=>{const fit=cals?fitL(r.diff):null;return'<div class="rc" onclick="openRec('+r.id+')"><img class="rc-img" src="'+r.img+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="rc-ph" style="display:none">'+r.emoji+'</div><div class="rc-body">'+(r.sat?'<span class="tag-sat">🔥 Насыщающее</span>':'')+(fit?'<div class="fit '+fit.c+'">'+fit.t+'</div>':'')+'<div class="rc-name">'+r.emoji+' '+r.name+'</div><div class="rc-row"><div class="rc-tags">'+r.tags.map(t=>'<span class="rc-tag">'+t+'</span>').join('')+'</div><div class="rc-kcal">'+r.kS+' ккал</div></div><div class="rc-macs"><div class="rc-mac"><div class="rc-mv" style="color:var(--gr)">'+r.pS+'г</div><div class="rc-mn">Белки</div></div><div class="rc-mac"><div class="rc-mv" style="color:var(--am)">'+r.fS+'г</div><div class="rc-mn">Жиры</div></div><div class="rc-mac"><div class="rc-mv" style="color:var(--bl)">'+r.cS+'г</div><div class="rc-mn">Углев.</div></div></div></div>';}).join('')+'</div>';
+  el.innerHTML='<div class="ptitle">Рецепты 🍽️</div>'+(cals?'<div style="font-size:11px;font-weight:700;color:var(--tx3);margin-bottom:10px">Порции под <span style="color:var(--pu)">'+cals+' ккал/день</span></div>':'')+'<div class="filt">'+filters.map(f=>'<div class="chip '+(rF===f.id?'on':'')+'" onclick="setRF(\''+f.id+'\')">'+f.l+'</div>').join('')+'</div><div class="rgrid">'+sc.map(r=>{const fit=cals?fitL(r.diff):null;return'<div class="rc" onclick="openRec('+r.id+')"><img class="rc-img" src="'+r.img+'" loading="lazy" onerror="this.style.display=\'none\';this.nextElementSibling.style.display=\'flex\'"/><div class="rc-ph" style="display:none">'+r.emoji+'</div><div class="rc-body">'+(r.sat?'<span class="tag-sat">🔥 Насыщающее</span>':'')+(fit?'<div class="fit '+fit.c+'">'+fit.t+'</div>':'')+'<div class="rc-name">'+r.emoji+' '+r.name+'</div><div class="rc-row"><div class="rc-tags">'+r.tags.map(t=>'<span class="rc-tag">'+t+'</span>').join('')+'</div><div class="rc-kcal">'+r.kS+' ккал</div></div><div class="rc-macs"><div class="rc-mac"><div class="rc-mv" style="color:var(--gr)">'+r.pS+'г</div><div class="rc-mn">Белки</div></div><div class="rc-mac"><div class="rc-mv" style="color:var(--am)">'+r.fS+'г</div><div class="rc-mn">Жиры</div></div><div class="rc-mac"><div class="rc-mv" style="color:var(--bl)">'+r.cS+'г</div><div class="rc-mn">Углев.</div></div></div></div></div>';}).join('')+'</div>';
 }
 function setRF(f){rF=f;rRec();}
 
@@ -1025,8 +1065,7 @@ function rCalc(){
   var carb=Math.round((cals-prot*4-fat*9)/4);
   var remTotal=Math.max(0,cals-Math.round(tot.k));
 
-  // 👇 Добавлена кнопка распознавания еды (начало счётчика)
-  var header='<button class="btn btn-p" onclick="openCamera()" style="margin-bottom:12px">📸 Распознать еду</button>'+
+  var header='<button class="btn btn-p" onclick="openCamera()" style="margin-bottom:12px;display:flex;align-items:center;justify-content:center;gap:8px"><span style="font-size:18px">📸</span><span>Распознать еду по фото</span></button>'+
     '<div style="text-align:center;margin-bottom:12px">'+
     '<div class="dt-n">'+Math.round(tot.k)+'</div>'+
     '<div class="dt-l">из '+cals+' ккал сегодня</div>'+
@@ -1189,74 +1228,270 @@ function openChangelog(){document.getElementById("mo-cl").classList.add("on");}
 function closeMo(e){if(!e||e.target===document.getElementById('mo'))document.getElementById('mo').classList.remove('on');}
 function showT(m){const t=document.getElementById('toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),2500);}
 
-// ══════════════ РАСПОЗНАВАНИЕ ЕДЫ ══════════════
-// 👇 Новые функции для интеграции с сервером нейросети
+// ══════════════ РАСПОЗНАВАНИЕ ЕДЫ (Clarifai → RU) ══════════════
+const CLARIFAI_MAP={
+  'chicken':{ru:['Куриная грудка (сырая)','Куриное бедро без кожи (сырое)'],e:'🍗'},
+  'chicken breast':{ru:['Куриная грудка (сырая)'],e:'🍗'},
+  'turkey':{ru:['Индейка грудка (сырая)'],e:'🦃'},
+  'salmon':{ru:['Лосось (сырой)'],e:'🐟'},
+  'tuna':{ru:['Тунец (сырой)','Тунец консервированный'],e:'🐟'},
+  'cod':{ru:['Треска (сырая)'],e:'🐠'},
+  'mackerel':{ru:['Скумбрия (сырая)'],e:'🐟'},
+  'trout':{ru:['Форель (сырая)'],e:'🐟'},
+  'shrimp':{ru:['Креветки (сырые)'],e:'🦐'},
+  'fish':{ru:['Треска (сырая)','Лосось (сырой)'],e:'🐟'},
+  'beef':{ru:['Говядина вырезка (сырая)','Говяжий фарш 5% (сырой)'],e:'🥩'},
+  'pork':{ru:['Свинина вырезка (сырая)'],e:'🥩'},
+  'steak':{ru:['Говядина вырезка (сырая)'],e:'🥩'},
+  'meat':{ru:['Говядина вырезка (сырая)'],e:'🥩'},
+  'hamburger':{ru:['Говяжий фарш 15% (сырой)'],e:'🥩'},
+  'meatball':{ru:['Говяжий фарш 15% (сырой)'],e:'🥩'},
+  'egg':{ru:['Яйцо куриное'],e:'🥚'},
+  'cheese':{ru:['Сыр твёрдый','Сыр моцарелла'],e:'🧀'},
+  'yogurt':{ru:['Йогурт греческий 5%'],e:'🥛'},
+  'milk':{ru:['Молоко 2.5%'],e:'🥛'},
+  'cottage cheese':{ru:['Творог 5%'],e:'🧀'},
+  'butter':{ru:['Сливочное масло'],e:'🧈'},
+  'rice':{ru:['Рис белый (сырой)','Рис бурый (сырой)'],e:'🍚'},
+  'oatmeal':{ru:['Овсянка (сырая)'],e:'🌾'},
+  'oat':{ru:['Овсянка (сырая)'],e:'🌾'},
+  'pasta':{ru:['Паста сухая'],e:'🍝'},
+  'bread':{ru:['Хлеб цельнозерновой','Хлеб белый'],e:'🍞'},
+  'buckwheat':{ru:['Гречка (сырая)'],e:'🌾'},
+  'quinoa':{ru:['Киноа (сырая)'],e:'🌾'},
+  'potato':{ru:['Картофель (сырой)'],e:'🥔'},
+  'sweet potato':{ru:['Батат (сырой)'],e:'🍠'},
+  'granola':{ru:['Гранола'],e:'🌾'},
+  'lentil':{ru:['Чечевица (сырая)'],e:'🫘'},
+  'chickpea':{ru:['Нут (сырой)'],e:'🫘'},
+  'bean':{ru:['Фасоль (сухая)'],e:'🫘'},
+  'hummus':{ru:['Хумус готовый'],e:'🫘'},
+  'tofu':{ru:['Тофу'],e:'🥛'},
+  'avocado':{ru:['Авокадо'],e:'🥑'},
+  'almond':{ru:['Миндаль'],e:'🌰'},
+  'walnut':{ru:['Грецкий орех'],e:'🌰'},
+  'cashew':{ru:['Кешью'],e:'🌰'},
+  'peanut butter':{ru:['Арахисовая паста'],e:'🥜'},
+  'peanut':{ru:['Арахисовая паста'],e:'🥜'},
+  'olive oil':{ru:['Оливковое масло'],e:'🫙'},
+  'banana':{ru:['Банан'],e:'🍌'},
+  'apple':{ru:['Яблоко'],e:'🍎'},
+  'orange':{ru:['Апельсин'],e:'🍊'},
+  'mango':{ru:['Манго'],e:'🥭'},
+  'blueberry':{ru:['Черника'],e:'🫐'},
+  'strawberry':{ru:['Клубника'],e:'🍓'},
+  'kiwi':{ru:['Киви'],e:'🥝'},
+  'pear':{ru:['Груша'],e:'🍐'},
+  'grape':{ru:['Виноград'],e:'🍇'},
+  'broccoli':{ru:['Брокколи'],e:'🥦'},
+  'spinach':{ru:['Шпинат'],e:'🥬'},
+  'cucumber':{ru:['Огурец'],e:'🥒'},
+  'tomato':{ru:['Помидор'],e:'🍅'},
+  'carrot':{ru:['Морковь'],e:'🥕'},
+  'pepper':{ru:['Болгарский перец'],e:'🫑'},
+  'bell pepper':{ru:['Болгарский перец'],e:'🫑'},
+  'zucchini':{ru:['Кабачок'],e:'🥒'},
+  'eggplant':{ru:['Баклажан'],e:'🍆'},
+  'onion':{ru:['Лук репчатый'],e:'🧅'},
+  'garlic':{ru:['Чеснок'],e:'🧄'},
+  'cauliflower':{ru:['Цветная капуста'],e:'🥦'},
+  'cabbage':{ru:['Белокочанная капуста'],e:'🥬'},
+  'beet':{ru:['Свёкла (сырая)'],e:'🫑'},
+  'salad':{ru:['Шпинат'],e:'🥬'},
+  'lettuce':{ru:['Шпинат'],e:'🥬'},
+  'coffee':{ru:['Кофе чёрный'],e:'☕'},
+  'tea':{ru:['Чай зелёный'],e:'🍵'},
+  'juice':{ru:['Апельсиновый сок'],e:'🍊'},
+  'water':{ru:['Вода'],e:'💧'},
+  'honey':{ru:['Мёд'],e:'🍯'},
+  'chocolate':{ru:['Шоколад тёмный 70%'],e:'🍫'},
+  'pizza':{ru:['Хлеб белый'],e:'🍕'},
+  'soup':{ru:['Чечевица (сырая)'],e:'🍲'},
+  'porridge':{ru:['Овсянка (сырая)'],e:'🌾'},
+  'smoothie':{ru:['Банан'],e:'🥤'},
+  'protein':{ru:['Протеин порошок'],e:'💪'},
+};
 
-// Открыть камеру / выбор фото
+function matchClarifai(names){
+  const results=[],seen=new Set();
+  names.forEach(rawName=>{
+    const key=rawName.toLowerCase();
+    let mapped=null;
+    if(CLARIFAI_MAP[key]){mapped={label:rawName,...CLARIFAI_MAP[key]};}
+    else{
+      // Длинный ключ — ищем подстроку
+      const keys=Object.keys(CLARIFAI_MAP).sort((a,b)=>b.length-a.length);
+      for(const k of keys){
+        if(key.includes(k)||k.includes(key)){mapped={label:rawName,...CLARIFAI_MAP[k]};break;}
+      }
+    }
+    if(mapped){
+      mapped.ru.forEach(ruName=>{
+        if(!seen.has(ruName)){
+          seen.add(ruName);
+          const fd=FOODS.find(f=>f.n===ruName);
+          results.push({label:rawName,ruName,fd,e:mapped.e});
+        }
+      });
+    } else {
+      if(!seen.has(rawName)){
+        seen.add(rawName);
+        results.push({label:rawName,ruName:rawName,fd:null,e:'❓'});
+      }
+    }
+  });
+  return results;
+}
+
+let _fmPhoto=null,_fmSel=null;
+
 function openCamera(){
   document.getElementById('food-photo').click();
 }
 
-// Отправка фото на сервер
+function closeFoodModal(){
+  document.getElementById('fm-ov').classList.remove('on');
+  _fmSel=null;_fmPhoto=null;
+  // Сброс input чтобы можно повторить то же фото
+  const inp=document.getElementById('food-photo');
+  if(inp)inp.value='';
+}
+
 async function analyzeFood(event){
-  const file = event.target.files[0];
-  if (!file) return;
+  const file=event.target.files[0];
+  if(!file)return;
+  event.target.value='';
 
-  const formData = new FormData();
-  formData.append('image', file);
+  _fmPhoto=URL.createObjectURL(file);
+  const ov=document.getElementById('fm-ov');
+  document.getElementById('fm-content').innerHTML=
+    '<img class="fm-photo" src="'+_fmPhoto+'" alt="фото еды"/>'+
+    '<div class="fm-scan-anim"><div class="fm-scan-spinner"></div>'+
+    '<div class="fm-scan-label">Распознаю еду... 🔍</div></div>';
+  ov.classList.add('on');
 
-  showT("Распознаю еду...");
-
-  try {
-    const res = await fetch("https://food-ai-server-dzk1.onrender.com/analyze", {
-      method: "POST",
-      body: formData
-    });
-
-    const data = await res.json();
-    showChoices(data.foods);
-  } catch (e) {
-    console.error(e);
-    showT("Ошибка распознавания 😢 Проверьте сервер");
+  try{
+    const formData=new FormData();
+    formData.append('image',file);
+    const res=await fetch('https://food-ai-server-dzk1.onrender.com/analyze',{method:'POST',body:formData});
+    if(!res.ok)throw new Error('Server '+res.status);
+    const data=await res.json();
+    renderFoodChoices(data.foods);
+  }catch(err){
+    console.error(err);
+    document.getElementById('fm-content').innerHTML=
+      '<img class="fm-photo" src="'+_fmPhoto+'" alt="фото"/>'+
+      '<div class="fm-items"><div style="text-align:center;padding:28px 0">'+
+      '<div style="font-size:36px;margin-bottom:10px">😢</div>'+
+      '<div style="font-size:14px;font-weight:800;margin-bottom:6px">Ошибка распознавания</div>'+
+      '<div style="font-size:12px;font-weight:600;color:var(--tx3);margin-bottom:16px">Проверьте интернет или попробуйте другое фото</div>'+
+      '<button class="btn btn-ghost btn-sm" onclick="closeFoodModal()">Закрыть</button>'+
+      '</div></div>';
   }
 }
 
-// Показать список вариантов продуктов
-function showChoices(foods){
-  let html = `<div class="card"><div class="lbl">Что это за еда?</div>`;
-  foods.forEach(name => {
-    html += `<div class="fri" onclick="selectRecognizedFood('${name}')">
-      <div class="fri-n">${name}</div>
-    </div>`;
+function renderFoodChoices(names){
+  const matches=matchClarifai(names);
+  const found=matches.filter(m=>m.fd);
+  const notFound=matches.filter(m=>!m.fd);
+  window._fmFound=found;
+
+  let itemsHtml='';
+  found.forEach((m,i)=>{
+    itemsHtml+=
+      '<div class="fm-item found" onclick="selectFoodItem('+i+')">'+
+      '<div class="fm-item-ico">'+m.e+'</div>'+
+      '<div class="fm-item-info">'+
+      '<div class="fm-item-name">'+m.ruName+'</div>'+
+      '<div class="fm-item-sub">'+m.fd.k+' ккал/100'+m.fd.u+' · Б:'+m.fd.p+' Ж:'+m.fd.f+' У:'+m.fd.c+'</div>'+
+      '</div><div class="fm-item-badge ok">✅ В базе</div></div>';
   });
-  html += `</div>`;
+  notFound.forEach(m=>{
+    itemsHtml+=
+      '<div class="fm-item notfound">'+
+      '<div class="fm-item-ico">'+m.e+'</div>'+
+      '<div class="fm-item-info">'+
+      '<div class="fm-item-name">'+m.label+'</div>'+
+      '<div class="fm-item-sub">Нет в базе продуктов</div>'+
+      '</div><div class="fm-item-badge no">❌</div></div>';
+  });
+  if(!itemsHtml){
+    itemsHtml='<div style="text-align:center;padding:24px;color:var(--tx3);font-weight:700;font-size:13px">'+
+      'Ничего не распознано.<br>Попробуйте другое фото.</div>';
+  }
 
-  // Показываем список вариантов в счётчике (в calc-b)
-  const el = document.getElementById('calc-b');
-  if (el) el.innerHTML = html;
+  document.getElementById('fm-content').innerHTML=
+    '<img class="fm-photo" src="'+_fmPhoto+'" alt="фото"/>'+
+    '<div class="fm-head">'+
+    '<div class="fm-title">Что на фото? 🔍</div>'+
+    '<div class="fm-sub">Нажмите на продукт чтобы добавить в дневник</div>'+
+    '</div>'+
+    '<div class="fm-items">'+itemsHtml+'</div>'+
+    '<div class="fm-gram-box" id="fm-gram-box">'+
+    '<div class="fm-gram-title" id="fm-gram-title">Сколько грамм?</div>'+
+    '<div class="fm-gram-row">'+
+    '<input class="fm-gram-input" type="number" id="fm-gram-val" value="100" inputmode="numeric" min="1" max="2000" oninput="updateGramPreview()"/>'+
+    '<span class="fm-gram-unit" id="fm-gram-unit">г</span>'+
+    '</div>'+
+    '<div class="fm-quick-btns">'+
+    '<button class="fm-qb" onclick="setGram(50)">50г</button>'+
+    '<button class="fm-qb" onclick="setGram(100)">100г</button>'+
+    '<button class="fm-qb" onclick="setGram(150)">150г</button>'+
+    '<button class="fm-qb" onclick="setGram(200)">200г</button>'+
+    '<button class="fm-qb" onclick="setGram(300)">300г</button>'+
+    '</div>'+
+    '<div class="fm-gram-preview" id="fm-gram-preview"></div>'+
+    '<button class="btn btn-p mt" onclick="confirmFoodAdd()">Добавить в дневник ✅</button>'+
+    '<button class="btn btn-ghost mt" style="margin-top:6px" onclick="cancelFoodSel()">← Выбрать другое</button>'+
+    '</div>';
 }
 
-// Выбор продукта из распознанных, запрос граммов и добавление в дневник
-function selectRecognizedFood(name){
-  const found = FOODS.find(f =>
-    name.toLowerCase().includes(f.n.toLowerCase())
-  );
+function selectFoodItem(idx){
+  const m=window._fmFound[idx];
+  if(!m||!m.fd)return;
+  _fmSel=m;
+  document.querySelectorAll('.fm-item').forEach((el,i)=>{
+    el.style.borderColor=i===idx?'var(--pu)':'';
+    el.style.background=i===idx?'var(--pul)':'';
+  });
+  const gb=document.getElementById('fm-gram-box');
+  gb.classList.add('on');
+  document.getElementById('fm-gram-title').textContent=
+    m.e+' '+m.ruName+' — сколько '+(m.fd.u==='мл'?'мл':'грамм')+'?';
+  document.getElementById('fm-gram-unit').textContent=m.fd.u;
+  document.getElementById('fm-gram-val').value=100;
+  updateGramPreview();
+  setTimeout(()=>gb.scrollIntoView({behavior:'smooth',block:'start'}),50);
+}
 
-  if (!found) {
-    showT("Не найдено в базе 😢 Попробуйте вручную");
-    rCalc(); // вернуть счётчик
-    return;
-  }
+function setGram(g){
+  const inp=document.getElementById('fm-gram-val');
+  if(inp){inp.value=g;updateGramPreview();}
+}
 
-  const grams = prompt(`Сколько грамм ${found.n}?`, "100");
-  if (!grams) {
-    rCalc();
-    return;
-  }
+function updateGramPreview(){
+  if(!_fmSel||!_fmSel.fd)return;
+  const g=parseFloat(document.getElementById('fm-gram-val').value)||0;
+  const r=g/100,fd=_fmSel.fd;
+  const kcal=Math.round(fd.k*r),p=(fd.p*r).toFixed(1),f=(fd.f*r).toFixed(1),c=(fd.c*r).toFixed(1);
+  const prev=document.getElementById('fm-gram-preview');
+  if(prev)prev.innerHTML=g+fd.u+' = <b style="color:var(--pu)">'+kcal+' ккал</b> · Б:'+p+' Ж:'+f+' У:'+c;
+}
 
-  // Вызываем существующую функцию quickAdd, которая добавит продукт в foodLog и обновит интерфейс
-  quickAdd(found.n, parseFloat(grams), selMeal || 'breakfast');
-  // quickAdd сама вызовет showT и rCalc(), поэтому дополнительно ничего не нужно
+function cancelFoodSel(){
+  _fmSel=null;
+  const gb=document.getElementById('fm-gram-box');
+  if(gb)gb.classList.remove('on');
+  document.querySelectorAll('.fm-item').forEach(el=>{el.style.borderColor='';el.style.background='';});
+}
+
+function confirmFoodAdd(){
+  if(!_fmSel||!_fmSel.fd){showT('⚠️ Выберите продукт');return;}
+  const g=parseFloat(document.getElementById('fm-gram-val').value);
+  if(!g||g<=0){showT('⚠️ Укажите количество');return;}
+  const meal=selMeal||'breakfast';
+  closeFoodModal();
+  quickAdd(_fmSel.fd.n,g,meal);
 }
 </script>
 </body>
